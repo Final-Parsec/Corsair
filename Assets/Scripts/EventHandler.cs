@@ -37,10 +37,6 @@ public class EventHandler : MonoBehaviour
 		
 		// Left Click Down & Tuoch Event
 		if (!CameraMovement.IsCameraMoving() && Input.GetMouseButtonUp(0)) {
-			if(objectManager.TurretFocusMenu.isActive){
-				objectManager.GuiButtonMethods.UpgradeMenuBackPressed();
-				return;
-			}
 
 			Vector3 mousePosition = Input.mousePosition;
 			

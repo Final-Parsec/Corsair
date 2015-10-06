@@ -335,6 +335,8 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void PlaySellSound()
 	{
+		upgradeAnimator.SetTrigger("Swipe Out");
+
 		if(!objectManager.gameState.isMuted)
 			audioSource.PlayOneShot(audioClips["sellPress"]);
 	}
