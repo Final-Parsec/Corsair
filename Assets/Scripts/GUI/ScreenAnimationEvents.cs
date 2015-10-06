@@ -8,4 +8,9 @@ public class ScreenAnimationEvents : MonoBehaviour {
 	{
 		gameObject.SetActive (false);
 	}
+
+	public void SwipeOutFinished()
+	{
+		ObjectManager.GetInstance().TurretFocusMenu.SelectedTurret = null;
+	}
 }

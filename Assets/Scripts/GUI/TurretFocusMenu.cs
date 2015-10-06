@@ -59,7 +59,6 @@ public class TurretFocusMenu : MonoBehaviour
 			if(selectedTurret != null && value == null)
 			{
 				isActive = false;
-				upgradeAnimator.SetTrigger("Swipe Out");
 				objectManager.gameState.GameSpeed = lastGameSpeed;
 			}
 			

@@ -49,10 +49,4 @@ public class TurretFactory : MonoBehaviour
 	{
 		objectManager = ObjectManager.GetInstance ();
 	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
 }

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public class EventHandler : MonoBehaviour
 {
@@ -24,18 +25,24 @@ public class EventHandler : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		//Debug.Log (objectManager.gameState.optionsOn);
-		if (objectManager.gameState.optionsOn || objectManager.TurretFocusMenu.isActive)
-			return;
+		// Escape (Back button on Android)
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 
+		//Debug.Log (objectManager.gameState.optionsOn);
+		if (objectManager.gameState.optionsOn || objectManager.gameState.gameOver || EventSystem.current.IsPointerOverGameObject(-1))
+			return;
+		
 		// Left Click Down & Tuoch Event
-		if (Input.GetMouseButtonDown (0)) {
-			Vector3 mousePosition = Input.mousePosition;
-						
-			// Top 20% of screen is reserved for GUI. Game ignores this.
-			var guiClick = (mousePosition.y / Screen.height) >= .8;
-			if (guiClick || objectManager.gameState.gameOver)
+		if (!CameraMovement.IsCameraMoving() && Input.GetMouseButtonUp(0)) {
+			if(objectManager.TurretFocusMenu.isActive){
+				objectManager.GuiButtonMethods.UpgradeMenuBackPressed();
 				return;
+			}
+
+			Vector3 mousePosition = Input.mousePosition;
 			
 			if (objectManager.TurretFocusMenu.SelectedTurret == null) {
 				objectManager.TurretFactory.PlaceOrSelectTurret(mousePosition);
@@ -49,12 +56,6 @@ public class EventHandler : MonoBehaviour
 				objectManager.TurretFactory.TurretType = associatedType;
 				Debug.Log ("Selected " + objectManager.TurretFactory.TurretType);
 			}
-		}
-				
-		// Escape (Back button on Android)
-		if (Input.GetKey(KeyCode.Escape))
-		{
-			Application.Quit();
 		}
 	}
 }

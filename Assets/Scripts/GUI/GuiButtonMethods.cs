@@ -292,7 +292,7 @@ public class GuiButtonMethods : MonoBehaviour
 	public void UpgradeMenuBackPressed()
 	{
 		PlayDefaultSound();
-		objectManager.TurretFocusMenu.SelectedTurret = null;
+		upgradeAnimator.SetTrigger("Swipe Out");
 	}
 
 	public void SpeedUp()

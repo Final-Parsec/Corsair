@@ -310,21 +310,9 @@ public class Map : MonoBehaviour
 		Vector3 center = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width/2f, Screen.height/2f, 0));
 		center.y = transform.position.y;
 		transform.position = center;
-
-		Vector3 midLeft = new Vector3 (0, Screen.height / 2);
-		Vector3 midRight = new Vector3 (Screen.width, Screen.height / 2);
 		
-		midLeft = Camera.main.ScreenToWorldPoint (midLeft);
-		midRight = Camera.main.ScreenToWorldPoint (midRight);
-		
-		midLeft.y = 0;
-		midRight.y = 0;
-		
-		left.transform.position = midLeft;
-		right.transform.position = midRight;
-		
-		enemySpawnTransform.transform.position = midLeft;
-		destinationTransform.transform.position = midRight;
+		enemySpawnTransform.transform.position = left.transform.position;
+		destinationTransform.transform.position = right.transform.position;
 		
 	}
 	
@@ -350,11 +338,11 @@ public class Map : MonoBehaviour
 				Vector3 listIndex = new Vector3 (x, 0, z);
 				nodes [x, z] = new Node (true, true, position, listIndex);
 				
-				if (Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y <= 10 ||
-				    Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y >= Screen.height - Screen.height * .21) {
-					nodes [x, z].isWalkable = false;
-					nodes [x, z].isBuildable = false;
-				}
+				//if (Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y <= 10 ||
+				//    Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y >= Screen.height - Screen.height * .21) {
+				//	nodes [x, z].isWalkable = false;
+				//	nodes [x, z].isBuildable = false;
+				//}
 			}
 		}
 	}
