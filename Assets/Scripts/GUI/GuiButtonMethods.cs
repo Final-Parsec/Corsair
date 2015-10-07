@@ -291,8 +291,11 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void UpgradeMenuBackPressed()
 	{
-		PlayDefaultSound();
-		upgradeAnimator.SetTrigger("Swipe Out");
+		
+		if (!upgradeAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeOut")){
+			PlayDefaultSound();
+			upgradeAnimator.SetTrigger("Swipe Out");
+		}
 	}
 
 	public void SpeedUp()

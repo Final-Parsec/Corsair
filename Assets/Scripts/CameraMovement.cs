@@ -2,6 +2,8 @@
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour{
+
+	static int NO_DRAG = int.MinValue;
 	
 	int sensitivity = 120;
 	int scrollSensitivity = 50;
@@ -10,72 +12,14 @@ public class CameraMovement : MonoBehaviour{
 	int scrollMaxDistance = 100;
 	int scrollMinDistance = 30;
 
-	private static bool up;
-	private static bool Up
-	{
-		get{return up;}
-		set
-		{
-			if(value)
-			{
-				Down = false;
-				Left = false;
-				Right = false;
-			}
-			up = value;
-		}
-	}
-	private static bool down;
-	private static bool Down
-	{
-		get{return down;}
-		set
-		{
-			if(value)
-			{
-				Up = false;
-				Left = false;
-				Right = false;
-			}
-			down = value;
-		}
-	}
-	private static bool left;
-	private static bool Left
-	{
-		get{return left;}
-		set
-		{
-			if(value)
-			{
-				Up = false;
-				Down = false;
-				Right = false;
-			}
-			left= value;
-		}
-	}
-	private static bool right;
-	private static bool Right
-	{
-		get{return right;}
-		set
-		{
-			if(value)
-			{
-				Up = false;
-				Down = false;
-				Left = false;
-			}
-			right = value;
-		}
-	}
+	private static bool isZooming;
+	private static int dragTouchId;
+	private float dragZone = 2;
 
-	private static bool wasZooming;
 
 	public static bool IsCameraMoving()
 	{
-		return up||down||right||left||Input.touchCount > 1||wasZooming;
+		return dragTouchId != NO_DRAG || Input.touchCount > 1 || isZooming;
 	}
 	
 	void Start() {
@@ -100,43 +44,48 @@ public class CameraMovement : MonoBehaviour{
 		float deltaZ = 0;
 		
 		// Move the camera with the arrow keys or with the mouse.
-		if ( Input.GetKey(KeyCode.UpArrow) || Input.touchCount == 1 && Input.touches[0].deltaPosition.y > 1 || Up){
+		if ( Input.GetKey(KeyCode.UpArrow)){
 			if (transform.position.z + moveRate < cameraMaxDistance.y){
 				deltaY = moveRate;
-				Up = true;
 			}
 		}
-		if ( Input.GetKey(KeyCode.DownArrow) || Input.touchCount == 1 && Input.touches[0].deltaPosition.y < -1 || Down){
+		if ( Input.GetKey(KeyCode.DownArrow)){
 			if (transform.position.z - moveRate > cameraMinDistance.y){
 				deltaY = -moveRate;
-				Down = true;
 			}
 		}
-		if ( Input.GetKey(KeyCode.RightArrow) || Input.touchCount == 1 && Input.touches[0].deltaPosition.x > 1 || Right){
+		if ( Input.GetKey(KeyCode.RightArrow)){
 			if (transform.position.x + moveRate < cameraMaxDistance.x){
 				deltaX = moveRate;
-				Right = true;
 			}
 		}
-		if ( Input.GetKey(KeyCode.LeftArrow) || Input.touchCount == 1 && Input.touches[0].deltaPosition.x < -1 || Left){
+		if ( Input.GetKey(KeyCode.LeftArrow)){
 			if (transform.position.x - moveRate > cameraMinDistance.x){
 				deltaX = -moveRate;
-				Left = true;
+			}
+		}
+
+		if(Input.touchCount == 1){
+
+			Touch touch = Input.touches[0];
+			if(dragTouchId !=  NO_DRAG|| Math.Abs(touch.deltaPosition.x) > dragZone || Math.Abs(touch.deltaPosition.y) > dragZone){
+
+				deltaX = -touch.deltaPosition.x/2f;
+				deltaY = -touch.deltaPosition.y/2f;
+
+				dragTouchId = Input.touchCount == 1?touch.fingerId:-1;
 			}
 		}
 
 		if(Input.touchCount != 1)
 		{
-			Up = false;
-			Down = false;
-			Right = false;
-			Left = false;
+			dragTouchId = NO_DRAG;
 		}
 
 		// If there are two touches on the device...
 		if (Input.touchCount == 2)
 		{
-			wasZooming = true;
+			isZooming = true;
 
 			// Store both touches.
 			Touch touchZero = Input.GetTouch(0);
@@ -161,9 +110,9 @@ public class CameraMovement : MonoBehaviour{
 
 		}
 
-		if(wasZooming && Input.touchCount == 0)
+		if(isZooming && Input.touchCount == 0)
 		{
-			wasZooming = false;
+			isZooming = false;
 		}
 		
 		// Zoom in/out with the scroll wheel.
@@ -186,7 +135,9 @@ public class CameraMovement : MonoBehaviour{
 	
 	private void moveCamera(float x, float y, float z){
 		// Different coordinate standards.
-		transform.position = new Vector3(transform.position.x + x, transform.position.y + z, transform.position.z + y);
+		transform.position = new Vector3((transform.position.x + x > cameraMaxDistance.x)?cameraMaxDistance.x:Mathf.Max(cameraMinDistance.x,transform.position.x + x),
+		                                 transform.position.y + z,
+		                                 (transform.position.z + y > cameraMaxDistance.y)?cameraMaxDistance.y:Mathf.Max(cameraMinDistance.y,transform.position.z + y));
 	}
 	
 	public void setStartingPosition(Vector3 position){
