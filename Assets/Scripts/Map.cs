@@ -11,8 +11,8 @@ public class Map : MonoBehaviour
 	public List<GameObject> enemyPrefabs;
 	public List<GameObject> bossPrefabs;
 	public List<GameObject> obstaclePrefabs;
-	public Transform left;
-	public Transform right;
+	private Vector3 left;
+	private Vector3 right;
 	public Transform enemySpawnTransform;
 	public Transform destinationTransform;
 	public Texture healthTexture;
@@ -64,6 +64,10 @@ public class Map : MonoBehaviour
 		enemySpawnNode.isBuildable = false;
 
 		MakeGrid ();
+
+		foreach (Node node in nodes){
+			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
+		}
 	}
 
 	/// <summary>
@@ -86,6 +90,8 @@ public class Map : MonoBehaviour
 				GUI.DrawTexture (new Rect (wantedPos.x - width / 2, Screen.height - wantedPos.y - objSize.y / 2, width, height), healthTexture);
 			}
 		}
+
+
 	}
 
 	/// <summary>
@@ -223,8 +229,8 @@ public class Map : MonoBehaviour
 	public Node GetNodeFromLocation (Vector3 location)
 	{
 		
-		int xIndex = (int)Mathf.Floor ((location.x - left.position.x) / nodeSize.x);
-		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.position.z) / nodeSize.y));
+		int xIndex = (int)Mathf.Floor ((location.x - left.x) / nodeSize.x);
+		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.y) / nodeSize.y));
 
 		// out of bounds check
 		if (zIndex >= size_z || zIndex < 0 || xIndex >= size_x || xIndex < 0)
@@ -240,8 +246,8 @@ public class Map : MonoBehaviour
 	public Node GetClosestNode (Vector3 location)
 	{
 		
-		int xIndex = (int)Mathf.Floor ((location.x - left.position.x) / nodeSize.x);
-		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.position.z) / nodeSize.y));
+		int xIndex = (int)Mathf.Floor ((location.x - left.x) / nodeSize.x);
+		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.y) / nodeSize.y));
 		
 		if (xIndex >= size_x)
 			xIndex = size_x - 1;
@@ -266,7 +272,7 @@ public class Map : MonoBehaviour
 	{
 		Node node = GetNodeFromLocation (position);
 
-		if (!node.isBuildable)
+		if (node == null || !node.isBuildable)
 			return false;
 
 		node.isWalkable = false;
@@ -307,12 +313,15 @@ public class Map : MonoBehaviour
 
 	private void SetPositions ()
 	{
-		Vector3 center = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width/2f, Screen.height/2f, 0));
-		center.y = transform.position.y;
-		transform.position = center;
+		//Vector3 center = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width/2f, Screen.height/2f, 0));
+		//center.y = transform.position.y;
+		//transform.position = center;
+
+		left = new Vector2(-(size_x * nodeSize.x) / 2f, (size_z * nodeSize.y) / 2f);
+		right = new Vector2((size_x * nodeSize.x) / 2f, -(size_z * nodeSize.y) / 2f);
 		
-		enemySpawnTransform.transform.position = left.transform.position;
-		destinationTransform.transform.position = right.transform.position;
+		enemySpawnTransform.transform.position = new Vector3(left.x, 0f, left.y);
+		destinationTransform.transform.position = new Vector3(right.x, 0f, right.y);
 		
 	}
 	
@@ -322,19 +331,19 @@ public class Map : MonoBehaviour
 	private void BuildNodes ()
 	{
 		
-		float mapSizeX = (right.position.x - left.position.x);
-		float mapSizwZ = (left.position.z - right.position.z);
+		float mapSizeX = (right.x - left.x);
+		float mapSizwZ = (left.y - right.y);
 
 		transform.localScale = new Vector3 (mapSizeX, mapSizwZ, 1);
 		
-		nodeSize = new Vector2 (mapSizeX / size_x, mapSizwZ / size_z);
+		//nodeSize = new Vector2 (mapSizeX / size_x, mapSizwZ / size_z);
 		float xPos;
 		float zPos;
 		for (int x=0; x<size_x; x++) {
 			for (int z=0; z<size_z; z++) {
-				xPos = left.position.x + (x * nodeSize.x);
-				zPos = right.position.z + ((z + 1) * nodeSize.y);
-				Vector3 position = new Vector3 (xPos + nodeSize.x / 2, 0, zPos - nodeSize.y / 2);
+				xPos = left.x + (x * nodeSize.x);
+				zPos = right.y + ((z + 1) * nodeSize.y) + ((x%2==1)?nodeSize.y/2f:0f);
+				Vector3 position = new Vector3 (xPos + nodeSize.x / 2f, 0, zPos - nodeSize.y / 2f);
 				Vector3 listIndex = new Vector3 (x, 0, z);
 				nodes [x, z] = new Node (true, true, position, listIndex);
 				
@@ -396,6 +405,12 @@ public class Map : MonoBehaviour
 
 	private void MakeGrid()
 	{
+		Vector3 center = new Vector3(right.x + left.x, 0, left.y + right.y);
+		center.y = transform.position.y;
+		transform.position = center;
+		center.y = Camera.main.transform.position.y;
+		Camera.main.transform.position = center;
+
 		gridTexture = new Texture2D (size_x, size_z);
 		gridTexture.wrapMode = TextureWrapMode.Clamp;
 		gridTexture.filterMode = FilterMode.Point;

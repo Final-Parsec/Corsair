@@ -47,6 +47,8 @@ public class EventHandler : MonoBehaviour
 			}
 
 			Vector3 mousePosition = Input.mousePosition;
+
+			Debug.Log(mousePosition);
 			
 			if (objectManager.TurretFocusMenu.SelectedTurret == null) {
 				objectManager.TurretFactory.PlaceOrSelectTurret(mousePosition);

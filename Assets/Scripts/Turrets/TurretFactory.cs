@@ -18,6 +18,8 @@ public class TurretFactory : MonoBehaviour
 			return;
 
 		bool canBuild = objectManager.Map.BlockNode (cursorOnNode.unityPosition);
+
+		Debug.Log("canbuild: "+canBuild);
 		
 		if (turretCosts [(int)TurretType] <= objectManager.gameState.playerMoney && 
             objectManager.Pathfinding.CheckAndUpdatePaths () && 

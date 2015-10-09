@@ -141,7 +141,7 @@ public class CameraMovement : MonoBehaviour{
 	}
 	
 	public void setStartingPosition(Vector3 position){
-		transform.position = new Vector3(position.x, transform.position.y, position.z);
+		transform.position = Vector3.Lerp(transform.position, new Vector3(position.x, transform.position.y, position.z), .1f);
 	}
 	
 	public float GetDistanceRatio(){
