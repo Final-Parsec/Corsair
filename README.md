@@ -4,6 +4,8 @@ Corsair
 
 This game started as a fork from Aurora Tower Defense 1.3.1.
 
+![Corsair Feature Graphic](Art/PirateShipPaintedPromo.png)
+
 ## Contributors
 ### Artwork
 * OpenGameArt.org
