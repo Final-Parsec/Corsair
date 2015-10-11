@@ -5,12 +5,12 @@ public class CameraMovement : MonoBehaviour{
 
 	static int NO_DRAG = int.MinValue;
 	
-	int sensitivity = 120;
-	int scrollSensitivity = 50;
+	int sensitivity = 200;
+	int scrollSensitivity = 75;
 	Vector2 cameraMinDistance;
 	Vector2 cameraMaxDistance;
-	int scrollMaxDistance = 100;
-	int scrollMinDistance = 30;
+	int scrollMaxDistance = 150;
+	int scrollMinDistance = 50;
 
 	private static bool isZooming;
 	private static int dragTouchId;
@@ -26,8 +26,10 @@ public class CameraMovement : MonoBehaviour{
 		
 		Map _tileMap = GameObject.Find("Map").GetComponent<Map>();
 		
-		cameraMinDistance = new Vector2(transform.position.x - (_tileMap.size_x * _tileMap.nodeSize.x)/2f, transform.position.z - (_tileMap.size_z * _tileMap.nodeSize.y)/2f);
-		cameraMaxDistance = new Vector2((_tileMap.size_x * _tileMap.nodeSize.x)/2f + transform.position.x, (_tileMap.size_z * _tileMap.nodeSize.y)/2f + transform.position.z);
+		cameraMinDistance = new Vector2(transform.position.x - (_tileMap.size_x * (_tileMap.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f,
+		                                transform.position.z - (_tileMap.size_z * _tileMap.nodeSize.y)/2f);
+		cameraMaxDistance = new Vector2((_tileMap.size_x * (_tileMap.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f + transform.position.x,
+		                                (_tileMap.size_z * _tileMap.nodeSize.y)/2f + transform.position.z);
 	}
 	
 	// Update is called once per frame
@@ -44,22 +46,22 @@ public class CameraMovement : MonoBehaviour{
 		float deltaZ = 0;
 		
 		// Move the camera with the arrow keys or with the mouse.
-		if ( Input.GetKey(KeyCode.UpArrow)){
+		if ( Input.GetKey(KeyCode.W)){
 			if (transform.position.z + moveRate < cameraMaxDistance.y){
 				deltaY = moveRate;
 			}
 		}
-		if ( Input.GetKey(KeyCode.DownArrow)){
+		if ( Input.GetKey(KeyCode.S)){
 			if (transform.position.z - moveRate > cameraMinDistance.y){
 				deltaY = -moveRate;
 			}
 		}
-		if ( Input.GetKey(KeyCode.RightArrow)){
+		if ( Input.GetKey(KeyCode.D)){
 			if (transform.position.x + moveRate < cameraMaxDistance.x){
 				deltaX = moveRate;
 			}
 		}
-		if ( Input.GetKey(KeyCode.LeftArrow)){
+		if ( Input.GetKey(KeyCode.A)){
 			if (transform.position.x - moveRate > cameraMinDistance.x){
 				deltaX = -moveRate;
 			}

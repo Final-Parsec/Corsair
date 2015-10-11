@@ -24,7 +24,7 @@ public class Map : MonoBehaviour
 	public int size_z;
 	public Vector2 nodeSize;
 	public Node[,] nodes;
-	public List<Texture> gridTextures;
+	public Texture2D grid;
 	private Texture2D gridTexture;
 	private ObjectManager _ObjectManager;
 
@@ -35,7 +35,10 @@ public class Map : MonoBehaviour
 	private float nextWaveSpawnEvent;
 	public bool playerTriggeredWave;
 
-	
+	public bool isIsoGrid = true;
+	private Color[] colors;
+
+	[HideInInspector]
 	public GoogleMobileAdsScript ad;
 
 	void Awake()
@@ -51,6 +54,8 @@ public class Map : MonoBehaviour
 
 		destinationTransform.position = nodes[size_x-2, 0].unityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
+		enemySpawnTransform.position = nodes[0, size_z-1].unityPosition;
+		enemySpawnTransform.position = new Vector3(enemySpawnTransform.position.x, -.9f, enemySpawnTransform.position.z);
 	}
 	
 	// Use this for initialization
@@ -128,7 +133,7 @@ public class Map : MonoBehaviour
 						nodes[x,z].isBuildable = false;
 						nodes[x,z].isWalkable = false;
 
-						if(x%5==4 && 
+						if(x%5==4 &&
 						   z%5==4 && 
 						   !(Camera.main.WorldToScreenPoint(nodes[x,z].unityPosition).y <= 10 ||
 	                         Camera.main.WorldToScreenPoint(nodes[x,z].unityPosition).y >= Screen.height - Screen.height * .20)) {
@@ -313,16 +318,8 @@ public class Map : MonoBehaviour
 
 	private void SetPositions ()
 	{
-		//Vector3 center = Camera.main.ScreenToWorldPoint (new Vector3(Screen.width/2f, Screen.height/2f, 0));
-		//center.y = transform.position.y;
-		//transform.position = center;
-
 		left = new Vector2(-(size_x * nodeSize.x) / 2f, (size_z * nodeSize.y) / 2f);
-		right = new Vector2((size_x * nodeSize.x) / 2f, -(size_z * nodeSize.y) / 2f);
-		
-		enemySpawnTransform.transform.position = new Vector3(left.x, 0f, left.y);
-		destinationTransform.transform.position = new Vector3(right.x, 0f, right.y);
-		
+		right = new Vector2((size_x * nodeSize.x * (isIsoGrid?.5f:1f)) / 2f, -(size_z * nodeSize.y) / 2f);
 	}
 	
 	/// <summary>
@@ -331,21 +328,27 @@ public class Map : MonoBehaviour
 	private void BuildNodes ()
 	{
 		
-		float mapSizeX = (right.x - left.x);
-		float mapSizwZ = (left.y - right.y);
+		float mapSizeX = (right.x - left.x) - (isIsoGrid?(size_x * nodeSize.x * .25f) - nodeSize.x/2: 0);
+		float mapSizwZ = (left.y - right.y) + (isIsoGrid?nodeSize.y/2f:0f);
 
 		transform.localScale = new Vector3 (mapSizeX, mapSizwZ, 1);
 		
 		//nodeSize = new Vector2 (mapSizeX / size_x, mapSizwZ / size_z);
 		float xPos;
 		float zPos;
+		float txPos;
+		float tyPos;
 		for (int x=0; x<size_x; x++) {
 			for (int z=0; z<size_z; z++) {
-				xPos = left.x + (x * nodeSize.x);
-				zPos = right.y + ((z + 1) * nodeSize.y) + ((x%2==1)?nodeSize.y/2f:0f);
+				xPos = left.x + (x * nodeSize.x * (isIsoGrid?.5f:1f));
+				zPos = right.y + ((z + 1) * nodeSize.y) + (isIsoGrid?((x%2==1)?nodeSize.y/2f:0f):0f);
+				txPos = (x * nodeSize.x * (isIsoGrid?.5f:1f));
+				tyPos = ((z + 1) * nodeSize.y) + (isIsoGrid?((x%2==1)?nodeSize.y/2f:0f):0f);
 				Vector3 position = new Vector3 (xPos + nodeSize.x / 2f, 0, zPos - nodeSize.y / 2f);
 				Vector3 listIndex = new Vector3 (x, 0, z);
-				nodes [x, z] = new Node (true, true, position, listIndex);
+				Vector2 textureCenter = new Vector2(nodeSize.x/2f + txPos,
+				                                    tyPos - nodeSize.y / 2f);
+				nodes [x, z] = new Node (true, true, position, listIndex, textureCenter);
 				
 				//if (Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y <= 10 ||
 				//    Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y >= Screen.height - Screen.height * .21) {
@@ -405,26 +408,129 @@ public class Map : MonoBehaviour
 
 	private void MakeGrid()
 	{
-		Vector3 center = new Vector3(right.x + left.x, 0, left.y + right.y);
+		Vector3 center = new Vector3(right.x + left.x + (isIsoGrid?nodeSize.x/4f:0f), 0, left.y + right.y + (isIsoGrid?nodeSize.y/4f:0f));
 		center.y = transform.position.y;
 		transform.position = center;
 		center.y = Camera.main.transform.position.y;
 		Camera.main.transform.position = center;
 
-		gridTexture = new Texture2D (size_x, size_z);
+		gridTexture = new Texture2D (size_x * (int)(nodeSize.x / (isIsoGrid?2f:1f)) + (isIsoGrid?(int)nodeSize.x/2:0),
+		                             size_z * (int)nodeSize.y + (isIsoGrid?(int)nodeSize.y/2:0));
 		gridTexture.wrapMode = TextureWrapMode.Clamp;
 		gridTexture.filterMode = FilterMode.Point;
 		GetComponent<Renderer>().material.mainTexture = gridTexture;
 
+		ClearEdges (gridTexture);
+
+		//colors = grid.GetPixels ();
+
 		foreach (Node node in nodes) {
-			float c = node.listIndex.x + node.listIndex.z;
-			if (node.isBuildable) 
-				gridTexture.SetPixel((int)node.listIndex.x, (int)node.listIndex.z, new Color(c%2, c%2, c%2, .3f));
-			else
-				gridTexture.SetPixel((int)node.listIndex.x, (int)node.listIndex.z, Color.clear);
+			if (node.isBuildable){
+				WriteTexture(node, grid, gridTexture);
+
+//				gridTexture.SetPixels(node.texturePosX - (int)nodeSize.x/2,
+//				                      node.texturePosY - (int)nodeSize.y/2,
+//				                      (int)(isIsoGrid?nodeSize.x:nodeSize.x),
+//				                      (int)(isIsoGrid?nodeSize.y:nodeSize.y),
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 16,
+//				                      node.texturePosY - 1,
+//				                      32,
+//				                      2,
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 1,
+//				                      node.texturePosY - 1,
+//				                      2,
+//				                      2,
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 1,
+//				                      node.texturePosY - 8,
+//				                      2,
+//				                      16,
+//				                      colors);
+			}
+			else{
+				WriteTexture(node, grid, gridTexture);
+
+//				gridTexture.SetPixels(node.texturePosX - (int)nodeSize.x/2,
+//				                      node.texturePosY - (int)nodeSize.y/2,
+//				                      (int)(isIsoGrid?nodeSize.x:nodeSize.x),
+//				                      (int)(isIsoGrid?nodeSize.y:nodeSize.y),
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 16,
+//				                      node.texturePosY - 1,
+//				                      32,
+//				                      2,
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 1,
+//				                      node.texturePosY - 1,
+//				                      2,
+//				                      2,
+//				                      colors);
+
+//				gridTexture.SetPixels(node.texturePosX - 1,
+//				                      node.texturePosY - 8,
+//				                      2,
+//				                      16,
+//				                      colors);
+			}
 
 		}
 		gridTexture.Apply ();
+
+	}
+
+	public void WriteTexture(Node node, Texture2D tex, Texture2D masterTexture)
+	{
+		Color[] colors = tex.GetPixels ();
+
+		int xOffset = node.texturePosX - (int)nodeSize.x / 2;
+		int yOffset = node.texturePosY - (int)nodeSize.y / 2;
+		for(int x = 0; x < nodeSize.x; x++){
+			for(int y = 0; y < nodeSize.y; y++){
+				int index = y * (int)nodeSize.x + x;
+				if( colors[index].a == 0){
+					continue;
+				}
+				masterTexture.SetPixel(x+xOffset, y+yOffset, colors[index]);
+			}
+		}
+
+	}
+
+	public void ClearEdges(Texture2D masterTexture)
+	{
+//		for(int x = 0; x < nodeSize.x * size_x; x++){
+//			for(int y = 0; y < nodeSize.y / 2; y++){
+//				masterTexture.SetPixel(x, y, Color.clear);
+//			}
+//		}
+//		for(int x = 0; x < nodeSize.x * size_x; x++){
+//			for(int y = (int)nodeSize.y * size_z - (int)nodeSize.y / 2; y < (int)nodeSize.y * size_z; y++){
+//				masterTexture.SetPixel(x, y, Color.clear);
+//			}
+//		}
+//		for(int x = 0; x < nodeSize.x / 2; x++){
+//			for(int y = 0; y < nodeSize.y * size_z; y++){
+//				masterTexture.SetPixel(x, y, Color.clear);
+//			}
+//		}
+//		for(int x = (int)nodeSize.x * size_x - (int)nodeSize.x; x < (int)nodeSize.x * size_x; x++){
+//			for(int y = 0; y < nodeSize.y * size_z; y++){
+//				masterTexture.SetPixel(x, y, Color.clear);
+//			}
+//		}
+
+		for(int x = 0; x < (int)nodeSize.x * (size_x+1); x++){
+			for(int y = 0; y < nodeSize.y * (size_z+1); y++){
+				masterTexture.SetPixel(x, y, Color.clear);
+			}
+		}
 
 	}
 

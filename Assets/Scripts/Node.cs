@@ -13,6 +13,8 @@ public class Node
 	public Node[] borderTiles = new Node[8];
 	public Vector3 unityPosition;
 	public Vector3 listIndex;
+	public int texturePosX;
+	public int texturePosY;
 
 	// A* variables
 	public int gScore = int.MaxValue; // undefined 
@@ -25,17 +27,19 @@ public class Node
 	{
 	}
 
-	public Node (bool isWalkable, bool isBuildable, Vector3 unityPosition, Vector3 listIndex)
+	public Node (bool isWalkable, bool isBuildable, Vector3 unityPosition, Vector3 listIndex, Vector2 textureCenter)
 	{
 		this.isWalkable = isWalkable;
 		this.isBuildable = isBuildable;
 		this.unityPosition = unityPosition;
 		this.listIndex = listIndex;
+		this.texturePosX = (int)textureCenter.x;
+		this.texturePosY = (int)textureCenter.y;
 	}
 	
 	public Node clone ()
 	{
-		return new Node (isWalkable, isBuildable, unityPosition, listIndex);
+		return new Node (isWalkable, isBuildable, unityPosition, listIndex, new Vector2(texturePosX, texturePosY));
 	}
 
 	public void setUnityPosition (Vector3 unityPosition)
