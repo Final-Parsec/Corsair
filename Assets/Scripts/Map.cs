@@ -54,6 +54,7 @@ public class Map : MonoBehaviour
 
 		destinationTransform.position = nodes[size_x-2, 0].unityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
+
 		enemySpawnTransform.position = nodes[0, size_z-1].unityPosition;
 		enemySpawnTransform.position = new Vector3(enemySpawnTransform.position.x, -.9f, enemySpawnTransform.position.z);
 	}
@@ -422,77 +423,52 @@ public class Map : MonoBehaviour
 
 		ClearEdges (gridTexture);
 
-		//colors = grid.GetPixels ();
+        for (var y = size_z - 1; y > -1; y--)
+        {
+            for (var x = 1; x < size_x; x += 2)
+            {
+                var node = nodes[x, y];
+                if (node.isBuildable)
+                {
+                    WriteTexture(node, grid, gridTexture);
+                }
+                else
+                {
+                    WriteTexture(node, grid, gridTexture);
+                }
+            }
 
-		foreach (Node node in nodes) {
-			if (node.isBuildable){
-				WriteTexture(node, grid, gridTexture);
+            for (var x = 0; x < size_x; x += 2)
+            {
+                var node = nodes[x, y];
+                if (node.isBuildable)
+                {
+                    WriteTexture(node, grid, gridTexture);
+                }
+                else
+                {
+                    WriteTexture(node, grid, gridTexture);
+                }
+            }
+        }
 
-//				gridTexture.SetPixels(node.texturePosX - (int)nodeSize.x/2,
-//				                      node.texturePosY - (int)nodeSize.y/2,
-//				                      (int)(isIsoGrid?nodeSize.x:nodeSize.x),
-//				                      (int)(isIsoGrid?nodeSize.y:nodeSize.y),
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 16,
-//				                      node.texturePosY - 1,
-//				                      32,
-//				                      2,
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 1,
-//				                      node.texturePosY - 1,
-//				                      2,
-//				                      2,
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 1,
-//				                      node.texturePosY - 8,
-//				                      2,
-//				                      16,
-//				                      colors);
-			}
-			else{
-				WriteTexture(node, grid, gridTexture);
-
-//				gridTexture.SetPixels(node.texturePosX - (int)nodeSize.x/2,
-//				                      node.texturePosY - (int)nodeSize.y/2,
-//				                      (int)(isIsoGrid?nodeSize.x:nodeSize.x),
-//				                      (int)(isIsoGrid?nodeSize.y:nodeSize.y),
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 16,
-//				                      node.texturePosY - 1,
-//				                      32,
-//				                      2,
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 1,
-//				                      node.texturePosY - 1,
-//				                      2,
-//				                      2,
-//				                      colors);
-
-//				gridTexture.SetPixels(node.texturePosX - 1,
-//				                      node.texturePosY - 8,
-//				                      2,
-//				                      16,
-//				                      colors);
-			}
-
-		}
+        
 		gridTexture.Apply ();
 
 	}
 
-	public void WriteTexture(Node node, Texture2D tex, Texture2D masterTexture)
+    public void WriteTexture(Node node, Texture2D tex, Texture2D masterTexture)
 	{
 		Color[] colors = tex.GetPixels ();
 
 		int xOffset = node.texturePosX - (int)nodeSize.x / 2;
 		int yOffset = node.texturePosY - (int)nodeSize.y / 2;
-		for(int x = 0; x < nodeSize.x; x++){
-			for(int y = 0; y < nodeSize.y; y++){
+
+	    for (int x = 0; x < nodeSize.x; x++)
+	    {
+            for (int y = 0; y < nodeSize.y; y++)
+        {
+		
 				int index = y * (int)nodeSize.x + x;
 				if( colors[index].a == 0){
 					continue;
