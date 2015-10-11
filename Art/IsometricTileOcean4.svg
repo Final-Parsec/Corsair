@@ -43,7 +43,7 @@
        x2="343.68253"
        y2="556.29919"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.1668243,0,0,1,-59.382248,0)" />
+       gradientTransform="matrix(1.1668243,0,0,1,-67.160423,3.5797279)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -53,8 +53,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627418"
-     inkscape:cx="379.04828"
-     inkscape:cy="506.75856"
+     inkscape:cx="366.10306"
+     inkscape:cy="508.81575"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -71,8 +71,8 @@
        id="grid4136"
        units="mm"
        empspacing="5"
-       gridanglex="30"
-       gridanglez="30"
+       gridanglex="26.5"
+       gridanglez="26.5"
        spacingy="7.0866143"
        originy="9.834653e-017" />
     <sodipodi:guide
@@ -98,8 +98,11 @@
      id="layer1">
     <path
        style="fill:url(#linearGradient4167);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 355.9569,542.12599 21.48305,-10.62993 21.48306,10.62993 -21.48306,10.62992 z"
+       d="m 348.24122,545.67447 21.31899,-10.6143 21.31945,10.64555 -21.30628,10.58573 z"
        id="path4137"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-xdpi="134.05919"
+       inkscape:export-ydpi="134.05919"
+       sodipodi:nodetypes="ccccc" />
   </g>
 </svg>
