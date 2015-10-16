@@ -14,16 +14,14 @@ public class RunTextureGenerator : MonoBehaviour
 
 	public void GetTexture()
 	{
-		MakeTiles();
-
-		Texture2D[] gridTextures = TextureGenerator.Generate(tiles, nodeSize, isIsoGrid);
+		IMapData mapData = new HardcodedMapData("Test", nodeSize, isIsoGrid, grid, grid2);
+		TextureGenerator textureGenerator = new TextureGenerator(); 
+		Texture2D[] gridTextures = textureGenerator.Generate(mapData);
 		
 //		GetComponent<Renderer>().sharedMaterial.SetTexture(1, gridTextures[1]);
 //		GetComponent<Renderer>().sharedMaterial.SetTexture(0, gridTextures[0]);
 
 		GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[1];
-
-		SaveTextures(gridTextures);
 	}
 
 //	IEnumerator Animate(Texture2D[] gridTextures) {
@@ -37,28 +35,5 @@ public class RunTextureGenerator : MonoBehaviour
 //
 //	}
 
-	private void MakeTiles()
-	{
-		tiles = new Tile[(int)nodeSize.x, (int)nodeSize.y];
 
-		for(int x = 0; x<nodeSize.x; x++)
-		{
-			for(int y = 0; y<nodeSize.y; y++)
-			{
-				Texture2D[] testures = (y==1)?new Texture2D[]{grid, grid2, grid}:new Texture2D[]{grid};
-				Tile tile = new Tile(testures, true);
-				tiles[x,y] = tile;
-			}
-		}
-	}
-
-	private void SaveTextures(Texture2D[] textures)
-	{
-		int count = 0;
-		foreach(Texture2D tex in textures){
-
-			byte[] bytes = tex.EncodeToPNG();
-			File.WriteAllBytes(Application.dataPath + "/Texture"+ count++ +".png", bytes);
-		}
-	}
 }

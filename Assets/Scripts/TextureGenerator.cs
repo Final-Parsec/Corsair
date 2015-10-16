@@ -1,78 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
 
-public static class TextureGenerator{
+public class TextureGenerator{
 
 	// Grid/Node
-	private static int sizeX;
-	private static int sizeY;
-	private static int nodeSizeX;
-	private static int nodeSizeY;
-	private static Tile[,] tiles;
-	private static int maxTextures;
-	
-	private static bool isIsoGrid;
+	private int sizeX;
+	private int sizeY;
+	private int nodeSizeX;
+	private int nodeSizeY;
+	private int maxTextures;
+	private IMapData mapData;
 
-	public static Texture2D[] Generate(Tile[,] tiles, Vector2 nodeSize)
+	public Texture2D[] Generate(IMapData mapData)
 	{
-		TextureGenerator.tiles = tiles;
-
-		sizeX = tiles.GetLength(0);
-		sizeY = tiles.GetLength(1);
+		this.mapData = mapData;
 		
-		nodeSizeX = (int)nodeSize.x;
-		nodeSizeY = (int)nodeSize.y;
-
-		TextureGenerator.isIsoGrid = true;
-
-		CalculateTilePositions();
+		sizeX = mapData.tiles.GetLength(0);
+		sizeY = mapData.tiles.GetLength(1);
 		
-		return MakeTextures();
-	}
-
-	public static Texture2D[] Generate(Tile[,] tiles, Vector2 nodeSize, bool isIsoGrid)
-	{
-		TextureGenerator.tiles = tiles;
-		
-		sizeX = tiles.GetLength(0);
-		sizeY = tiles.GetLength(1);
-		
-		nodeSizeX = (int)nodeSize.x;
-		nodeSizeY = (int)nodeSize.y;
-		
-		TextureGenerator.isIsoGrid = isIsoGrid;
+		nodeSizeX = (int)mapData.nodeSize.x;
+		nodeSizeY = (int)mapData.nodeSize.y;
 
 		CalculateTilePositions();
 
 		return MakeTextures();
 	}
 
-	private static void CalculateTilePositions ()
+	private void CalculateTilePositions ()
 	{
 		float txPos;
 		float tyPos;
 		for (int x=0; x<sizeX; x++) {
 			for (int y=0; y<sizeY; y++) {
-				txPos = (x * nodeSizeX * (isIsoGrid?.5f:1f));
-				tyPos = ((y + 1) * nodeSizeY) + (isIsoGrid?((x%2==1)?nodeSizeY/2f:0f):0f);
+				txPos = (x * nodeSizeX * (mapData.isIsoGrid?.5f:1f));
+				tyPos = ((y + 1) * nodeSizeY) + (mapData.isIsoGrid?((x%2==1)?nodeSizeY/2f:0f):0f);
 
-				tiles [x, y].texturePositionX = (int)(nodeSizeX/2 + txPos);
-				tiles [x, y].texturePositionY = (int)(tyPos - nodeSizeY / 2);
+				mapData.tiles [x, y].texturePositionX = (int)(nodeSizeX/2 + txPos);
+				mapData.tiles [x, y].texturePositionY = (int)(tyPos - nodeSizeY / 2);
 
-				maxTextures = Mathf.Max(maxTextures, tiles [x, y].tileTextures.Length);
+				maxTextures = Mathf.Max(maxTextures, mapData.tiles [x, y].tileTextures.Length);
 			}
 		}
 	}
 	
-	private static Texture2D[] MakeTextures()
+	private Texture2D[] MakeTextures()
 	{
 		Texture2D[] textureArray = new Texture2D[maxTextures];
 
 		for(int textureNumber = 0; textureNumber < maxTextures; textureNumber++)
 		{
 
-			textureArray[textureNumber] = new Texture2D (sizeX * (nodeSizeX / (isIsoGrid?2:1)) + (isIsoGrid?nodeSizeX/2:0),
-			                             sizeY * nodeSizeY + (isIsoGrid?nodeSizeY/2:0));
+			textureArray[textureNumber] = new Texture2D (sizeX * (nodeSizeX / (mapData.isIsoGrid?2:1)) + (mapData.isIsoGrid?nodeSizeX/2:0),
+			                                             sizeY * nodeSizeY + (mapData.isIsoGrid?nodeSizeY/2:0));
 
 			textureArray[textureNumber].wrapMode = TextureWrapMode.Clamp;
 			textureArray[textureNumber].filterMode = FilterMode.Point;
@@ -83,22 +63,24 @@ public static class TextureGenerator{
 			{
 				for (var x = 1; x < sizeX; x += 2)
 				{
-					var tile = tiles[x, y];
+					var tile = mapData.tiles[x, y];
 					WriteTileTexture(tile, tile.tileTextures[(textureNumber >= tile.tileTextures.Length)?tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
 				}
 				
 				for (var x = 0; x < sizeX; x += 2)
 				{
-					var tile = tiles[x, y];
+					var tile = mapData.tiles[x, y];
 					WriteTileTexture(tile, tile.tileTextures[(textureNumber >= tile.tileTextures.Length)?tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
 				}
 			}
 			textureArray[textureNumber].Apply ();
 		}
+
+		SaveTextures(textureArray);
 		return textureArray;
 	}
 	
-	public static void WriteTileTexture(Tile tile, Texture2D tex, Texture2D masterTexture)
+	public void WriteTileTexture(Tile tile, Texture2D tex, Texture2D masterTexture)
 	{
 		Color[] colors = tex.GetPixels ();
 		
@@ -118,7 +100,7 @@ public static class TextureGenerator{
 		}
 	}
 	
-	public static void ClearEdges(Texture2D masterTexture)
+	public void ClearEdges(Texture2D masterTexture)
 	{
 		//		for(int x = 0; x < nodeSize.x * size_x; x++){
 		//			for(int y = 0; y < nodeSize.y / 2; y++){
@@ -149,5 +131,15 @@ public static class TextureGenerator{
 		
 	}
 
-
+	private void SaveTextures(Texture2D[] textures)
+	{
+		int count = 0;
+		foreach(Texture2D tex in textures){
+			
+			byte[] bytes = tex.EncodeToPNG();
+			string path = Application.dataPath + "/Resources/"+mapData.mapName+"/";
+			if(File.Exists(path))
+				File.WriteAllBytes(path+mapData.mapName+"_"+ count++ +".png", bytes);
+		}
+	}
 }

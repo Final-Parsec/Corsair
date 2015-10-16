@@ -36,6 +36,12 @@ public class Node
 		this.texturePosX = (int)textureCenter.x;
 		this.texturePosY = (int)textureCenter.y;
 	}
+
+	public Node (bool isWalkable, bool isBuildable)
+	{
+		this.isWalkable = isWalkable;
+		this.isBuildable = isBuildable;
+	}
 	
 	public Node clone ()
 	{
