@@ -87,29 +87,46 @@ public class NodeManager{
 			for (int y=0; y<size_y; y++) {
 				for (int x=0; x<size_x; x++) {
 					//Debug.Log(x+", "+ y);
-					if (x - 1 >= 0) {
-						nodes [x, y].borderTiles [(int)Border.downRight] = nodes [x - 1, y];
-						if (y - 1 >= 0)
-							nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
-						
-						if (y + 1 < size_y)
-							nodes [x, y].borderTiles [(int)Border.Right] = nodes [x - 1, y + 1];
+					if(x%2 == 0){
+						if (x - 1 >= 0) {
+							nodes [x, y].borderTiles [(int)Border.Left] = nodes [x - 1, y];
+							if (y - 1 >= 0)
+								nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
+						}
+
+						if (x + 1 < size_x) {
+							nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y];
+							if (y - 1 >= 0)
+								nodes [x, y].borderTiles [(int)Border.Right] = nodes [x + 1, y - 1];
+						}
 					}
-					
-					if (x + 1 < size_x) {
-						nodes [x, y].borderTiles [(int)Border.upLeft] = nodes [x + 1, y];
-						if (y - 1 >= 0)
-							nodes [x, y].borderTiles [(int)Border.Left] = nodes [x + 1, y - 1];
-						
-						if (y + 1 < size_y)
-							nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
+
+					if(x%2 == 1){
+						if (x - 1 >= 0) {
+							nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y];
+							
+							if (y + 1 < size_y)
+								nodes [x, y].borderTiles [(int)Border.Left] = nodes [x - 1, y + 1];
+						}
+
+						if (x + 1 < size_x) {
+							nodes [x, y].borderTiles [(int)Border.Right] = nodes [x + 1, y];
+							if (y + 1 < size_y)
+								nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
+						}
 					}
-					
+
+					if (x - 2 >= 0)
+						nodes [x, y].borderTiles [(int)Border.downLeft] = nodes [x - 2, y];
+
+					if (x + 2 < size_x)
+						nodes [x, y].borderTiles [(int)Border.upRight] = nodes [x + 2, y];
+
 					if (y - 1 >= 0)
-						nodes [x, y].borderTiles [(int)Border.downLeft] = nodes [x, y - 1];
-					
+						nodes [x, y].borderTiles [(int)Border.downRight] = nodes [x, y - 1];
+				
 					if (y + 1 < size_y)
-						nodes [x, y].borderTiles [(int)Border.upRight] = nodes [x, y + 1];
+						nodes [x, y].borderTiles [(int)Border.upLeft] = nodes [x, y + 1];
 				}
 			}
 		}
@@ -185,8 +202,6 @@ public class NodeManager{
 		// out of bounds check
 		if (zIndex >= size_y || zIndex < 0 || xIndex >= size_x || xIndex < 0)
 			return null;
-
-		Debug.Log (xIndex+" : "+zIndex);
 		
 		return nodes [xIndex, zIndex];
 	}
@@ -199,6 +214,12 @@ public class NodeManager{
 		
 		int xIndex = (int)Mathf.Floor ((location.x - left.x) / objectManager.MapData.nodeSize.x);
 		int zIndex = size_y + ((int)Mathf.Floor ((location.z - left.y) / objectManager.MapData.nodeSize.y));
+
+		if(objectManager.MapData.isIsoGrid)
+		{
+			xIndex = (int)Mathf.Round((2f*location.x + objectManager.MapData.nodeSize.x - 2f * left.x) / objectManager.MapData.nodeSize.x) - 2;
+			zIndex = (int)Mathf.Round((location.z - (objectManager.MapData.nodeSize.y / 2f) - right.y - ((xIndex%2==1)?objectManager.MapData.nodeSize.y/2f:0f)) / objectManager.MapData.nodeSize.y);
+		}
 		
 		if (xIndex >= size_x)
 			xIndex = size_x - 1;
