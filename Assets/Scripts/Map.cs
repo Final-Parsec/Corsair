@@ -11,8 +11,7 @@ public class Map : MonoBehaviour
 	public List<GameObject> enemyPrefabs;
 	public List<GameObject> bossPrefabs;
 	public List<GameObject> obstaclePrefabs;
-	private Vector3 left;
-	private Vector3 right;
+
 	public Transform enemySpawnTransform;
 	public Transform destinationTransform;
 	public Texture healthTexture;
@@ -20,13 +19,8 @@ public class Map : MonoBehaviour
 	public Node enemySpawnNode;
 
 	// Grid/Node
-	public int size_x;
-	public int size_z;
-	public Vector2 nodeSize;
-	public Node[,] nodes;
-	public Texture2D grid;
-	private Texture2D gridTexture;
-	private ObjectManager _ObjectManager;
+	private ObjectManager objectManager;
+	public NodeGenerator nodeGenerator;
 
 	// Wave control attributes
 	public List<Wave> upcomingWaves = new List<Wave> ();
@@ -43,19 +37,18 @@ public class Map : MonoBehaviour
 
 	void Awake()
 	{
-		_ObjectManager = ObjectManager.GetInstance ();
-		nodes = new Node[size_x, size_z];
+		objectManager = ObjectManager.GetInstance ();
 
-		SetPositions ();
-		BuildNodes ();
-		ConnectNodes ();
+		NodeGenerator nodeGenerator = new NodeGenerator(objectManager.MapData);
+		nodeGenerator.MakeNodes();
+
 		MakeWaves ();
 		MakeObstacles ();
 
-		destinationTransform.position = nodes[size_x-2, 0].unityPosition;
+		destinationTransform.position = nodeGenerator.nodes[size_x-2, 0].unityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
 
-		enemySpawnTransform.position = nodes[0, size_z-1].unityPosition;
+		enemySpawnTransform.position = nodeGenerator.nodes[0, size_z-1].unityPosition;
 		enemySpawnTransform.position = new Vector3(enemySpawnTransform.position.x, -.9f, enemySpawnTransform.position.z);
 	}
 	
@@ -64,14 +57,7 @@ public class Map : MonoBehaviour
 		ad = GameObject.FindGameObjectWithTag("Ad").GetComponent<GoogleMobileAdsScript>();
 		ad.RequestInterstitial ();
 
-		destinationNode = nodes[size_x - 1, 0];
-		destinationNode.isBuildable = false;
-		enemySpawnNode = nodes[0, size_z - 1];
-		enemySpawnNode.isBuildable = false;
-
-		MakeGrid ();
-
-		foreach (Node node in nodes){
+		foreach (Node node in nodeGenerator.nodes){
 			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
 		}
 	}
@@ -81,7 +67,7 @@ public class Map : MonoBehaviour
 	/// </summary>
 	void OnGUI ()
 	{
-		foreach (EnemyBase Gob in _ObjectManager.ThingsWithHealthBars()) {
+		foreach (EnemyBase Gob in objectManager.ThingsWithHealthBars()) {
 			//Health Bar
 			float healthRatio = (((float)Gob.Health) / ((float)Gob.maxHealth));
 			if (healthRatio != 1) {
@@ -109,7 +95,7 @@ public class Map : MonoBehaviour
 		int random;
 		Wave wave;
 
-        for (int x = 1; x < _ObjectManager.gameState.numberOfWaves; x++)
+        for (int x = 1; x < objectManager.gameState.numberOfWaves; x++)
         {
 			if (x % 10 == 0) {
 				random = UnityEngine.Random.Range ((int)BossType.Start+1, (int)BossType.Max);
@@ -127,7 +113,7 @@ public class Map : MonoBehaviour
 	{
 		System.Random random = new System.Random();  // Needs to be instantiated outside the loop. http://stackoverflow.com/questions/5398336/random-number-generator-always-picks-the-same-value-when-run-inside-a-loop
 	
-		if(_ObjectManager.gameState.MapType == MapType.Obstacles){
+		if(objectManager.gameState.MapType == MapType.Obstacles){
 			for(int x=0; x<size_x; x++){
 				for(int z=0; z<size_z; z++){
 					if((x%5==3 || x%5==4) && (z%5==3 || z%5==4)){
@@ -180,7 +166,7 @@ public class Map : MonoBehaviour
 			Wave wave = upcomingWaves [0];
 			upcomingWaves.RemoveAt (0);
 			currentWaves.Add (wave);
-			_ObjectManager.gameState.waveCount++;
+			objectManager.gameState.waveCount++;
 		}
 	}
 	
@@ -190,7 +176,7 @@ public class Map : MonoBehaviour
 	public void CreateEnemies ()
 	{
 		if (Time.time >= nextWaveSpawnEvent || playerTriggeredWave) {
-			_ObjectManager.WaveWheel.UpdateSpriteImages = true;
+			objectManager.WaveWheel.UpdateSpriteImages = true;
 
 			playerTriggeredWave = false;
 			nextWaveSpawnEvent = Time.time + waveSpawnDelay;
@@ -199,13 +185,13 @@ public class Map : MonoBehaviour
 
 		foreach (Wave wave in currentWaves) {
 
-			if(_ObjectManager.gameState.GameSpeed == GameSpeed.Paused)
+			if(objectManager.gameState.GameSpeed == GameSpeed.Paused)
 			{
 				wave.nextEnemySpawnEvent += Time.deltaTime;
 			}
 			else 
 			{
-				wave.nextEnemySpawnEvent -= (Time.deltaTime * (float)_ObjectManager.gameState.GameSpeed) - Time.deltaTime;
+				wave.nextEnemySpawnEvent -= (Time.deltaTime * (float)objectManager.gameState.GameSpeed) - Time.deltaTime;
 			}
 
 			if (Time.time >= wave.nextEnemySpawnEvent && wave.numberOfEnemies > 0) {
@@ -300,99 +286,20 @@ public class Map : MonoBehaviour
 	
 	public void Update ()
 	{
-		if(_ObjectManager.gameState.gameStarted && !_ObjectManager.gameState.gameOver){
+		if(objectManager.gameState.gameStarted && !objectManager.gameState.gameOver){
 
-			if(_ObjectManager.gameState.GameSpeed == GameSpeed.Paused)
+			if(objectManager.gameState.GameSpeed == GameSpeed.Paused)
 			{
 				nextWaveSpawnEvent += Time.deltaTime;
 			}
 			else 
 			{
-				nextWaveSpawnEvent -= (Time.deltaTime * (float)_ObjectManager.gameState.GameSpeed) - Time.deltaTime;
+				nextWaveSpawnEvent -= (Time.deltaTime * (float)objectManager.gameState.GameSpeed) - Time.deltaTime;
 			}
 
 
-			_ObjectManager.gameState.nextWaveCountDown = (int)(nextWaveSpawnEvent - Time.time);
+			objectManager.gameState.nextWaveCountDown = (int)(nextWaveSpawnEvent - Time.time);
 			CreateEnemies ();
-		}
-	}
-
-	private void SetPositions ()
-	{
-		left = new Vector2(-(size_x * nodeSize.x) / 2f, (size_z * nodeSize.y) / 2f);
-		right = new Vector2((size_x * nodeSize.x * (isIsoGrid?.5f:1f)) / 2f, -(size_z * nodeSize.y) / 2f);
-	}
-	
-	/// <summary>
-	/// Initializes nodes that make up the map.
-	/// </summary>
-	private void BuildNodes ()
-	{
-		
-		float mapSizeX = (right.x - left.x) - (isIsoGrid?(size_x * nodeSize.x * .25f) - nodeSize.x/2: 0);
-		float mapSizwZ = (left.y - right.y) + (isIsoGrid?nodeSize.y/2f:0f);
-
-		transform.localScale = new Vector3 (mapSizeX, mapSizwZ, 1);
-		
-		//nodeSize = new Vector2 (mapSizeX / size_x, mapSizwZ / size_z);
-		float xPos;
-		float zPos;
-		float txPos;
-		float tyPos;
-		for (int x=0; x<size_x; x++) {
-			for (int z=0; z<size_z; z++) {
-				xPos = left.x + (x * nodeSize.x * (isIsoGrid?.5f:1f));
-				zPos = right.y + ((z + 1) * nodeSize.y) + (isIsoGrid?((x%2==1)?nodeSize.y/2f:0f):0f);
-				txPos = (x * nodeSize.x * (isIsoGrid?.5f:1f));
-				tyPos = ((z + 1) * nodeSize.y) + (isIsoGrid?((x%2==1)?nodeSize.y/2f:0f):0f);
-				Vector3 position = new Vector3 (xPos + nodeSize.x / 2f, 0, zPos - nodeSize.y / 2f);
-				Vector3 listIndex = new Vector3 (x, 0, z);
-				Vector2 textureCenter = new Vector2(nodeSize.x/2f + txPos,
-				                                    tyPos - nodeSize.y / 2f);
-				nodes [x, z] = new Node (true, true, position, listIndex, textureCenter);
-				
-				//if (Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y <= 10 ||
-				//    Camera.main.WorldToScreenPoint (nodes [x, z].unityPosition).y >= Screen.height - Screen.height * .21) {
-				//	nodes [x, z].isWalkable = false;
-				//	nodes [x, z].isBuildable = false;
-				//}
-			}
-		}
-	}
-	
-	/// <summary>
-	/// Connects the nodes.
-	/// </summary>
-	private void ConnectNodes ()
-	{
-		for (int z=0; z<size_z; z++) {
-			for (int x=0; x<size_x; x++) {
-				//Debug.Log(x+", "+ y);
-				
-				if (x - 1 >= 0) {
-					nodes [x, z].borderTiles [(int)Border.downRight] = nodes [x - 1, z];
-					if (z - 1 >= 0)
-						nodes [x, z].borderTiles [(int)Border.Down] = nodes [x - 1, z - 1];
-					
-					if (z + 1 < nodes.GetLength (1))
-						nodes [x, z].borderTiles [(int)Border.Right] = nodes [x - 1, z + 1];
-				}
-				
-				if (x + 1 < nodes.GetLength (0)) {
-					nodes [x, z].borderTiles [(int)Border.upLeft] = nodes [x + 1, z];
-					if (z - 1 >= 0)
-						nodes [x, z].borderTiles [(int)Border.Left] = nodes [x + 1, z - 1];
-					
-					if (z + 1 < nodes.GetLength (1))
-						nodes [x, z].borderTiles [(int)Border.Up] = nodes [x + 1, z + 1];
-				}
-				
-				if (z - 1 >= 0)
-					nodes [x, z].borderTiles [(int)Border.downLeft] = nodes [x, z - 1];
-				
-				if (z + 1 < nodes.GetLength (1))
-					nodes [x, z].borderTiles [(int)Border.upRight] = nodes [x, z + 1];
-			}
 		}
 	}
 
@@ -405,113 +312,5 @@ public class Map : MonoBehaviour
 			gridTexture.SetPixel((int)node.listIndex.x, (int)node.listIndex.z, Color.clear);
 
 		gridTexture.Apply ();
-	}
-
-	private void MakeGrid()
-	{
-		Vector3 center = new Vector3(right.x + left.x + (isIsoGrid?nodeSize.x/4f:0f), 0, left.y + right.y + (isIsoGrid?nodeSize.y/4f:0f));
-		center.y = transform.position.y;
-		transform.position = center;
-		center.y = Camera.main.transform.position.y;
-		Camera.main.transform.position = center;
-
-		gridTexture = new Texture2D (size_x * (int)(nodeSize.x / (isIsoGrid?2f:1f)) + (isIsoGrid?(int)nodeSize.x/2:0),
-		                             size_z * (int)nodeSize.y + (isIsoGrid?(int)nodeSize.y/2:0));
-		gridTexture.wrapMode = TextureWrapMode.Clamp;
-		gridTexture.filterMode = FilterMode.Point;
-		GetComponent<Renderer>().material.mainTexture = gridTexture;
-
-		ClearEdges (gridTexture);
-
-        for (var y = size_z - 1; y > -1; y--)
-        {
-            for (var x = 1; x < size_x; x += 2)
-            {
-                var node = nodes[x, y];
-                if (node.isBuildable)
-                {
-                    WriteTexture(node, grid, gridTexture);
-                }
-                else
-                {
-                    WriteTexture(node, grid, gridTexture);
-                }
-            }
-
-            for (var x = 0; x < size_x; x += 2)
-            {
-                var node = nodes[x, y];
-                if (node.isBuildable)
-                {
-                    WriteTexture(node, grid, gridTexture);
-                }
-                else
-                {
-                    WriteTexture(node, grid, gridTexture);
-                }
-            }
-        }
-
-        
-		gridTexture.Apply ();
-
-	}
-
-    public void WriteTexture(Node node, Texture2D tex, Texture2D masterTexture)
-	{
-		Color[] colors = tex.GetPixels ();
-
-		int xOffset = node.texturePosX - (int)nodeSize.x / 2;
-		int yOffset = node.texturePosY - (int)nodeSize.y / 2;
-
-	    for (int x = 0; x < nodeSize.x; x++)
-	    {
-            for (int y = 0; y < nodeSize.y; y++)
-        {
-		
-				int index = y * (int)nodeSize.x + x;
-				if( colors[index].a == 0){
-					continue;
-				}
-				masterTexture.SetPixel(x+xOffset, y+yOffset, colors[index]);
-			}
-		}
-
-	}
-
-	public void ClearEdges(Texture2D masterTexture)
-	{
-//		for(int x = 0; x < nodeSize.x * size_x; x++){
-//			for(int y = 0; y < nodeSize.y / 2; y++){
-//				masterTexture.SetPixel(x, y, Color.clear);
-//			}
-//		}
-//		for(int x = 0; x < nodeSize.x * size_x; x++){
-//			for(int y = (int)nodeSize.y * size_z - (int)nodeSize.y / 2; y < (int)nodeSize.y * size_z; y++){
-//				masterTexture.SetPixel(x, y, Color.clear);
-//			}
-//		}
-//		for(int x = 0; x < nodeSize.x / 2; x++){
-//			for(int y = 0; y < nodeSize.y * size_z; y++){
-//				masterTexture.SetPixel(x, y, Color.clear);
-//			}
-//		}
-//		for(int x = (int)nodeSize.x * size_x - (int)nodeSize.x; x < (int)nodeSize.x * size_x; x++){
-//			for(int y = 0; y < nodeSize.y * size_z; y++){
-//				masterTexture.SetPixel(x, y, Color.clear);
-//			}
-//		}
-
-		for(int x = 0; x < (int)nodeSize.x * (size_x+1); x++){
-			for(int y = 0; y < nodeSize.y * (size_z+1); y++){
-				masterTexture.SetPixel(x, y, Color.clear);
-			}
-		}
-
-	}
-
-	public void SetGrid(bool flag)
-	{
-		GetComponent<Renderer> ().material.color = new Color (1f, 1f, 1f, 1f * (flag?1f:0f));
 	}
 }

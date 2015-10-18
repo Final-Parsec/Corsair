@@ -121,7 +121,6 @@ public class GuiButtonMethods : MonoBehaviour
 	private void EndGame(string conditionText)
 	{
 		objectManager.Map.ad.ShowInterstitial ();
-		objectManager.Map.SetGrid(false);
 		
 		gameOverScreen.SetActive (true);
 		gameOverAnimator.SetTrigger("Fade In");
@@ -203,7 +202,8 @@ public class GuiButtonMethods : MonoBehaviour
 	{
 		PlayDefaultSound();
 		gridToggle = !gridToggle;
-		objectManager.Map.SetGrid(gridToggle);
+		//objectManager.Map.SetGrid(gridToggle);
+		// TODO: make work
 	}
 
 	public void QuitPressed()

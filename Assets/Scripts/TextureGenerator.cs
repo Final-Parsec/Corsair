@@ -137,9 +137,13 @@ public class TextureGenerator{
 		foreach(Texture2D tex in textures){
 			
 			byte[] bytes = tex.EncodeToPNG();
-			string path = Application.dataPath + "/Resources/"+mapData.mapName+"/";
-			if(File.Exists(path))
+			string path = Application.dataPath + "/Resources/"+mapData.mapName+"/mapTextures/";
+			if(File.Exists(path)){
 				File.WriteAllBytes(path+mapData.mapName+"_"+ count++ +".png", bytes);
+			}else{
+				Directory.CreateDirectory(path);
+				File.WriteAllBytes(path+mapData.mapName+"_"+ count++ +".png", bytes);
+			}
 		}
 	}
 }

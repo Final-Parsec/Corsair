@@ -16,6 +16,8 @@ public class CameraMovement : MonoBehaviour{
 	private static int dragTouchId;
 	private float dragZone = 2;
 
+	private ObjectManager objectManager;
+
 
 	public static bool IsCameraMoving()
 	{
@@ -23,13 +25,14 @@ public class CameraMovement : MonoBehaviour{
 	}
 	
 	void Start() {
+		objectManager = ObjectManager.GetInstance();
 		
 		Map _tileMap = GameObject.Find("Map").GetComponent<Map>();
 		
-		cameraMinDistance = new Vector2(transform.position.x - (_tileMap.size_x * (_tileMap.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f,
-		                                transform.position.z - (_tileMap.size_z * _tileMap.nodeSize.y)/2f);
-		cameraMaxDistance = new Vector2((_tileMap.size_x * (_tileMap.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f + transform.position.x,
-		                                (_tileMap.size_z * _tileMap.nodeSize.y)/2f + transform.position.z);
+		cameraMinDistance = new Vector2(transform.position.x - (objectManager.Map.nodeGenerator.size_x * (objectManager.MapData.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f,
+		                                transform.position.z - (objectManager.Map.nodeGenerator.size_y * objectManager.MapData.nodeSize.y)/2f);
+		cameraMaxDistance = new Vector2((objectManager.Map.nodeGenerator.size_x * (objectManager.MapData.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f + transform.position.x,
+		                                (objectManager.Map.nodeGenerator.size_y * objectManager.MapData.nodeSize.y)/2f + transform.position.z);
 	}
 	
 	// Update is called once per frame

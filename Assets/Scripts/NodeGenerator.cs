@@ -2,13 +2,12 @@
 using System.Collections;
 
 public class NodeGenerator{
-
-	// Internal
-	private Node[,] nodes;
+	
+	public Node[,] nodes;
+	public int size_x = 0;
+	public int size_y = 0;
 	private Vector3 left;
 	private Vector3 right;
-	private int size_x = 0;
-	private int size_y = 0;
 	private IMapData mapData;
 
 	public NodeGenerator(IMapData mapData)

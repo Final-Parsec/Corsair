@@ -82,13 +82,13 @@ public class EnemyBase : MonoBehaviour
     private void CorrectPosition()
     {
         // perfect for non mind control
-		float correctedY = -((onNode.listIndex.z / _ObjectManager.Map.size_z) + (onNode.listIndex.x / _ObjectManager.Map.size_x));
+		float correctedY = -((onNode.listIndex.z / _ObjectManager.Map.nodeGenerator.size_y) + (onNode.listIndex.x / _ObjectManager.Map.nodeGenerator.size_x));
         transform.position = new Vector3(transform.position.x, correctedY, transform.position.z);
         
     }
 
 	protected void InitAttributes(){
-		minWaypointDisplacement = _ObjectManager.Map.nodeSize.x / 10;
+		minWaypointDisplacement = _ObjectManager.MapData.nodeSize.x / 10;
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		animator = GetComponent<Animator>();
 		SetPath (_ObjectManager.Pathfinding.Astar (onNode, _ObjectManager.Map.destinationNode));

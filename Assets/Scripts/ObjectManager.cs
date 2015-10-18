@@ -82,6 +82,16 @@ public class ObjectManager
 		} 
 	}
 
+	private IMapData mapData;
+	public IMapData MapData 
+	{ 
+		get{
+			if(mapData == null)
+				mapData = new HardcodedMapData("Test", new Vector2(64,32), true, null, null);
+			return mapData;
+		} 
+	}
+
 	public ObjectManager ()
 	{
 		ObjectManager.instance = this;
