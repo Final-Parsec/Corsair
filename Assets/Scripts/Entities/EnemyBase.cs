@@ -62,15 +62,9 @@ public class EnemyBase : MonoBehaviour
 	{
 		_ObjectManager = ObjectManager.GetInstance ();
 		_ObjectManager.AddEntity (this);
-		onNode = _ObjectManager.Map.GetClosestNode (transform.position);
+		onNode = _ObjectManager.NodeManager.GetClosestNode (transform.position);
 		InitAttributes();
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
-	}
-	
+	}	
 	// Update is called once per frame
 	void Update ()
 	{
@@ -82,9 +76,8 @@ public class EnemyBase : MonoBehaviour
     private void CorrectPosition()
     {
         // perfect for non mind control
-		float correctedY = -((onNode.listIndex.z / _ObjectManager.Map.nodeGenerator.size_y) + (onNode.listIndex.x / _ObjectManager.Map.nodeGenerator.size_x));
+		float correctedY = -((onNode.listIndex.z / _ObjectManager.NodeManager.size_y) + (onNode.listIndex.x / _ObjectManager.NodeManager.size_x));
         transform.position = new Vector3(transform.position.x, correctedY, transform.position.z);
-        
     }
 
 	protected void InitAttributes(){

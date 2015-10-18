@@ -67,7 +67,7 @@ public class Turret : MonoBehaviour
     {
         get
         {
-            float minRange = Mathf.Min(objectManager.Map.nodeSize.x, objectManager.Map.nodeSize.y) * 1.5f;
+			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
             float maxRange = minRange * 4f;
 
             float computedRange = (((float)aoeRange - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
@@ -81,7 +81,7 @@ public class Turret : MonoBehaviour
 	{ 
 		get 
         {	
-			float minRange = Mathf.Min(objectManager.Map.nodeSize.x, objectManager.Map.nodeSize.y) * 1.5f;
+			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
 			float maxRange = minRange * 4f;
 			
 			float detectionRadius = (((float)range - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
@@ -91,7 +91,7 @@ public class Turret : MonoBehaviour
 		}
 		set 
         {
-			float minRange = Mathf.Min(objectManager.Map.nodeSize.x, objectManager.Map.nodeSize.y) * 1.5f;
+			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
 			float maxRange = minRange * 4f;
 			
 			float detectionRadius = (((float)value - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;

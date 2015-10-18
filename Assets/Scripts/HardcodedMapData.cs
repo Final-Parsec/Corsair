@@ -17,19 +17,23 @@ public class HardcodedMapData : IMapData {
 
 	private void MakeTiles()
 	{
-		this.tiles = new Tile[(int)nodeSize.x, (int)nodeSize.y];
+		int lengthX = 68;
+		int lengthY = 36;
+
+		this.tiles = new Tile[lengthX, lengthY];
 		
-		for(int x = 0; x<nodeSize.x; x++)
+		for(int x = 0; x<lengthX; x++)
 		{
-			for(int y = 0; y<nodeSize.y; y++)
+			for(int y = 0; y<lengthY; y++)
 			{
 				Texture2D[] testures = (y==1)?new Texture2D[]{grid, grid2, grid}:new Texture2D[]{grid};
 				Tile tile = new Tile(testures, false, false, false);
 				tiles[x,y] = tile;
 
-				if(x > 2 && x < nodeSize.x-2 && y > 2 && y < nodeSize.y-2){
+				if(x > 1 && x < lengthX-6 && y > 1 && y < lengthY-6){
 					tile.isBuildable = true;
 					tile.isWalkable = true;
+					tile.isNode = true;
 				}
 			}
 		}

@@ -18,7 +18,6 @@ public class CameraMovement : MonoBehaviour{
 
 	private ObjectManager objectManager;
 
-
 	public static bool IsCameraMoving()
 	{
 		return dragTouchId != NO_DRAG || Input.touchCount > 1 || isZooming;
@@ -26,21 +25,28 @@ public class CameraMovement : MonoBehaviour{
 	
 	void Start() {
 		objectManager = ObjectManager.GetInstance();
-		
-		Map _tileMap = GameObject.Find("Map").GetComponent<Map>();
-		
-		cameraMinDistance = new Vector2(transform.position.x - (objectManager.Map.nodeGenerator.size_x * (objectManager.MapData.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f,
-		                                transform.position.z - (objectManager.Map.nodeGenerator.size_y * objectManager.MapData.nodeSize.y)/2f);
-		cameraMaxDistance = new Vector2((objectManager.Map.nodeGenerator.size_x * (objectManager.MapData.nodeSize.x / (_tileMap.isIsoGrid?2f:1f)))/2f + transform.position.x,
-		                                (objectManager.Map.nodeGenerator.size_y * objectManager.MapData.nodeSize.y)/2f + transform.position.z);
+
+		Node firstNode = objectManager.NodeManager.nodes [0, 0];
+		Node lastNode = objectManager.NodeManager.nodes [objectManager.NodeManager.size_x - 1,
+		                                                 objectManager.NodeManager.size_y - 1];
+
+		cameraMinDistance = new Vector2(firstNode.unityPosition.x,
+		                                firstNode.unityPosition.z);
+		cameraMaxDistance = new Vector2(lastNode.unityPosition.x,
+		                                lastNode.unityPosition.z);
+
+		Vector3 center = new Vector3 ((lastNode.unityPosition.x + firstNode.unityPosition.x) / 2f,
+		                              transform.position.y,
+		                              (lastNode.unityPosition.z + firstNode.unityPosition.z) / 2f);
+
+		transform.position = center;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		float theScreenWidth = Screen.width;
 		float theScreenHeight = Screen.height;
-		
-		
+
 		float moveRate = sensitivity * Time.deltaTime;
 		float scrollRate = scrollSensitivity * Time.deltaTime;
 		

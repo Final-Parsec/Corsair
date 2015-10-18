@@ -23,17 +23,4 @@ public class RunTextureGenerator : MonoBehaviour
 
 		GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[1];
 	}
-
-//	IEnumerator Animate(Texture2D[] gridTextures) {
-//		int max = 30;
-//		for (int x = 0; x < max; x++)
-//		{
-//			GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[x%gridTextures.Length];
-//			yield return new WaitForSeconds(.05f);
-//			Debug.Log("here");
-//		}
-//
-//	}
-
-
 }

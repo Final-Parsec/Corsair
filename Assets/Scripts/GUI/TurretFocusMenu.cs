@@ -89,7 +89,7 @@ public class TurretFocusMenu : MonoBehaviour
 		objectManager.GuiButtonMethods.PlaySellSound();
 		
 		objectManager.gameState.playerMoney += SelectedTurret.Msrp;
-		objectManager.Map.UnBlockNode(SelectedTurret.transform.position);
+		objectManager.NodeManager.UnBlockNode(SelectedTurret.transform.position);
 		Destroy(SelectedTurret.gameObject);
 		SelectedTurret = null;
 	}

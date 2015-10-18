@@ -92,6 +92,16 @@ public class ObjectManager
 		} 
 	}
 
+	private NodeManager nodeManager;
+	public NodeManager NodeManager 
+	{ 
+		get{
+			if(nodeManager == null)
+				nodeManager = new NodeManager();
+			return nodeManager;
+		} 
+	}
+
 	public ObjectManager ()
 	{
 		ObjectManager.instance = this;

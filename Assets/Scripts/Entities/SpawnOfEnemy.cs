@@ -8,7 +8,7 @@ public class SpawnOfEnemy : EnemyBase
 	{
 		_ObjectManager = ObjectManager.GetInstance ();
 		_ObjectManager.AddEntity (this);
-		onNode = _ObjectManager.Map.GetClosestNode (transform.position);
+		onNode = _ObjectManager.NodeManager.GetClosestNode (transform.position);
 		InitAttributes();
 	}
 

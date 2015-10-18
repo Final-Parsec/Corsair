@@ -20,7 +20,6 @@ public class Map : MonoBehaviour
 
 	// Grid/Node
 	private ObjectManager objectManager;
-	public NodeGenerator nodeGenerator;
 
 	// Wave control attributes
 	public List<Wave> upcomingWaves = new List<Wave> ();
@@ -29,26 +28,23 @@ public class Map : MonoBehaviour
 	private float nextWaveSpawnEvent;
 	public bool playerTriggeredWave;
 
-	public bool isIsoGrid = true;
-	private Color[] colors;
-
 	[HideInInspector]
 	public GoogleMobileAdsScript ad;
 
 	void Awake()
 	{
 		objectManager = ObjectManager.GetInstance ();
-
-		NodeGenerator nodeGenerator = new NodeGenerator(objectManager.MapData);
-		nodeGenerator.MakeNodes();
-
+		ScaleAndPlaceMap ();
+		
 		MakeWaves ();
 		MakeObstacles ();
 
-		destinationTransform.position = nodeGenerator.nodes[size_x-2, 0].unityPosition;
+		destinationNode = objectManager.NodeManager.nodes[objectManager.NodeManager.size_x-1, 0];
+		destinationTransform.position = objectManager.NodeManager.nodes[objectManager.NodeManager.size_x-2, 0].unityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
 
-		enemySpawnTransform.position = nodeGenerator.nodes[0, size_z-1].unityPosition;
+		enemySpawnNode = objectManager.NodeManager.nodes [0, objectManager.NodeManager.size_y - 1];
+		enemySpawnTransform.position = objectManager.NodeManager.nodes[0, objectManager.NodeManager.size_y-1].unityPosition;
 		enemySpawnTransform.position = new Vector3(enemySpawnTransform.position.x, -.9f, enemySpawnTransform.position.z);
 	}
 	
@@ -57,9 +53,11 @@ public class Map : MonoBehaviour
 		ad = GameObject.FindGameObjectWithTag("Ad").GetComponent<GoogleMobileAdsScript>();
 		ad.RequestInterstitial ();
 
-		foreach (Node node in nodeGenerator.nodes){
+		foreach (Node node in objectManager.NodeManager.nodes){
 			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
 		}
+
+		LoadMapTexture ();
 	}
 
 	/// <summary>
@@ -114,17 +112,19 @@ public class Map : MonoBehaviour
 		System.Random random = new System.Random();  // Needs to be instantiated outside the loop. http://stackoverflow.com/questions/5398336/random-number-generator-always-picks-the-same-value-when-run-inside-a-loop
 	
 		if(objectManager.gameState.MapType == MapType.Obstacles){
-			for(int x=0; x<size_x; x++){
-				for(int z=0; z<size_z; z++){
+			for(int x=0; x<objectManager.NodeManager.size_x; x++){
+				for(int z=0; z<objectManager.NodeManager.size_y; z++){
 					if((x%5==3 || x%5==4) && (z%5==3 || z%5==4)){
-						nodes[x,z].isBuildable = false;
-						nodes[x,z].isWalkable = false;
+						objectManager.NodeManager.nodes[x,z].isBuildable = false;
+						objectManager.NodeManager.nodes[x,z].isWalkable = false;
 
 						if(x%5==4 &&
 						   z%5==4 && 
-						   !(Camera.main.WorldToScreenPoint(nodes[x,z].unityPosition).y <= 10 ||
-	                         Camera.main.WorldToScreenPoint(nodes[x,z].unityPosition).y >= Screen.height - Screen.height * .20)) {
-							Vector3 spawnPosition = new Vector3(nodes[x,z].unityPosition.x - nodeSize.x/2, -3, nodes[x,z].unityPosition.z - nodeSize.y/2);
+						   !(Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y <= 10 ||
+						  Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y >= Screen.height - Screen.height * .20)) {
+							Vector3 spawnPosition = new Vector3(objectManager.NodeManager.nodes[x,z].unityPosition.x - objectManager.MapData.nodeSize.x/2,
+							                                    -3,
+							                                    objectManager.NodeManager.nodes[x,z].unityPosition.z - objectManager.MapData.nodeSize.y/2);
 							Array values = Enum.GetValues(typeof(ObstacleType));
 							ObstacleType randomObstacle = (ObstacleType)values.GetValue(random.Next(values.Length));
 							GameObject obstaclePrefab = obstaclePrefabs[(int)randomObstacle];
@@ -132,19 +132,19 @@ public class Map : MonoBehaviour
 						}
 						else if(x%5==4 && z%5==4) {
 
-							if(!(Camera.main.WorldToScreenPoint (nodes[x-1,z-1].unityPosition).y <= 10 ||
-							      Camera.main.WorldToScreenPoint (nodes[x-1,z-1].unityPosition).y >= Screen.height - Screen.height * .21)){
-								nodes[x,z].isBuildable = true;
-								nodes[x,z].isWalkable = true;
+							if(!(Camera.main.WorldToScreenPoint (objectManager.NodeManager.nodes[x-1,z-1].unityPosition).y <= 10 ||
+							     Camera.main.WorldToScreenPoint (objectManager.NodeManager.nodes[x-1,z-1].unityPosition).y >= Screen.height - Screen.height * .21)){
+								objectManager.NodeManager.nodes[x,z].isBuildable = true;
+								objectManager.NodeManager.nodes[x,z].isWalkable = true;
 
-								nodes[x-1,z].isBuildable = true;
-								nodes[x-1,z].isWalkable = true;
+								objectManager.NodeManager.nodes[x-1,z].isBuildable = true;
+								objectManager.NodeManager.nodes[x-1,z].isWalkable = true;
 
-								nodes[x,z-1].isBuildable = true;
-								nodes[x,z-1].isWalkable = true;
+								objectManager.NodeManager.nodes[x,z-1].isBuildable = true;
+								objectManager.NodeManager.nodes[x,z-1].isWalkable = true;
 
-								nodes[x-1,z-1].isBuildable = true;
-								nodes[x-1,z-1].isWalkable = true;
+								objectManager.NodeManager.nodes[x-1,z-1].isBuildable = true;
+								objectManager.NodeManager.nodes[x-1,z-1].isWalkable = true;
 							}
 						}
 					}
@@ -215,75 +215,6 @@ public class Map : MonoBehaviour
 		currentWaves.RemoveAll (a => a.numberOfEnemies <= 0);
 	}
 
-	/// <summary>
-	/// Gets the tile from location.
-	/// </summary>
-	public Node GetNodeFromLocation (Vector3 location)
-	{
-		
-		int xIndex = (int)Mathf.Floor ((location.x - left.x) / nodeSize.x);
-		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.y) / nodeSize.y));
-
-		// out of bounds check
-		if (zIndex >= size_z || zIndex < 0 || xIndex >= size_x || xIndex < 0)
-			return null;
-
-		
-		return nodes [xIndex, zIndex];
-	}
-
-	/// <summary>
-	/// Gets the tile from location.
-	/// </summary>
-	public Node GetClosestNode (Vector3 location)
-	{
-		
-		int xIndex = (int)Mathf.Floor ((location.x - left.x) / nodeSize.x);
-		int zIndex = size_z + ((int)Mathf.Floor ((location.z - left.y) / nodeSize.y));
-		
-		if (xIndex >= size_x)
-			xIndex = size_x - 1;
-		else if (xIndex < 0)
-			xIndex = 0;
-		
-		if (zIndex >= size_z)
-			zIndex = size_z - 1;
-		else if (zIndex < 0)
-			zIndex = 0;
-		
-		
-		return nodes [xIndex, zIndex];
-	}
-
-	/// <summary>
-	/// Blocks the node at the given position.
-	/// returns true if the object can be built 
-	/// else false	
-	/// </summary>
-	public bool BlockNode (Vector3 position)
-	{
-		Node node = GetNodeFromLocation (position);
-
-		if (node == null || !node.isBuildable)
-			return false;
-
-		node.isWalkable = false;
-		node.isBuildable = false;
-
-		UpdateGridNode(node);
-		return true;
-	}
-
-	public void UnBlockNode (Vector3 position)
-	{
-		Node node = GetNodeFromLocation (position);
-
-		node.isWalkable = true;
-		node.isBuildable = true;
-
-		UpdateGridNode(node);
-	}
-	
 	public void Update ()
 	{
 		if(objectManager.gameState.gameStarted && !objectManager.gameState.gameOver){
@@ -303,14 +234,57 @@ public class Map : MonoBehaviour
 		}
 	}
 
-	public void UpdateGridNode(Node node)
+	public void ScaleAndPlaceMap()
 	{
-		float c = node.listIndex.x + node.listIndex.z;
-		if (node.isBuildable) 
-			gridTexture.SetPixel((int)node.listIndex.x, (int)node.listIndex.z, new Color(c%2, c%2, c%2, .3f));
-		else
-			gridTexture.SetPixel((int)node.listIndex.x, (int)node.listIndex.z, Color.clear);
+		Node firstNode = objectManager.NodeManager.nodes [0, 0];
+		Node lastNode = objectManager.NodeManager.nodes [objectManager.NodeManager.size_x - 1,
+		                                                 objectManager.NodeManager.size_y - 1];
+		
+		Vector3 center = new Vector3 ((lastNode.unityPosition.x + firstNode.unityPosition.x) / 2f,
+		                              firstNode.unityPosition.y - 10,
+		                              (lastNode.unityPosition.z + firstNode.unityPosition.z) / 2f);
 
-		gridTexture.Apply ();
+		int xIndex = -1;
+		int yIndex = -1;
+		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		{
+			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			{
+				if(xIndex == -1 && objectManager.MapData.tiles[x,y].isNode){
+					xIndex = x;
+					yIndex = y;
+					
+					x = objectManager.MapData.tiles.GetLength(0);
+					y = objectManager.MapData.tiles.GetLength(1);
+				}
+			}
+		}
+
+		float textureSizeX = objectManager.MapData.tiles.GetLength (0);
+		float textureSizeY = objectManager.MapData.tiles.GetLength (1);
+
+		center.z = center.z + (((textureSizeX - objectManager.NodeManager.size_x) / 2f) - xIndex) * objectManager.MapData.nodeSize.y;
+		center.x = center.x + (((textureSizeY - objectManager.NodeManager.size_y) / 2f) - yIndex) * (objectManager.MapData.nodeSize.x / (objectManager.MapData.isIsoGrid?2:1));
+
+		transform.position = center;
+		transform.localScale = new Vector3 (((objectManager.MapData.tiles.GetLength(0) + 1) * objectManager.MapData.nodeSize.x) / (objectManager.MapData.isIsoGrid?2:1),
+		                                    (objectManager.MapData.tiles.GetLength(1)+.5f) * objectManager.MapData.nodeSize.y,
+		                                    1);
+	}
+
+	public void LoadMapTexture()
+	{
+		Texture2D[] textures = Resources.LoadAll<Texture2D>(objectManager.MapData.mapName+"/mapTextures");
+		StartCoroutine (Animate(textures));
+	}
+
+	IEnumerator Animate(Texture2D[] gridTextures) {
+		int itr = 0;
+		while(true)
+		{
+			GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[itr%gridTextures.Length];
+			itr++;
+			yield return new WaitForSeconds(.2f);
+		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Pathfinding : MonoBehaviour
 {
-	private ObjectManager _ObjectManager;
+	private ObjectManager objectManager;
 	public List<Node> pathToDestination = null;
 
 	public List<Node> Astar (Node start, Node goal)
@@ -22,7 +22,7 @@ public class Pathfinding : MonoBehaviour
         }
 		
 		// initialize pathfinding variables
-		foreach (Node node in _ObjectManager.Map.nodes) {
+		foreach (Node node in objectManager.NodeManager.nodes) {
 			node.gScore = int.MaxValue;
 			node.fScore = int.MaxValue;
 			node.parent = null;
@@ -107,14 +107,14 @@ public class Pathfinding : MonoBehaviour
 	/// <returns><c>true</c>, if there is a valid <c>false</c> otherwise.</returns>
 	public bool CheckAndUpdatePaths ()
 	{
-		Node destination = _ObjectManager.Map.destinationNode;
-		Node spawn = _ObjectManager.Map.enemySpawnNode;
+		Node destination = objectManager.Map.destinationNode;
+		Node spawn = objectManager.Map.enemySpawnNode;
 		
 		pathToDestination = Astar (spawn, destination);
 		if (pathToDestination == null)
 			return false;
 		
-		foreach (EnemyBase entity in _ObjectManager.enemies) {
+		foreach (EnemyBase entity in objectManager.enemies) {
 			List<Node> path;
 
             
@@ -156,9 +156,9 @@ public class Pathfinding : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		_ObjectManager = ObjectManager.GetInstance ();
-		pathToDestination = Astar (_ObjectManager.Map.enemySpawnNode,
-		                          _ObjectManager.Map.destinationNode);
+		objectManager = ObjectManager.GetInstance ();
+		pathToDestination = Astar (objectManager.Map.enemySpawnNode,
+		                          objectManager.Map.destinationNode);
 	}
 	
 	// Update is called once per frame
