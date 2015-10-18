@@ -12,11 +12,10 @@ public class Map : MonoBehaviour
 	public List<GameObject> bossPrefabs;
 	public List<GameObject> obstaclePrefabs;
 
-	public Transform enemySpawnTransform;
 	public Transform destinationTransform;
 	public Texture healthTexture;
 	public Node destinationNode;
-	public Node enemySpawnNode;
+	public Node[] enemySpawnNodes;
 
 	// Grid/Node
 	private ObjectManager objectManager;
@@ -39,13 +38,11 @@ public class Map : MonoBehaviour
 		MakeWaves ();
 		MakeObstacles ();
 
-		destinationNode = objectManager.NodeManager.nodes[objectManager.NodeManager.size_x-1, 0];
-		destinationTransform.position = objectManager.NodeManager.nodes[objectManager.NodeManager.size_x-2, 0].unityPosition;
+		destinationNode = objectManager.NodeManager.GetDestinationNode();
+		destinationTransform.position = destinationNode.unityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
 
-		enemySpawnNode = objectManager.NodeManager.nodes [0, objectManager.NodeManager.size_y - 1];
-		enemySpawnTransform.position = objectManager.NodeManager.nodes[0, objectManager.NodeManager.size_y-1].unityPosition;
-		enemySpawnTransform.position = new Vector3(enemySpawnTransform.position.x, -.9f, enemySpawnTransform.position.z);
+		enemySpawnNodes = objectManager.NodeManager.GetSpawnNodes ();
 	}
 	
 	// Use this for initialization
@@ -202,11 +199,9 @@ public class Map : MonoBehaviour
 					enemy = enemyPrefabs [(int)wave.enemyType];
 				}
 
-				Vector3 moveSpawnOffScreen = enemySpawnTransform.position;
-				moveSpawnOffScreen.x-=10;
-				moveSpawnOffScreen.y-=10;
+				int spawnIndex = UnityEngine.Random.Range(0, enemySpawnNodes.Length);
 
-				Instantiate (enemy, moveSpawnOffScreen, Quaternion.Euler (new Vector3 (90, 45, 0)));
+				Instantiate (enemy, enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 45, 0)));
 				wave.nextEnemySpawnEvent = Time.time + wave.spawnDelay;
 				wave.numberOfEnemies--;
 			}

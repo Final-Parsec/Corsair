@@ -15,6 +15,17 @@ public class HardcodedMapData : IMapData {
 		MakeTiles();
 	}
 
+	public override Vector2 GetDestinationTileIndex()
+	{
+		return new Vector2(50, 29);
+	}
+
+	public override Vector2[] GetEnemySpawnTileIndecies()
+	{
+		Vector2[] arr = {new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25)};
+		return arr;
+	}
+
 	private void MakeTiles()
 	{
 		int lengthX = 68;

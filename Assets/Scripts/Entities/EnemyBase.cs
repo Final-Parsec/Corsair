@@ -29,6 +29,7 @@ public class EnemyBase : MonoBehaviour
 	protected List<Node> path = null;
 	public float speed = 10;
 	public int mindControlled = 0; // 0 is walking forward, >0 are stacked mindControle commands.
+	public Node spawnNode;
 
     public bool StopMindControlling { get; set; }
 
@@ -63,6 +64,7 @@ public class EnemyBase : MonoBehaviour
 		_ObjectManager = ObjectManager.GetInstance ();
 		_ObjectManager.AddEntity (this);
 		onNode = _ObjectManager.NodeManager.GetClosestNode (transform.position);
+		spawnNode = onNode;
 		InitAttributes();
 	}	
 	// Update is called once per frame

@@ -108,11 +108,13 @@ public class Pathfinding : MonoBehaviour
 	public bool CheckAndUpdatePaths ()
 	{
 		Node destination = objectManager.Map.destinationNode;
-		Node spawn = objectManager.Map.enemySpawnNode;
-		
-		pathToDestination = Astar (spawn, destination);
-		if (pathToDestination == null)
-			return false;
+
+		foreach(Node spawn in objectManager.Map.enemySpawnNodes){
+			pathToDestination = Astar (spawn, destination);
+			if (pathToDestination == null)
+				return false;
+
+		}
 		
 		foreach (EnemyBase entity in objectManager.enemies) {
 			List<Node> path;
@@ -120,7 +122,7 @@ public class Pathfinding : MonoBehaviour
             
 			if(entity.mindControlled>0)
             {
-                path = Astar(entity.onNode, spawn);
+				path = Astar(entity.onNode, entity.spawnNode);
                 Debug.Log("Mindcontrolled " + entity.mindControlled);
             }
 			else
@@ -157,8 +159,6 @@ public class Pathfinding : MonoBehaviour
 	void Start ()
 	{
 		objectManager = ObjectManager.GetInstance ();
-		pathToDestination = Astar (objectManager.Map.enemySpawnNode,
-		                          objectManager.Map.destinationNode);
 	}
 	
 	// Update is called once per frame

@@ -8,6 +8,8 @@ public class NodeManager{
 	public int size_y = 0;
 	private Vector3 left;
 	private Vector3 right;
+	private int xIndexOffset;
+	private int yIndexOffset;
 
 	private ObjectManager objectManager;
 
@@ -134,15 +136,13 @@ public class NodeManager{
 
 	private void SetGridSize()
 	{
-		int xIndex = -1;
-		int yIndex = -1;
 		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
 		{
 			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
 			{
-				if(xIndex == -1 && objectManager.MapData.tiles[x,y].isNode){
-					xIndex = x;
-					yIndex = y;
+				if(objectManager.MapData.tiles[x,y].isNode){
+					xIndexOffset = x;
+					yIndexOffset = y;
 
 					x = objectManager.MapData.tiles.GetLength(0);
 					y = objectManager.MapData.tiles.GetLength(1);
@@ -152,14 +152,14 @@ public class NodeManager{
 		
 		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
 		{
-			if(objectManager.MapData.tiles[x,yIndex].isNode){
+			if(objectManager.MapData.tiles[x,yIndexOffset].isNode){
 				size_x++;
 			}
 		}
 		
 		for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
 		{
-			if(objectManager.MapData.tiles[xIndex,y].isNode){
+			if(objectManager.MapData.tiles[xIndexOffset,y].isNode){
 				size_y++;
 			}
 		}
@@ -171,7 +171,7 @@ public class NodeManager{
 			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
 			{
 				if(objectManager.MapData.tiles[x,y].isNode){
-					nodes [x - xIndex, y - yIndex] = new Node (objectManager.MapData.tiles[x,y].isBuildable, objectManager.MapData.tiles[x,y].isWalkable);
+					nodes [x - xIndexOffset, y - yIndexOffset] = new Node (objectManager.MapData.tiles[x,y].isBuildable, objectManager.MapData.tiles[x,y].isWalkable);
 				}
 			}
 		}
@@ -254,5 +254,23 @@ public class NodeManager{
 		
 		node.isWalkable = true;
 		node.isBuildable = true;
+	}
+
+	public Node GetDestinationNode()
+	{
+		Vector2 destIndex = objectManager.MapData.GetDestinationTileIndex ();
+		return nodes[(int)destIndex.x - xIndexOffset, (int)destIndex.y - yIndexOffset];
+	}
+
+	public Node[] GetSpawnNodes()
+	{
+		Vector2[] spawnInecies = objectManager.MapData.GetEnemySpawnTileIndecies ();
+		Node[] spawnNodes = new Node[spawnInecies.Length];
+
+		for(int x = 0; x< spawnInecies.Length; x++){
+			spawnNodes[x] = nodes[(int)spawnInecies[x].x - xIndexOffset, (int)spawnInecies[x].y - yIndexOffset];
+		}
+
+		return spawnNodes;
 	}
 }

@@ -57,7 +57,7 @@ public class Debuff
                 owner.StopMindControlling = false;
 				owner.mindControlled++;
 				if(owner.mindControlled == 1)
-					MoveOwner(owner._ObjectManager.Map.enemySpawnNode);
+					MoveOwner(owner.spawnNode);
 				appliedEffect = true;
 			}
 			break;
