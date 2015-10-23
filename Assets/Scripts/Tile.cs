@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile {
 
+	public LinkedList<GameObject> doodads;
 	public Texture2D[] tileTextures;
 	public bool isBuildable;
 	public bool isWalkable;
@@ -16,5 +18,6 @@ public class Tile {
 		this.isBuildable = isBuildable;
 		this.isWalkable = isWalkable;
 		this.isNode = isNode;
+		doodads = new LinkedList<GameObject>();
 	}
 }

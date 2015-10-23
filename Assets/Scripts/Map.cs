@@ -50,11 +50,12 @@ public class Map : MonoBehaviour
 		ad = GameObject.FindGameObjectWithTag("Ad").GetComponent<GoogleMobileAdsScript>();
 		ad.RequestInterstitial ();
 
-		foreach (Node node in objectManager.NodeManager.nodes){
-			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
-		}
+//		foreach (Node node in objectManager.NodeManager.nodes){
+//			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
+//		}
 
 		LoadMapTexture ();
+		PlaceDoodads ();
 	}
 
 	/// <summary>
@@ -77,8 +78,6 @@ public class Map : MonoBehaviour
 				GUI.DrawTexture (new Rect (wantedPos.x - width / 2, Screen.height - wantedPos.y - objSize.y / 2, width, height), healthTexture);
 			}
 		}
-
-
 	}
 
 	/// <summary>
@@ -265,6 +264,27 @@ public class Map : MonoBehaviour
 		transform.localScale = new Vector3 (((objectManager.MapData.tiles.GetLength(0) + 1) * objectManager.MapData.nodeSize.x) / (objectManager.MapData.isIsoGrid?2:1),
 		                                    (objectManager.MapData.tiles.GetLength(1)+.5f) * objectManager.MapData.nodeSize.y,
 		                                    1);
+	}
+
+	public void PlaceDoodads()
+	{
+		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		{
+			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			{
+				Tile tile = objectManager.MapData.tiles[x, y];
+
+				if(tile.doodads.Count > 0)
+				{
+					foreach(GameObject doodad in tile.doodads)
+					{
+						Instantiate(doodad,
+						            objectManager.NodeManager.GetNodeFromTileIndex(x, y).unityPosition,
+						            Quaternion.Euler(Vector3.zero));
+					}
+				}
+			}
+		}
 	}
 
 	public void LoadMapTexture()

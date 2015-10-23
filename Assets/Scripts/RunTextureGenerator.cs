@@ -5,6 +5,7 @@ using System.IO;
 [RequireComponent(typeof(Renderer))]
 public class RunTextureGenerator : MonoBehaviour
 {
+	public string mapName;
 	public Vector2 nodeSize;
 	public bool isIsoGrid;
 	private Tile[,] tiles;
@@ -14,7 +15,7 @@ public class RunTextureGenerator : MonoBehaviour
 
 	public void GetTexture()
 	{
-		IMapData mapData = new HardcodedMapData("Test", nodeSize, isIsoGrid, grid, grid2);
+		IMapData mapData = new HardcodedMapData(mapName, nodeSize, isIsoGrid, grid, grid2);
 		TextureGenerator textureGenerator = new TextureGenerator(); 
 		Texture2D[] gridTextures = textureGenerator.Generate(mapData);
 		

@@ -273,4 +273,9 @@ public class NodeManager{
 
 		return spawnNodes;
 	}
+
+	public Node GetNodeFromTileIndex(int x, int y)
+	{
+		return nodes[x + xIndexOffset, y + yIndexOffset];
+	}
 }
