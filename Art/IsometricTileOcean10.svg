@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 1052.3622 744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="IsometricTileOcean10.svg"
+   inkscape:export-filename="C:\Code\Corsair\Art\IsometricTileOcean9.png"
+   inkscape:export-xdpi="6.2584758"
+   inkscape:export-ydpi="6.2584758">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.99999999"
+     inkscape:cx="337.70442"
+     inkscape:cy="368.83682"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:snap-grids="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1177"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:snap-perpendicular="false"
+     inkscape:snap-tangential="false"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     gridtolerance="10">
+    <inkscape:grid
+       type="axonomgrid"
+       id="grid4136"
+       units="mm"
+       empspacing="5"
+       gridanglex="26.5"
+       gridanglez="26.5"
+       spacingy="76.181102"
+       originy="9.834653e-017"
+       enabled="false" />
+    <sodipodi:guide
+       position="349.81971,506.69292"
+       orientation="1,0"
+       id="guide4141" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26772)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path4173"
+       d="M 687.58044,481.00394 440.38696,564.2756 687.58044,709.54725 916.77392,595.2756 Z"
+       style="fill:#2c617b;fill-opacity:1;fill-rule:evenodd;stroke:#2c617b;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-xdpi="6.2584758"
+       inkscape:export-ydpi="6.2584758" />
+    <path
+       style="fill:#366d88;fill-opacity:1;fill-rule:evenodd;stroke:#2c617b;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 229.19348,481.00394 -8.8617622e-7,595.2756 229.19348,709.54725 440.38696,564.2756 Z"
+       id="path4175"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-xdpi="6.2584758"
+       inkscape:export-ydpi="6.2584758" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path4177"
+       d="M 440.38696,564.27559 229.19348,709.54725 458.38696,823.8189 687.58044,709.54725 Z"
+       style="fill:#43758c;fill-opacity:1;fill-rule:evenodd;stroke:#43758c;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-xdpi="6.2584758"
+       inkscape:export-ydpi="6.2584758" />
+    <path
+       style="fill:#386981;fill-opacity:1;fill-rule:evenodd;stroke:#386981;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 458.38696,366.73228 229.19348,481.00394 440.38696,564.27559 687.58044,481.00394 Z"
+       id="path4171"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc"
+       inkscape:export-xdpi="6.2584758"
+       inkscape:export-ydpi="6.2584758" />
+  </g>
+</svg>
