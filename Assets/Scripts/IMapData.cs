@@ -5,6 +5,7 @@ public abstract class IMapData {
 	public Tile[,] tiles;
 	public string mapName;
 	public Vector2 nodeSize;
+	public Vector2 tileSize;
 	public bool isIsoGrid;
 
 	public abstract Vector2 GetDestinationTileIndex();

@@ -5,13 +5,14 @@ public class HardcodedMapData : IMapData {
 	private Texture2D grid;
 	private Texture2D grid2;
 
-	public HardcodedMapData(string mapName, Vector2 nodeSize, bool isIsoGrid, Texture2D grid, Texture2D grid2)
+	public HardcodedMapData(string mapName, Vector2 tileSize, bool isIsoGrid, Texture2D grid, Texture2D grid2)
 	{
 		this.mapName = mapName;
-		this.nodeSize = nodeSize;
+		this.tileSize = tileSize;
 		this.isIsoGrid = isIsoGrid;
 		this.grid = grid;
 		this.grid2 = grid2;
+		this.nodeSize = new Vector2 (32, 16);
 		MakeTiles();
 	}
 
