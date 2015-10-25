@@ -6,16 +6,15 @@ using System.IO;
 public class RunTextureGenerator : MonoBehaviour
 {
 	public string mapName;
-	public Vector2 nodeSize;
+	public Vector2 tileSize;
 	public bool isIsoGrid;
 	private Tile[,] tiles;
 
-	public Texture2D grid;
-	public Texture2D grid2;
+	public Texture2D[] grid;
 
 	public void GetTexture()
 	{
-		IMapData mapData = new HardcodedMapData(mapName, nodeSize, isIsoGrid, grid, grid2);
+		IMapData mapData = new HardcodedMapData(mapName, tileSize, isIsoGrid, grid);
 		TextureGenerator textureGenerator = new TextureGenerator(); 
 		Texture2D[] gridTextures = textureGenerator.Generate(mapData);
 		

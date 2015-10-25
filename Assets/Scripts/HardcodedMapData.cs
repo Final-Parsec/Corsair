@@ -2,16 +2,14 @@
 using System.Collections;
 
 public class HardcodedMapData : IMapData {
-	private Texture2D grid;
-	private Texture2D grid2;
+	private Texture2D[] grid;
 
-	public HardcodedMapData(string mapName, Vector2 tileSize, bool isIsoGrid, Texture2D grid, Texture2D grid2)
+	public HardcodedMapData(string mapName, Vector2 tileSize, bool isIsoGrid, Texture2D[] grid)
 	{
 		this.mapName = mapName;
 		this.tileSize = tileSize;
 		this.isIsoGrid = isIsoGrid;
 		this.grid = grid;
-		this.grid2 = grid2;
 		this.nodeSize = new Vector2 (32, 16);
 		MakeTiles();
 	}
@@ -38,7 +36,7 @@ public class HardcodedMapData : IMapData {
 		{
 			for(int y = 0; y<lengthY; y++)
 			{
-				Texture2D[] testures = (y==1)?new Texture2D[]{grid, grid2, grid}:new Texture2D[]{grid};
+				Texture2D[] testures = grid;
 				Tile tile = new Tile(testures, false, false, false);
 				tiles[x,y] = tile;
 

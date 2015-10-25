@@ -299,7 +299,7 @@ public class Map : MonoBehaviour
 		{
 			GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[itr%gridTextures.Length];
 			itr++;
-			yield return new WaitForSeconds(.2f);
+			yield return new WaitForSeconds(.5f);
 		}
 	}
 }

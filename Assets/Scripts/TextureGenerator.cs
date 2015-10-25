@@ -7,8 +7,8 @@ public class TextureGenerator{
 	// Grid/Node
 	private int sizeX;
 	private int sizeY;
-	private int nodeSizeX;
-	private int nodeSizeY;
+	private int tileSizeX;
+	private int tileSizeY;
 	private int maxTextures;
 	private IMapData mapData;
 
@@ -19,8 +19,8 @@ public class TextureGenerator{
 		sizeX = mapData.tiles.GetLength(0);
 		sizeY = mapData.tiles.GetLength(1);
 		
-		nodeSizeX = (int)mapData.nodeSize.x;
-		nodeSizeY = (int)mapData.nodeSize.y;
+		tileSizeX = (int)mapData.tileSize.x;
+		tileSizeY = (int)mapData.tileSize.y;
 
 		CalculateTilePositions();
 
@@ -33,11 +33,11 @@ public class TextureGenerator{
 		float tyPos;
 		for (int x=0; x<sizeX; x++) {
 			for (int y=0; y<sizeY; y++) {
-				txPos = (x * nodeSizeX * (mapData.isIsoGrid?.5f:1f));
-				tyPos = ((y + 1) * nodeSizeY) + (mapData.isIsoGrid?((x%2==1)?nodeSizeY/2f:0f):0f);
+				txPos = (x * tileSizeX * (mapData.isIsoGrid?.5f:1f));
+				tyPos = ((y + 1) * tileSizeY) + (mapData.isIsoGrid?((x%2==1)?tileSizeY/2f:0f):0f);
 
-				mapData.tiles [x, y].texturePositionX = (int)(nodeSizeX/2 + txPos);
-				mapData.tiles [x, y].texturePositionY = (int)(tyPos - nodeSizeY / 2);
+				mapData.tiles [x, y].texturePositionX = (int)(tileSizeX/2 + txPos);
+				mapData.tiles [x, y].texturePositionY = (int)(tyPos - tileSizeY / 2);
 
 				maxTextures = Mathf.Max(maxTextures, mapData.tiles [x, y].tileTextures.Length);
 			}
@@ -51,8 +51,8 @@ public class TextureGenerator{
 		for(int textureNumber = 0; textureNumber < maxTextures; textureNumber++)
 		{
 
-			textureArray[textureNumber] = new Texture2D (sizeX * (nodeSizeX / (mapData.isIsoGrid?2:1)) + (mapData.isIsoGrid?nodeSizeX/2:0),
-			                                             sizeY * nodeSizeY + (mapData.isIsoGrid?nodeSizeY/2:0));
+			textureArray[textureNumber] = new Texture2D (sizeX * (tileSizeX / (mapData.isIsoGrid?2:1)) + (mapData.isIsoGrid?tileSizeX/2:0),
+			                                             sizeY * tileSizeY + (mapData.isIsoGrid?tileSizeY/2:0));
 
 			textureArray[textureNumber].wrapMode = TextureWrapMode.Clamp;
 			textureArray[textureNumber].filterMode = FilterMode.Point;
@@ -84,14 +84,14 @@ public class TextureGenerator{
 	{
 		Color[] colors = tex.GetPixels ();
 		
-		int xOffset = tile.texturePositionX - nodeSizeX / 2;
-		int yOffset = tile.texturePositionY - nodeSizeY / 2;
+		int xOffset = tile.texturePositionX - tileSizeX / 2;
+		int yOffset = tile.texturePositionY - tileSizeY / 2;
 		
-		for (int x = 0; x < nodeSizeX; x++)
+		for (int x = 0; x < tileSizeX; x++)
 		{
-			for (int y = 0; y < nodeSizeY; y++)
+			for (int y = 0; y < tileSizeY; y++)
 			{
-				int index = y * nodeSizeX + x;
+				int index = y * tileSizeX + x;
 				if( colors[index].a == 0){
 					continue;
 				}
@@ -123,8 +123,8 @@ public class TextureGenerator{
 		//			}
 		//		}
 		
-		for(int x = 0; x < nodeSizeX * (sizeX+1); x++){
-			for(int y = 0; y < nodeSizeY * (sizeY+1); y++){
+		for(int x = 0; x < tileSizeX * (sizeX+1); x++){
+			for(int y = 0; y < tileSizeY * (sizeY+1); y++){
 				masterTexture.SetPixel(x, y, Color.clear);
 			}
 		}

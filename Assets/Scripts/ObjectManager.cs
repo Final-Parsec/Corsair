@@ -87,7 +87,7 @@ public class ObjectManager
 	{ 
 		get{
 			if(mapData == null)
-				mapData = new HardcodedMapData("Test", new Vector2(128,64), true, null, null);
+				mapData = new HardcodedMapData("Test", new Vector2(128,64), true, null);
 			return mapData;
 		} 
 	}
