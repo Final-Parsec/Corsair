@@ -233,8 +233,12 @@ public class Turret : MonoBehaviour
 		var aimError = Random.Range (-accuracyError, accuracyError);
 		var aimPoint = new Vector3 (targetPosition.x + aimError, targetPosition.y + aimError, targetPosition.z + aimError);
 		nextDamageEvent = Time.time + AttackDelay;
-		GameObject projectileObject = Instantiate (projectileType, transform.position, Quaternion.LookRotation (targetPosition)) as GameObject;
-		Projectile projectile = projectileObject.GetComponent<Projectile> ();
+        ////GameObject projectileObject = Instantiate (projectileType, transform.position, Quaternion.LookRotation (targetPosition)) as GameObject;
+        ////Projectile projectile = projectileObject.GetComponent<Projectile> ();
+        var projectile = projectileType.GetObjectFromPool<Projectile>(
+            ObjectPools.ProjectilePool,
+            transform.position,
+            Quaternion.LookRotation(targetPosition));
 		projectile.Damage = damage;
         projectile.DamageOverTime = damageOverTime;
         projectile.Slow = Slow;

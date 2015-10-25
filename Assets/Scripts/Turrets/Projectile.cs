@@ -30,9 +30,22 @@ public class Projectile : MonoBehaviour
 	// Runs when entity is Instantiated
 	void Awake ()
 	{
-		distance = 0;
         objectManager = ObjectManager.GetInstance();
+        this.Initialize();
 	}
+
+    void OnEnable()
+    {
+        this.Initialize();
+    }
+
+    /// <summary>
+    ///     Sets up the projectile!
+    /// </summary>
+    private void Initialize()
+    {
+        distance = 0;
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -51,7 +64,8 @@ public class Projectile : MonoBehaviour
 		if (distance > range ||
 			Vector3.Distance (transform.position, new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z)) < 1) 
         {
-			Destroy (gameObject);
+            ////Destroy (gameObject);
+            transform.gameObject.ReturnToPool(ObjectPools.ProjectilePool);
 			if (target != null) 
             {
                 if (Slow > 0)
@@ -93,8 +107,12 @@ public class Projectile : MonoBehaviour
                         if (Vector3.Distance(temp1, enemy.transform.position) < AoeRange)
                         {
                             var enemyTargetPosition = enemy.transform.position;
-                            GameObject projectileObject = Instantiate(Owner.projectileType, targetPosition, Quaternion.LookRotation(enemyTargetPosition)) as GameObject;
-                            Projectile projectile = projectileObject.GetComponent<Projectile>();
+                            ////GameObject projectileObject = Instantiate(Owner.projectileType, targetPosition, Quaternion.LookRotation(enemyTargetPosition)) as GameObject;
+                            ////Projectile projectile = projectileObject.GetComponent<Projectile>();
+                            var projectile = Owner.projectileType.GetObjectFromPool<Projectile>(
+                                ObjectPools.ProjectilePool,
+                                targetPosition,
+                                Quaternion.LookRotation(enemyTargetPosition));
                             projectile.Damage = AoeDamage;
                             projectile.target = enemy;
                             projectile.targetPosition = enemyTargetPosition;
