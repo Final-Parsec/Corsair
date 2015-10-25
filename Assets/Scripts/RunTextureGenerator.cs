@@ -21,6 +21,6 @@ public class RunTextureGenerator : MonoBehaviour
 //		GetComponent<Renderer>().sharedMaterial.SetTexture(1, gridTextures[1]);
 //		GetComponent<Renderer>().sharedMaterial.SetTexture(0, gridTextures[0]);
 
-		GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[1];
+		GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[0];
 	}
 }
