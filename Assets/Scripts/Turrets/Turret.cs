@@ -94,7 +94,7 @@ public class Turret : MonoBehaviour
 			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
 			float maxRange = minRange * 4f;
 			
-			float detectionRadius = (((float)value - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
+			float detectionRadius = (((float)range - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
 			detectionRadius = detectionRadius / transform.localScale.x;
 			
 			SphereCollider collider = transform.GetComponent<SphereCollider> ();
@@ -180,7 +180,8 @@ public class Turret : MonoBehaviour
 			switch(stat.AttribId)
 			{
 			case Attribute.Range:
-				DetectionRadius += stat.Value;
+				range += (int)stat.Value;
+				DetectionRadius = DetectionRadius;
 				break;
 			case Attribute.RateOfFire:
 				rateOfFire += (int)stat.Value;
@@ -231,7 +232,7 @@ public class Turret : MonoBehaviour
 	{
         var targetPosition = myTarget.transform.position;
 		var aimError = Random.Range (-accuracyError, accuracyError);
-		var aimPoint = new Vector3 (targetPosition.x + aimError, targetPosition.y + aimError, targetPosition.z + aimError);
+		var aimPoint = new Vector3 (targetPosition.x + aimError, targetPosition.y, targetPosition.z + aimError);
 		nextDamageEvent = Time.time + AttackDelay;
         ////GameObject projectileObject = Instantiate (projectileType, transform.position, Quaternion.LookRotation (targetPosition)) as GameObject;
         ////Projectile projectile = projectileObject.GetComponent<Projectile> ();
