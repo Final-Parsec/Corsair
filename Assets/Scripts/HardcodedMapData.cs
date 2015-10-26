@@ -11,6 +11,7 @@ public class HardcodedMapData : IMapData {
 		this.isIsoGrid = isIsoGrid;
 		this.grid = grid;
 		this.nodeSize = new Vector2 (32, 16);
+		this.animationSpeed = .28f;
 		MakeTiles();
 	}
 
