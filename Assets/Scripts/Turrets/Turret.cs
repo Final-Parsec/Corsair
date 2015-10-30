@@ -11,7 +11,8 @@ public class Turret : MonoBehaviour
     public int aoeRange = 0;
 	public int damage = 10;
     public int damageOverTime = 0;
-	public int range = 5;
+	public float range = 5;
+	public List<Node> nodesInRange = new List<Node>();
 	public int rateOfFire = 5;
 	public float Slow { get; set; }
 	public float SlowDuration { get; set; }
@@ -35,7 +36,7 @@ public class Turret : MonoBehaviour
 	
 	// Internal
 	private Sprite defaultSprite;
-	private List<EnemyBase> myTargets;
+	private EnemyBase target = null;
 	private float nextDamageEvent;
 	private ObjectManager objectManager;	
 	private static readonly object syncRoot = new object ();
@@ -76,31 +77,6 @@ public class Turret : MonoBehaviour
             return computedRange;
         }
     }
-	
-	public float DetectionRadius
-	{ 
-		get 
-        {	
-			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
-			float maxRange = minRange * 4f;
-			
-			float detectionRadius = (((float)range - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
-			detectionRadius = detectionRadius / transform.localScale.x;
-			
-			return detectionRadius;
-		}
-		set 
-        {
-			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
-			float maxRange = minRange * 4f;
-			
-			float detectionRadius = (((float)range - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
-			detectionRadius = detectionRadius / transform.localScale.x;
-			
-			SphereCollider collider = transform.GetComponent<SphereCollider> ();
-			collider.radius = detectionRadius;
-		}
-	}
 
     private int level = 0;
     public int Level
@@ -181,7 +157,6 @@ public class Turret : MonoBehaviour
 			{
 			case Attribute.Range:
 				range += (int)stat.Value;
-				DetectionRadius = DetectionRadius;
 				break;
 			case Attribute.RateOfFire:
 				rateOfFire += (int)stat.Value;
@@ -220,6 +195,7 @@ public class Turret : MonoBehaviour
 	{
 		objectManager = ObjectManager.GetInstance ();
 		objectManager.AddEntity (this);
+		FillNodesInRange();
 	}
 	
 	public void Deselect()
@@ -256,22 +232,28 @@ public class Turret : MonoBehaviour
         }
 	}
 
-	void OnTriggerEnter (Collider other)
+	void OnNodeExit ()
 	{
-		if (other.gameObject.tag == "enemy") {	
-			myTargets.Add (other.GetComponent<EnemyBase>());
+		if (target != null || !IsTargetInRange()) 
+		{
+			removeTargetCallbacks();
+			target = null;
 		}
-	}
-	
-	void OnTriggerExit (Collider other)
+	}	
+
+	void OnTargetKilled ()
 	{
-		lock (syncRoot) {
-			if (other != null &&
-				myTargets.Select (t => t!= null && t.gameObject).Contains(other.gameObject)) {
-				myTargets.Remove (other.GetComponent<EnemyBase>());
-			}
+		removeTargetCallbacks();
+		target = null;
+	}	
+
+	private void removeTargetCallbacks()
+	{
+		if (target != null)
+		{
+			target.Killed -= OnTargetKilled;
+			target.NodeExit -= OnNodeExit;
 		}
-		
 	}
 	
 	public void Select()
@@ -283,8 +265,6 @@ public class Turret : MonoBehaviour
 	void Start ()
 	{
 		defaultSprite = GetComponent<SpriteRenderer>().sprite;
-		DetectionRadius = range;
-		myTargets = new List<EnemyBase>();
 	}
 	
 	// Update is called once per frame
@@ -296,23 +276,20 @@ public class Turret : MonoBehaviour
 			return;
 		}
 
-        if (myTargets.Any())
-        {
-            EnemyBase myTarget = myTargets.ElementAt(Random.Range(0, myTargets.Count));
-            
-            
-            if (myTarget != null) {
-                if (Time.time >= nextDamageEvent)
-                {
-                    Fire(myTarget);
-                }
-            }
-            else
-            {
-				nextDamageEvent = Time.time + (AttackDelay * 1f/(float)objectManager.gameState.GameSpeed);
-                myTargets.Remove(myTarget);
-            }              
-        }
+		if (target != null && target.gameObject.activeSelf)
+		{
+			if (Time.time >= nextDamageEvent)
+			{
+				Fire(target);
+				nextDamageEvent = Time.time + (AttackDelay * 1f/(float)objectManager.gameState.GameSpeed); 
+			}
+			         
+		}
+		else
+		{
+
+			FindNewTarget();
+		}
 			
 	}
 
@@ -331,5 +308,107 @@ public class Turret : MonoBehaviour
 		str += MindControlDuration > 0?StatInfo.statInfo[Attribute.MindControlDuration].Acronym + "=" + MindControlDuration + "\t":"";
 
 		return str;
+	}
+
+	public void FillNodesInRange()
+	{
+		nodesInRange.Clear();
+
+		Node onNode = objectManager.NodeManager.GetNodeFromLocation(transform.position);
+
+		int yOffset = 0;
+		if(onNode.listPosX%2 == 0)
+		{
+			for(int x = 0; x <= range * 2; x++)
+			{
+				int xIndex = onNode.listPosX - (int)range + x;
+				for(int y = yOffset; y >= 0; y--)
+				{
+					int yIndexA = onNode.listPosY + y;
+					int yIndexB = onNode.listPosY - y;
+
+					if((xIndex >= 0 && xIndex < objectManager.NodeManager.size_x) && (yIndexA >= 0 && yIndexA < objectManager.NodeManager.size_y))
+					{
+						nodesInRange.Add(objectManager.NodeManager.nodes[xIndex, yIndexA]);
+					}
+
+					if((yIndexB != yIndexA) && (xIndex >= 0 && xIndex < objectManager.NodeManager.size_x) && (yIndexB >= 0 && yIndexB < objectManager.NodeManager.size_y))
+					{
+						nodesInRange.Add(objectManager.NodeManager.nodes[xIndex, yIndexB]);
+					}
+				}
+				if(x == range + 1)
+				{
+					yOffset--;
+				}
+				else if(x > range)
+				{
+					yOffset -= 2;
+				}
+				else
+				{
+					yOffset += 2;
+				}
+			}
+		}
+		else
+		{
+			for(int x = 0; x <= range * 2; x++)
+			{
+				int yIndex = onNode.listPosY - (int)range + x;
+				for(int y = 0; y < yOffset; y++)
+				{
+					int xIndexA = onNode.listPosX + y;
+					int xIndexB = onNode.listPosX - y;
+					
+					if((xIndexA >= 0 && xIndexA < objectManager.NodeManager.size_x) && (yIndex >= 0 && yIndex < objectManager.NodeManager.size_y))
+					{
+						nodesInRange.Add(objectManager.NodeManager.nodes[xIndexA, yIndex]);
+					}
+					
+					if((xIndexB != xIndexA) && (xIndexB >= 0 && xIndexB < objectManager.NodeManager.size_x) && (yIndex >= 0 && yIndex < objectManager.NodeManager.size_y))
+					{
+						nodesInRange.Add(objectManager.NodeManager.nodes[xIndexB, yIndex]);
+					}
+				}
+				if(x == range + 1)
+				{
+					yOffset--;
+				}
+				else if(x > range)
+				{
+					yOffset -= 2;
+				}
+				else
+				{
+					yOffset += 2;
+				}
+			}
+		}
+	}
+	 
+
+	private void FindNewTarget()
+	{
+		foreach (Node node in nodesInRange)
+		{
+			if(node.enemie != null)
+			{
+				removeTargetCallbacks();
+				target = node.enemie;
+				target.Killed += OnTargetKilled;
+				target.NodeExit += OnNodeExit;
+			}
+		}
+	}
+
+	private bool IsTargetInRange()
+	{
+		if (target == null)
+		{
+			return false;
+		}
+
+		return nodesInRange.Contains(target.onNode);
 	}
 }

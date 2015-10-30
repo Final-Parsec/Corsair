@@ -63,6 +63,7 @@ public class TurretFocusMenu : MonoBehaviour
 			}
 			
 			selectedTurret = value;
+
 			
 			if (oldSelectedTurret != null)
 			{
@@ -71,6 +72,10 @@ public class TurretFocusMenu : MonoBehaviour
 			
 			if (value != null)
 			{
+				GameObject turretRange = objectManager.TurretRange;
+				turretRange.transform.position = selectedTurret.transform.position;
+				turretRange.transform.localScale = new Vector3(selectedTurret.range * 10, selectedTurret.range * 10, 1);
+
 				isActive = true;
 				value.Select();
 				upgradeAnimator.SetTrigger ("Swipe In");

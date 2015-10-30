@@ -10,6 +10,11 @@ public class EnemyBase : MonoBehaviour
 	private static Color poison = new Color (.5f,0,.5f,1); // purple
 	private static float statusFlashDuration = .4f;
 
+	public delegate void KilledAction();
+	public delegate void NodeExitAction();
+	public event KilledAction Killed;
+	public event NodeExitAction NodeExit;
+
 	private float lastStatusFlashTime;
 	public int damageValue;
 	public int moneyValue;
@@ -78,7 +83,7 @@ public class EnemyBase : MonoBehaviour
     private void CorrectPosition()
     {
         // perfect for non mind control
-		float correctedY = -((onNode.listIndex.z / _ObjectManager.NodeManager.size_y) + (onNode.listIndex.x / _ObjectManager.NodeManager.size_x));
+		float correctedY = -((onNode.listPosY / _ObjectManager.NodeManager.size_y) + (onNode.listPosX / _ObjectManager.NodeManager.size_x));
         transform.position = new Vector3(transform.position.x, correctedY, transform.position.z);
     }
 
@@ -141,7 +146,17 @@ public class EnemyBase : MonoBehaviour
 		//if (_ObjectManager._Map.GetNodeFromLocation(transform.position) == path[currentWayPoint]) {
 		if(Vector3.Distance(position, path [currentWayPoint].unityPosition) <= minWaypointDisplacement){
 
+			if(onNode.enemie == this)
+			{
+				onNode.enemie = null;
+			}
 			onNode = path [currentWayPoint];
+			onNode.enemie = this;
+
+			if(NodeExit != null)
+			{
+				NodeExit();
+			}
 			currentWayPoint--;
 
             if (StopMindControlling)
@@ -347,6 +362,11 @@ public class EnemyBase : MonoBehaviour
 
 	public virtual void DestroyThisEntity ()
 	{
+		if(Killed != null)
+		{
+			Killed();
+		}
+
 		TextMesh deathInt = Instantiate(_ObjectManager.Map.enemyDeathInt, new Vector3 (transform.position.x, 40, transform.position.z), Quaternion.Euler(new Vector3(90, 45, 0))) as TextMesh;
 		if(onNode == _ObjectManager.Map.destinationNode){
 			_ObjectManager.gameState.PlayerHealth -= damageValue;

@@ -39,10 +39,10 @@ public class NodeManager{
 				txPos = (x * objectManager.MapData.nodeSize.x * (objectManager.MapData.isIsoGrid?.5f:1f));
 				tyPos = ((y + 1) * objectManager.MapData.nodeSize.y) + (objectManager.MapData.isIsoGrid?((x%2==1)?objectManager.MapData.nodeSize.y/2f:0f):0f);
 				Vector3 position = new Vector3 (xPos + objectManager.MapData.nodeSize.x / 2f, 0, zPos - objectManager.MapData.nodeSize.y / 2f);
-				Vector3 listIndex = new Vector3 (x, 0, y);
 				Vector2 textureCenter = new Vector2(objectManager.MapData.nodeSize.x/2f + txPos,
 				                                    tyPos - objectManager.MapData.nodeSize.y / 2f);
-				nodes [x, y].listIndex = listIndex;
+				nodes [x, y].listPosX = x;
+				nodes [x, y].listPosY = y;
 				nodes [x, y].setUnityPosition(position);
 				nodes [x, y].texturePosX = (int)(objectManager.MapData.nodeSize.x/2f + txPos);
 				nodes [x, y].texturePosY = (int)(tyPos - objectManager.MapData.nodeSize.y / 2f);

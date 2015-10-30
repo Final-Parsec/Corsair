@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Node
 {
 	public Turret turret = null;
+	public EnemyBase enemie;
 
 	public bool isWalkable;
 	public bool isBuildable;
@@ -12,7 +13,8 @@ public class Node
 	// Use border enum to access tiles.
 	public Node[] borderTiles = new Node[8];
 	public Vector3 unityPosition;
-	public Vector3 listIndex;
+	public int listPosX;
+	public int listPosY;
 	public int texturePosX;
 	public int texturePosY;
 
@@ -32,7 +34,8 @@ public class Node
 		this.isWalkable = isWalkable;
 		this.isBuildable = isBuildable;
 		this.unityPosition = unityPosition;
-		this.listIndex = listIndex;
+		this.listPosX = (int)listIndex.x;
+		this.listPosY = (int)listIndex.z;
 		this.texturePosX = (int)textureCenter.x;
 		this.texturePosY = (int)textureCenter.y;
 	}
@@ -45,7 +48,7 @@ public class Node
 	
 	public Node clone ()
 	{
-		return new Node (isWalkable, isBuildable, unityPosition, listIndex, new Vector2(texturePosX, texturePosY));
+		return new Node (isWalkable, isBuildable, unityPosition, new Vector2(listPosX, listPosY), new Vector2(texturePosX, texturePosY));
 	}
 
 	public void setUnityPosition (Vector3 unityPosition)

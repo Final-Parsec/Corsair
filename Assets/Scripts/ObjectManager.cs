@@ -102,6 +102,16 @@ public class ObjectManager
 		} 
 	}
 
+	private GameObject turretRange;
+	public GameObject TurretRange 
+	{ 
+		get{
+			if(turretRange == null)
+				turretRange = GameObject.Find("TurretRange");
+			return turretRange;
+		} 
+	}
+
 	public ObjectManager ()
 	{
 		ObjectManager.instance = this;
