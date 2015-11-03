@@ -17,12 +17,8 @@ public static class ObjectPooling
             // Initialize the object.
             objectFromPool.SetActive(true);
 
-            Debug.Log("Returned from pool");
-
             return objectFromPool.GetComponent<T>();    
         }
-
-        Debug.Log("Made new object");
 
         var newGameObject = Object.Instantiate(prefab);
         return newGameObject.GetComponent<T>();
@@ -46,12 +42,8 @@ public static class ObjectPooling
             objectFromPool.transform.rotation = rotation;
             objectFromPool.SetActive(true);
 
-            Debug.Log("Returned from pool");
-
             return objectFromPool.GetComponent<T>();
         }
-
-        Debug.Log("Made new object");
 
         var newGameObject = Object.Instantiate(prefab, position, rotation) as GameObject;
         return newGameObject.GetComponent<T>();
@@ -59,8 +51,6 @@ public static class ObjectPooling
 
     public static void ReturnToPool(this GameObject gameobject, string objectPoolName)
     {
-        Debug.Log("Returned to pool");
-
         var objectPool = GetObjectPool(objectPoolName);
         gameobject.SetActive(false);
         objectPool.AddFirst(gameobject);

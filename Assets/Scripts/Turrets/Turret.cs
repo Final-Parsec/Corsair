@@ -316,73 +316,67 @@ public class Turret : MonoBehaviour
 
 		Node onNode = objectManager.NodeManager.GetNodeFromLocation(transform.position);
 
-		int yOffset = 0;
-		if(onNode.listPosX%2 == 0)
+		Vector3 start = new Vector3 (onNode.unityPosition.x + ((objectManager.MapData.nodeSize.x / 2) * (range - 1)),
+		                             0,
+		                             onNode.unityPosition.z - ((objectManager.MapData.nodeSize.y / 2) * (range - 1) + objectManager.MapData.nodeSize.y));
+
+		Vector3 currentLoc = start;
+
+		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+		for(int i = 0; i < range * 2 + 1; i++)
 		{
-			for(int x = 0; x <= range * 2; x++)
+			if(i < range - 1 )
 			{
-				int xIndex = onNode.listPosX - (int)range + x;
-				for(int y = yOffset; y >= 0; y--)
-				{
-					int yIndexA = onNode.listPosY + y;
-					int yIndexB = onNode.listPosY - y;
 
-					if((xIndex >= 0 && xIndex < objectManager.NodeManager.size_x) && (yIndexA >= 0 && yIndexA < objectManager.NodeManager.size_y))
+				for(int l = 0; l < 3 + i * 2; l++)
+				{
+					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
+					if(node == null)
 					{
-						nodesInRange.Add(objectManager.NodeManager.nodes[xIndex, yIndexA]);
+						break;
 					}
-
-					if((yIndexB != yIndexA) && (xIndex >= 0 && xIndex < objectManager.NodeManager.size_x) && (yIndexB >= 0 && yIndexB < objectManager.NodeManager.size_y))
-					{
-						nodesInRange.Add(objectManager.NodeManager.nodes[xIndex, yIndexB]);
-					}
+					nodesInRange.Add(node);
+					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
 				}
-				if(x == range + 1)
-				{
-					yOffset--;
-				}
-				else if(x > range)
-				{
-					yOffset -= 2;
-				}
-				else
-				{
-					yOffset += 2;
-				}
+				currentLoc.x = start.x - objectManager.MapData.nodeSize.x;
+				currentLoc.z = start.z;
+				start = currentLoc;
 			}
-		}
-		else
-		{
-			for(int x = 0; x <= range * 2; x++)
+			else if(i < range + 1)
 			{
-				int yIndex = onNode.listPosY - (int)range + x;
-				for(int y = 0; y < yOffset; y++)
+				for(int l = 0; l < range * 2 + 1; l++)
 				{
-					int xIndexA = onNode.listPosX + y;
-					int xIndexB = onNode.listPosX - y;
-					
-					if((xIndexA >= 0 && xIndexA < objectManager.NodeManager.size_x) && (yIndex >= 0 && yIndex < objectManager.NodeManager.size_y))
+					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
+					if(node == null)
 					{
-						nodesInRange.Add(objectManager.NodeManager.nodes[xIndexA, yIndex]);
+						break;
 					}
-					
-					if((xIndexB != xIndexA) && (xIndexB >= 0 && xIndexB < objectManager.NodeManager.size_x) && (yIndex >= 0 && yIndex < objectManager.NodeManager.size_y))
+					nodesInRange.Add(node);
+					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
+				}
+				currentLoc.x = start.x - objectManager.MapData.nodeSize.x / 2;
+				currentLoc.z = start.z + objectManager.MapData.nodeSize.y / 2;
+				start = currentLoc;
+			}
+			else
+			{
+				for(int l = 0; l < 3 + ((range * 2 ) - i) * 2; l++)
+				{
+					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
+					if(node == null)
 					{
-						nodesInRange.Add(objectManager.NodeManager.nodes[xIndexB, yIndex]);
+						break;
 					}
+					nodesInRange.Add(node);
+					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
 				}
-				if(x == range + 1)
-				{
-					yOffset--;
-				}
-				else if(x > range)
-				{
-					yOffset -= 2;
-				}
-				else
-				{
-					yOffset += 2;
-				}
+				currentLoc.x = start.x;
+				currentLoc.z = start.z + objectManager.MapData.nodeSize.y;
+				start = currentLoc;
 			}
 		}
 	}
