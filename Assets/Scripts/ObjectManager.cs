@@ -102,12 +102,12 @@ public class ObjectManager
 		} 
 	}
 
-	private GameObject turretRange;
-	public GameObject TurretRange 
+	private RangeVisual turretRange;
+	public RangeVisual TurretRange 
 	{ 
 		get{
 			if(turretRange == null)
-				turretRange = GameObject.Find("TurretRange");
+				turretRange = GameObject.Find("TurretRange").GetComponent<RangeVisual>();
 			return turretRange;
 		} 
 	}

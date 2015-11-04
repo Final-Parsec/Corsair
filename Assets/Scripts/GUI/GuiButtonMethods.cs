@@ -296,6 +296,7 @@ public class GuiButtonMethods : MonoBehaviour
 			PlayDefaultSound();
 			upgradeAnimator.SetTrigger("Swipe Out");
 		}
+		objectManager.TurretRange.gameObject.SetActive(false);
 	}
 
 	public void SpeedUp()
@@ -339,6 +340,8 @@ public class GuiButtonMethods : MonoBehaviour
 	public void PlaySellSound()
 	{
 		upgradeAnimator.SetTrigger("Swipe Out");
+		
+		objectManager.TurretRange.gameObject.SetActive(false);
 
 		if(!objectManager.gameState.isMuted)
 			audioSource.PlayOneShot(audioClips["sellPress"]);

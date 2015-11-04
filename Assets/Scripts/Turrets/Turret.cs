@@ -157,6 +157,8 @@ public class Turret : MonoBehaviour
 			{
 			case Attribute.Range:
 				range += (int)stat.Value;
+				FillNodesInRange();
+				objectManager.TurretRange.ChangeSprite((int)range);
 				break;
 			case Attribute.RateOfFire:
 				rateOfFire += (int)stat.Value;
@@ -321,8 +323,6 @@ public class Turret : MonoBehaviour
 		                             onNode.unityPosition.z - ((objectManager.MapData.nodeSize.y / 2) * (range - 1) + objectManager.MapData.nodeSize.y));
 
 		Vector3 currentLoc = start;
-
-		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
 		for(int i = 0; i < range * 2 + 1; i++)
 		{

@@ -72,11 +72,11 @@ public class TurretFocusMenu : MonoBehaviour
 			
 			if (value != null)
 			{
-				GameObject turretRange = objectManager.TurretRange;
-				turretRange.transform.position = selectedTurret.transform.position;
-				turretRange.transform.localScale = new Vector3(objectManager.MapData.nodeSize.x * ((value.range-1) / 2),
-				                                               objectManager.MapData.nodeSize.x * ((value.range-1) / 2),
-				                                               1);
+				objectManager.TurretRange.gameObject.SetActive(true);
+				objectManager.TurretRange.transform.position = new Vector3(selectedTurret.transform.position.x,
+				                                                           selectedTurret.transform.position.y - 5,
+				                                                           selectedTurret.transform.position.z);
+				objectManager.TurretRange.ChangeSprite((int)value.range);
 
 				isActive = true;
 				value.Select();

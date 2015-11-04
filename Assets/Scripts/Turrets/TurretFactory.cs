@@ -25,7 +25,7 @@ public class TurretFactory : MonoBehaviour
         {
 			Vector3 correctedPosition = cursorOnNode.unityPosition;
 			correctedPosition.y = -((cursorOnNode.listPosY / objectManager.NodeManager.size_y) + (cursorOnNode.listPosX / objectManager.NodeManager.size_x));
-			Turret turret = ((GameObject) Instantiate (turretPrefabs [(int)TurretType], correctedPosition, Quaternion.Euler (new Vector3 (90, 45, 0)))).GetComponent<Turret>();
+			Turret turret = ((GameObject) Instantiate (turretPrefabs [(int)TurretType], correctedPosition, Quaternion.Euler (new Vector3 (90, 0, 0)))).GetComponent<Turret>();
 			turret.Msrp = turretCosts [(int)TurretType];
             turret.TurretType = TurretType;
 			cursorOnNode.turret = turret;
