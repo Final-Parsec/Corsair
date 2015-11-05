@@ -118,9 +118,9 @@ public class Map : MonoBehaviour
 						   z%5==4 && 
 						   !(Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y <= 10 ||
 						  Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y >= Screen.height - Screen.height * .20)) {
-							Vector3 spawnPosition = new Vector3(objectManager.NodeManager.nodes[x,z].unityPosition.x - objectManager.MapData.nodeSize.x/2,
+							Vector3 spawnPosition = new Vector3(objectManager.NodeManager.nodes[x,z].unityPosition.x - objectManager.MapData.NodeSize.x/2,
 							                                    -3,
-							                                    objectManager.NodeManager.nodes[x,z].unityPosition.z - objectManager.MapData.nodeSize.y/2);
+							                                    objectManager.NodeManager.nodes[x,z].unityPosition.z - objectManager.MapData.NodeSize.y/2);
 							Array values = Enum.GetValues(typeof(ObstacleType));
 							ObstacleType randomObstacle = (ObstacleType)values.GetValue(random.Next(values.Length));
 							GameObject obstaclePrefab = obstaclePrefabs[(int)randomObstacle];
@@ -240,39 +240,39 @@ public class Map : MonoBehaviour
 
 		int xIndex = -1;
 		int yIndex = -1;
-		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		for(int x = 0; x<objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 			{
-				if(xIndex == -1 && objectManager.MapData.tiles[x,y].isNode){
+				if(xIndex == -1 && objectManager.MapData.Tiles[x,y].isNode){
 					xIndex = x;
 					yIndex = y;
 					
-					x = objectManager.MapData.tiles.GetLength(0);
-					y = objectManager.MapData.tiles.GetLength(1);
+					x = objectManager.MapData.Tiles.GetLength(0);
+					y = objectManager.MapData.Tiles.GetLength(1);
 				}
 			}
 		}
 
-		float textureSizeX = objectManager.MapData.tiles.GetLength (0);
-		float textureSizeY = objectManager.MapData.tiles.GetLength (1);
+		float textureSizeX = objectManager.MapData.Tiles.GetLength (0);
+		float textureSizeY = objectManager.MapData.Tiles.GetLength (1);
 
-		center.z = center.z + (((textureSizeX - objectManager.NodeManager.size_x) / 2f) - xIndex) * objectManager.MapData.nodeSize.y;
-		center.x = center.x + (((textureSizeY - objectManager.NodeManager.size_y) / 2f) - yIndex) * (objectManager.MapData.nodeSize.x / (objectManager.MapData.isIsoGrid?2:1));
+		center.z = center.z + (((textureSizeX - objectManager.NodeManager.size_x) / 2f) - xIndex) * objectManager.MapData.NodeSize.y;
+		center.x = center.x + (((textureSizeY - objectManager.NodeManager.size_y) / 2f) - yIndex) * (objectManager.MapData.NodeSize.x / (objectManager.MapData.IsIsoGrid?2:1));
 
 		transform.position = center;
-		transform.localScale = new Vector3 (((objectManager.MapData.tiles.GetLength(0) + 1) * objectManager.MapData.nodeSize.x) / (objectManager.MapData.isIsoGrid?2:1),
-		                                    (objectManager.MapData.tiles.GetLength(1)+.5f) * objectManager.MapData.nodeSize.y,
+		transform.localScale = new Vector3 (((objectManager.MapData.Tiles.GetLength(0) + 1) * objectManager.MapData.NodeSize.x) / (objectManager.MapData.IsIsoGrid?2:1),
+		                                    (objectManager.MapData.Tiles.GetLength(1)+.5f) * objectManager.MapData.NodeSize.y,
 		                                    1);
 	}
 
 	public void PlaceDoodads()
 	{
-		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		for(int x = 0; x<objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 			{
-				Tile tile = objectManager.MapData.tiles[x, y];
+				Tile tile = objectManager.MapData.Tiles[x, y];
 
 				if(tile.doodads.Count > 0)
 				{
@@ -289,7 +289,7 @@ public class Map : MonoBehaviour
 
 	public void LoadMapTexture()
 	{
-		Texture2D[] textures = Resources.LoadAll<Texture2D>(objectManager.MapData.mapName+"/mapTextures");
+		Texture2D[] textures = Resources.LoadAll<Texture2D>(objectManager.MapData.MapName + "/mapTextures");
 		StartCoroutine (Animate(textures));
 	}
 
@@ -299,7 +299,7 @@ public class Map : MonoBehaviour
 		{
 			GetComponent<Renderer>().sharedMaterial.mainTexture = gridTextures[itr%gridTextures.Length];
 			itr++;
-			yield return new WaitForSeconds(objectManager.MapData.animationSpeed);
+			yield return new WaitForSeconds(objectManager.MapData.AnimationSpeed);
 		}
 	}
 }

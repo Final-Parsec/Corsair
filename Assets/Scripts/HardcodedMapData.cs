@@ -1,52 +1,120 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace FinalParsec.Corsair
+{
+    using UnityEngine;
 
-public class HardcodedMapData : IMapData {
-	private Texture2D[] grid;
+    /// <summary>
+    ///     <see cref="IMapData" /> implementation with configuration data directly in the source code.
+    /// </summary>
+    public class HardcodedMapData : IMapData
+    {
+        private readonly Texture2D[] grid;
 
-	public HardcodedMapData(string mapName, Vector2 tileSize, bool isIsoGrid, Texture2D[] grid)
-	{
-		this.mapName = mapName;
-		this.tileSize = tileSize;
-		this.isIsoGrid = isIsoGrid;
-		this.grid = grid;
-		this.nodeSize = new Vector2 (32, 16);
-		this.animationSpeed = .28f;
-		MakeTiles();
-	}
+        /// <summary>
+        ///     Backing store for <see cref="Tiles" />.
+        /// </summary>
+        private Tile[,] tiles;
 
-	public override Vector2 GetDestinationTileIndex()
-	{
-		return new Vector2(50, 29);
-	}
+        public HardcodedMapData(Texture2D[] grid)
+        {
+            this.grid = grid;
+        }
 
-	public override Vector2[] GetEnemySpawnTileIndecies()
-	{
-		Vector2[] arr = {new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25)};
-		return arr;
-	}
+        /// <summary>
+        ///     Gets or sets the duration, in seconds, each frame of the map's animation should be displayed.
+        /// </summary>
+        public float AnimationSpeed
+        {
+            get { return .28f; }
+        }
 
-	private void MakeTiles()
-	{
-		int lengthX = 68;
-		int lengthY = 36;
+        /// <summary>
+        ///     Gets the location of the destination node (where enemies go).
+        /// </summary>
+        public Vector2 DestinationNode
+        {
+            get { return new Vector2(50, 29); }
+        }
 
-		this.tiles = new Tile[lengthX, lengthY];
-		
-		for(int x = 0; x<lengthX; x++)
-		{
-			for(int y = 0; y<lengthY; y++)
-			{
-				Texture2D[] testures = grid;
-				Tile tile = new Tile(testures, false, false, false);
-				tiles[x,y] = tile;
+        /// <summary>
+        ///     Gets the location of the nodes where enemies spawn.
+        /// </summary>
+        public Vector2[] EnemySpawnTileIndicies
+        {
+            get
+            {
+                Vector2[] arr = {new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25)};
+                return arr;
+            }
+        }
 
-				if(x > 1 && x < lengthX-6 && y > 1 && y < lengthY-6){
-					tile.isBuildable = true;
-					tile.isWalkable = true;
-					tile.isNode = true;
-				}
-			}
-		}
-	}
+        /// <summary>
+        ///     Gets a value indicating whether the map uses an isometric grid.
+        /// </summary>
+        public bool IsIsoGrid
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        ///     Gets the name of the map.
+        /// </summary>
+        public string MapName
+        {
+            get { return "Baer World"; }
+        }
+
+        /// <summary>
+        ///     Gets the dimensions of the node map.
+        /// </summary>
+        public Vector2 NodeSize
+        {
+            get { return new Vector2(32, 16); }
+        }
+
+        /// <summary>
+        ///     Gets or sets the 2D tile set.
+        /// </summary>
+        public Tile[,] Tiles
+        {
+            get
+            {
+                if (this.tiles != default(Tile[,]))
+                {
+                    return this.tiles;
+                }
+
+                const int lengthX = 68;
+                const int lengthY = 36;
+
+                this.tiles = new Tile[lengthX, lengthY];
+
+                for (var x = 0; x < lengthX; x++)
+                {
+                    for (var y = 0; y < lengthY; y++)
+                    {
+                        var testures = this.grid;
+                        var tile = new Tile(testures, false, false, false);
+                        this.tiles[x, y] = tile;
+
+                        if (x > 1 && x < lengthX - 6 && y > 1 && y < lengthY - 6)
+                        {
+                            tile.isBuildable = true;
+                            tile.isWalkable = true;
+                            tile.isNode = true;
+                        }
+                    }
+                }
+
+                return this.tiles;
+            }
+        }
+
+        /// <summary>
+        ///     Gets the size, in pixels, of an individual tile.
+        /// </summary>
+        public Vector2 TileSize
+        {
+            get { return new Vector2(64, 32); }
+        }
+    }
 }

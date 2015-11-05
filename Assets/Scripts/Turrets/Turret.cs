@@ -68,7 +68,7 @@ public class Turret : MonoBehaviour
     {
         get
         {
-			float minRange = Mathf.Min(objectManager.MapData.nodeSize.x, objectManager.MapData.nodeSize.y) * 1.5f;
+			float minRange = Mathf.Min(objectManager.MapData.NodeSize.x, objectManager.MapData.NodeSize.y) * 1.5f;
             float maxRange = minRange * 4f;
 
             float computedRange = (((float)aoeRange - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
@@ -318,9 +318,9 @@ public class Turret : MonoBehaviour
 
 		Node onNode = objectManager.NodeManager.GetNodeFromLocation(transform.position);
 
-		Vector3 start = new Vector3 (onNode.unityPosition.x + ((objectManager.MapData.nodeSize.x / 2) * (range - 1)),
+		Vector3 start = new Vector3 (onNode.unityPosition.x + ((objectManager.MapData.NodeSize.x / 2) * (range - 1)),
 		                             0,
-		                             onNode.unityPosition.z - ((objectManager.MapData.nodeSize.y / 2) * (range - 1) + objectManager.MapData.nodeSize.y));
+		                             onNode.unityPosition.z - ((objectManager.MapData.NodeSize.y / 2) * (range - 1) + objectManager.MapData.NodeSize.y));
 
 		Vector3 currentLoc = start;
 
@@ -337,10 +337,10 @@ public class Turret : MonoBehaviour
 						break;
 					}
 					nodesInRange.Add(node);
-					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
-					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
+					currentLoc.x += objectManager.MapData.NodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.NodeSize.y / 2;
 				}
-				currentLoc.x = start.x - objectManager.MapData.nodeSize.x;
+				currentLoc.x = start.x - objectManager.MapData.NodeSize.x;
 				currentLoc.z = start.z;
 				start = currentLoc;
 			}
@@ -354,11 +354,11 @@ public class Turret : MonoBehaviour
 						break;
 					}
 					nodesInRange.Add(node);
-					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
-					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
+					currentLoc.x += objectManager.MapData.NodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.NodeSize.y / 2;
 				}
-				currentLoc.x = start.x - objectManager.MapData.nodeSize.x / 2;
-				currentLoc.z = start.z + objectManager.MapData.nodeSize.y / 2;
+				currentLoc.x = start.x - objectManager.MapData.NodeSize.x / 2;
+				currentLoc.z = start.z + objectManager.MapData.NodeSize.y / 2;
 				start = currentLoc;
 			}
 			else
@@ -371,11 +371,11 @@ public class Turret : MonoBehaviour
 						break;
 					}
 					nodesInRange.Add(node);
-					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
-					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
+					currentLoc.x += objectManager.MapData.NodeSize.x / 2;
+					currentLoc.z += objectManager.MapData.NodeSize.y / 2;
 				}
 				currentLoc.x = start.x;
-				currentLoc.z = start.z + objectManager.MapData.nodeSize.y;
+				currentLoc.z = start.z + objectManager.MapData.NodeSize.y;
 				start = currentLoc;
 			}
 		}
