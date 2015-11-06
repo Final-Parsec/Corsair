@@ -5,7 +5,7 @@ using System;
 
 public class Map : MonoBehaviour
 {
-	public TextMesh enemyDeathInt;
+	public GameObject enemyDeathInt;
 
 	// Prefabs, GameObjects, and Textures
 	public List<GameObject> enemyPrefabs;
@@ -36,7 +36,6 @@ public class Map : MonoBehaviour
 		ScaleAndPlaceMap ();
 		
 		MakeWaves ();
-		MakeObstacles ();
 
 		destinationNode = objectManager.NodeManager.GetDestinationNode();
 		destinationTransform.position = destinationNode.unityPosition;
@@ -103,55 +102,6 @@ public class Map : MonoBehaviour
 		}
 	}
 
-	private void MakeObstacles()
-	{
-		System.Random random = new System.Random();  // Needs to be instantiated outside the loop. http://stackoverflow.com/questions/5398336/random-number-generator-always-picks-the-same-value-when-run-inside-a-loop
-	
-		if(objectManager.gameState.MapType == MapType.Obstacles){
-			for(int x=0; x<objectManager.NodeManager.size_x; x++){
-				for(int z=0; z<objectManager.NodeManager.size_y; z++){
-					if((x%5==3 || x%5==4) && (z%5==3 || z%5==4)){
-						objectManager.NodeManager.nodes[x,z].isBuildable = false;
-						objectManager.NodeManager.nodes[x,z].isWalkable = false;
-
-						if(x%5==4 &&
-						   z%5==4 && 
-						   !(Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y <= 10 ||
-						  Camera.main.WorldToScreenPoint(objectManager.NodeManager.nodes[x,z].unityPosition).y >= Screen.height - Screen.height * .20)) {
-							Vector3 spawnPosition = new Vector3(objectManager.NodeManager.nodes[x,z].unityPosition.x - objectManager.MapData.nodeSize.x/2,
-							                                    -3,
-							                                    objectManager.NodeManager.nodes[x,z].unityPosition.z - objectManager.MapData.nodeSize.y/2);
-							Array values = Enum.GetValues(typeof(ObstacleType));
-							ObstacleType randomObstacle = (ObstacleType)values.GetValue(random.Next(values.Length));
-							GameObject obstaclePrefab = obstaclePrefabs[(int)randomObstacle];
-							Instantiate (obstaclePrefab, spawnPosition, obstaclePrefab.transform.rotation);							
-						}
-						else if(x%5==4 && z%5==4) {
-
-							if(!(Camera.main.WorldToScreenPoint (objectManager.NodeManager.nodes[x-1,z-1].unityPosition).y <= 10 ||
-							     Camera.main.WorldToScreenPoint (objectManager.NodeManager.nodes[x-1,z-1].unityPosition).y >= Screen.height - Screen.height * .21)){
-								objectManager.NodeManager.nodes[x,z].isBuildable = true;
-								objectManager.NodeManager.nodes[x,z].isWalkable = true;
-
-								objectManager.NodeManager.nodes[x-1,z].isBuildable = true;
-								objectManager.NodeManager.nodes[x-1,z].isWalkable = true;
-
-								objectManager.NodeManager.nodes[x,z-1].isBuildable = true;
-								objectManager.NodeManager.nodes[x,z-1].isWalkable = true;
-
-								objectManager.NodeManager.nodes[x-1,z-1].isBuildable = true;
-								objectManager.NodeManager.nodes[x-1,z-1].isWalkable = true;
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-
-	}
-
 	/// <summary>
 	/// Starts a wave from the upcomming Waves list.
 	/// Ends the game when all the waves have been ran, all the enemies are dead, and the player didn't lose.
@@ -192,15 +142,18 @@ public class Map : MonoBehaviour
 
 			if (Time.time >= wave.nextEnemySpawnEvent && wave.numberOfEnemies > 0) {
 				GameObject enemy;
-				if(wave.enemyType == EnemyType.Max){
-					enemy = bossPrefabs [(int)wave.bossType];
-				}else{
-					enemy = enemyPrefabs [(int)wave.enemyType];
-				}
-
 				int spawnIndex = UnityEngine.Random.Range(0, enemySpawnNodes.Length);
 
-				Instantiate (enemy, enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 45, 0)));
+				if(wave.enemyType == EnemyType.Max){
+					enemy = bossPrefabs [(int)wave.bossType];
+					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
+					madeEnemy.name = enemy.name;
+				}else{
+					enemy = enemyPrefabs [(int)wave.enemyType];
+					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
+					madeEnemy.name = enemy.name;
+				}
+
 				wave.nextEnemySpawnEvent = Time.time + wave.spawnDelay;
 				wave.numberOfEnemies--;
 			}

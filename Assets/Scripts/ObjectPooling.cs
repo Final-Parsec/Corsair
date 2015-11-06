@@ -30,24 +30,33 @@ public static class ObjectPooling
         Vector3 position,
         Quaternion rotation)
     {
-        var objectPool = GetObjectPool(objectPoolName);
-
-        if (objectPool.Count > 0)
-        {
-            var objectFromPool = objectPool.First.Value;
-            objectPool.RemoveFirst();
-
-            // Initialize the object.
-            objectFromPool.transform.position = position;
-            objectFromPool.transform.rotation = rotation;
-            objectFromPool.SetActive(true);
-
-            return objectFromPool.GetComponent<T>();
-        }
-
-        var newGameObject = Object.Instantiate(prefab, position, rotation) as GameObject;
-        return newGameObject.GetComponent<T>();
+		return prefab.GetObjectFromPool(objectPoolName, position, rotation).GetComponent<T>();
     }
+
+	public static GameObject GetObjectFromPool(
+		this GameObject prefab,
+		string objectPoolName,
+		Vector3 position,
+		Quaternion rotation)
+	{
+		var objectPool = GetObjectPool(objectPoolName);
+		
+		if (objectPool.Count > 0)
+		{
+			var objectFromPool = objectPool.First.Value;
+			objectPool.RemoveFirst();
+			
+			// Initialize the object.
+			objectFromPool.transform.position = position;
+			objectFromPool.transform.rotation = rotation;
+			objectFromPool.SetActive(true);
+			
+			return objectFromPool;
+		}
+		
+		var newGameObject = Object.Instantiate(prefab, position, rotation) as GameObject;
+		return newGameObject;
+	}
 
     public static void ReturnToPool(this GameObject gameobject, string objectPoolName)
     {
@@ -88,6 +97,8 @@ public static class ObjectPooling
             var newPool = new LinkedList<GameObject>();
             ObjectPooling.PooledObjects.Add(objectPoolName, newPool);
             objectPool = newPool;
+
+			Debug.Log(objectPoolName);
         }
 
         return objectPool;

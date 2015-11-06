@@ -9,7 +9,7 @@ public class DeathIntAction : MonoBehaviour {
 	private ObjectManager objectManager;
 
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		objectManager = ObjectManager.GetInstance();
 		madeAt = Time.time;
 	}
@@ -18,8 +18,9 @@ public class DeathIntAction : MonoBehaviour {
 	void Update () {
 		Move();
 		if(Time.time > madeAt+timeToLive)
-			Destroy(gameObject);
-
+		{
+			this.gameObject.ReturnToPool(this.gameObject.name);
+		}
 	}
 
 	public void Move ()

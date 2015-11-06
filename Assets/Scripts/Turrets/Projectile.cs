@@ -65,7 +65,7 @@ public class Projectile : MonoBehaviour
 			Vector3.Distance (transform.position, new Vector3 (targetPosition.x, targetPosition.y, targetPosition.z)) < 1) 
         {
             ////Destroy (gameObject);
-            transform.gameObject.ReturnToPool(ObjectPools.ProjectilePool);
+            transform.gameObject.ReturnToPool(this.gameObject.name);
 			if (target != null) 
             {
                 if (Slow > 0)

@@ -215,9 +215,10 @@ public class Turret : MonoBehaviour
         ////GameObject projectileObject = Instantiate (projectileType, transform.position, Quaternion.LookRotation (targetPosition)) as GameObject;
         ////Projectile projectile = projectileObject.GetComponent<Projectile> ();
         var projectile = projectileType.GetObjectFromPool<Projectile>(
-            ObjectPools.ProjectilePool,
+			projectileType.name,
             transform.position,
             Quaternion.LookRotation(targetPosition));
+		projectile.gameObject.name = projectileType.name;
 		projectile.Damage = damage;
         projectile.DamageOverTime = damageOverTime;
         projectile.Slow = Slow;
@@ -324,6 +325,8 @@ public class Turret : MonoBehaviour
 
 		Vector3 currentLoc = start;
 
+		//GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
 		for(int i = 0; i < range * 2 + 1; i++)
 		{
 			if(i < range - 1 )
@@ -331,12 +334,13 @@ public class Turret : MonoBehaviour
 
 				for(int l = 0; l < 3 + i * 2; l++)
 				{
+					//Instantiate(cube, currentLoc, Quaternion.Euler(Vector3.zero));
+
 					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
-					if(node == null)
+					if(node != null)
 					{
-						break;
+						nodesInRange.Add(node);
 					}
-					nodesInRange.Add(node);
 					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
 					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
 				}
@@ -348,12 +352,13 @@ public class Turret : MonoBehaviour
 			{
 				for(int l = 0; l < range * 2 + 1; l++)
 				{
+					//Instantiate(cube, currentLoc, Quaternion.Euler(Vector3.zero));
+
 					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
-					if(node == null)
+					if(node != null)
 					{
-						break;
+						nodesInRange.Add(node);
 					}
-					nodesInRange.Add(node);
 					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
 					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
 				}
@@ -365,12 +370,13 @@ public class Turret : MonoBehaviour
 			{
 				for(int l = 0; l < 3 + ((range * 2 ) - i) * 2; l++)
 				{
+					//Instantiate(cube, currentLoc, Quaternion.Euler(Vector3.zero));
+
 					Node node = objectManager.NodeManager.GetNodeFromLocation(currentLoc);
-					if(node == null)
+					if(node != null)
 					{
-						break;
+						nodesInRange.Add(node);
 					}
-					nodesInRange.Add(node);
 					currentLoc.x += objectManager.MapData.nodeSize.x / 2;
 					currentLoc.z += objectManager.MapData.nodeSize.y / 2;
 				}

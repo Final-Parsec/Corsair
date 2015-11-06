@@ -64,7 +64,7 @@ public class EnemyBase : MonoBehaviour
 	}
 
 	// Runs when entity is Instantiated
-	void Awake ()
+	void OnEnable()
 	{
 		_ObjectManager = ObjectManager.GetInstance ();
 		_ObjectManager.AddEntity (this);
@@ -93,10 +93,6 @@ public class EnemyBase : MonoBehaviour
 		animator = GetComponent<Animator>();
 		SetPath (_ObjectManager.Pathfinding.Astar (onNode, _ObjectManager.Map.destinationNode));
 		animator.speed = speed;
-
-//		Vector3 correctedPosition = transform.position;
-//		correctedPosition.y = ((onNode.listIndex.z) / _ObjectManager._Map.size_z)+1;
-//		transform.position = correctedPosition;
 
 		maxHealth += (int)(maxHealth * ((float)_ObjectManager.gameState.dificultyFactor * (float)(_ObjectManager.gameState.waveCount)));
 		moneyValue += (int)(moneyValue * _ObjectManager.gameState.enemyValueFactor * (_ObjectManager.gameState.waveCount));
@@ -367,7 +363,9 @@ public class EnemyBase : MonoBehaviour
 			Killed();
 		}
 
-		TextMesh deathInt = Instantiate(_ObjectManager.Map.enemyDeathInt, new Vector3 (transform.position.x, 40, transform.position.z), Quaternion.Euler(new Vector3(90, 45, 0))) as TextMesh;
+		TextMesh deathInt = _ObjectManager.Map.enemyDeathInt.GetObjectFromPool<TextMesh>(_ObjectManager.Map.enemyDeathInt.name, new Vector3 (transform.position.x, 40, transform.position.z), Quaternion.Euler(new Vector3(90, 0, 0)));
+		deathInt.gameObject.name = _ObjectManager.Map.enemyDeathInt.name;
+
 		if(onNode == _ObjectManager.Map.destinationNode){
 			_ObjectManager.gameState.PlayerHealth -= damageValue;
 			deathInt.text = "-"+damageValue;
@@ -377,8 +375,13 @@ public class EnemyBase : MonoBehaviour
 			deathInt.text = "+"+moneyValue;
 		}
 
+		if (onNode.enemie == this)
+		{
+			onNode.enemie = null;
+		}
+
 		_ObjectManager.DeReference (this);
-		Destroy (gameObject);
+		this.gameObject.ReturnToPool(this.gameObject.name);
 	}
 
 	public void SetState(int stateId){

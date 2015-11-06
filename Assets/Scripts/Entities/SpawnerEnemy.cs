@@ -9,7 +9,9 @@ public class SpawnerEnemy : EnemyBase {
 	{
 		if(!(onNode == _ObjectManager.Map.destinationNode)){
 			for(int x=0; x<numBabies; x++)
-				Instantiate (babies, GetClosePosition(), Quaternion.Euler (new Vector3 (90, 45, 0)));
+			{
+				babies.GetObjectFromPool(babies.gameObject.name , GetClosePosition(), Quaternion.Euler (new Vector3 (90, 0, 0)));
+			}
 		}
 		base.DestroyThisEntity();
 	}
