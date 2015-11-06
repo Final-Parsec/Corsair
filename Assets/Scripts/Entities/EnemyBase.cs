@@ -88,7 +88,7 @@ public class EnemyBase : MonoBehaviour
     }
 
 	protected void InitAttributes(){
-		minWaypointDisplacement = _ObjectManager.MapData.nodeSize.x / 10;
+		minWaypointDisplacement = _ObjectManager.MapData.NodeSize.x / 10;
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		animator = GetComponent<Animator>();
 		SetPath (_ObjectManager.Pathfinding.Astar (onNode, _ObjectManager.Map.destinationNode));

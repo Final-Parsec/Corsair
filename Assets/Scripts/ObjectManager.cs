@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using FinalParsec.Corsair;
 using JetBrains.Annotations;
 
 public class ObjectManager
@@ -82,14 +83,20 @@ public class ObjectManager
 		} 
 	}
 
+    /// <summary>
+    ///     Backing field for <see cref="MapData" />.
+    /// </summary>
 	private IMapData mapData;
-	public IMapData MapData 
-	{ 
-		get{
-			if(mapData == null)
-				mapData = new HardcodedMapData("Baer World", new Vector2(128,64), true, null);
-			return mapData;
-		} 
+	
+    /// <summary>
+    ///     Gets information about the current map.
+    /// </summary>
+    public IMapData MapData 
+	{
+        get
+        {
+            return this.mapData ?? (this.mapData = new HardcodedMapData(null));
+        }
 	}
 
 	private NodeManager nodeManager;

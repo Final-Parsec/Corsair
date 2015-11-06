@@ -34,25 +34,25 @@ public class NodeManager{
 		float tyPos;
 		for (int x=0; x<size_x; x++) {
 			for (int y=0; y<size_y; y++) {
-				xPos = left.x + (x * objectManager.MapData.nodeSize.x * (objectManager.MapData.isIsoGrid?.5f:1f));
-				zPos = right.y + ((y + 1) * objectManager.MapData.nodeSize.y) + (objectManager.MapData.isIsoGrid?((x%2==1)?objectManager.MapData.nodeSize.y/2f:0f):0f);
-				txPos = (x * objectManager.MapData.nodeSize.x * (objectManager.MapData.isIsoGrid?.5f:1f));
-				tyPos = ((y + 1) * objectManager.MapData.nodeSize.y) + (objectManager.MapData.isIsoGrid?((x%2==1)?objectManager.MapData.nodeSize.y/2f:0f):0f);
-				Vector3 position = new Vector3 (xPos + objectManager.MapData.nodeSize.x / 2f, 0, zPos - objectManager.MapData.nodeSize.y / 2f);
-				Vector2 textureCenter = new Vector2(objectManager.MapData.nodeSize.x/2f + txPos,
-				                                    tyPos - objectManager.MapData.nodeSize.y / 2f);
+				xPos = left.x + (x * objectManager.MapData.NodeSize.x * (objectManager.MapData.IsIsoGrid?.5f:1f));
+				zPos = right.y + ((y + 1) * objectManager.MapData.NodeSize.y) + (objectManager.MapData.IsIsoGrid?((x%2==1)?objectManager.MapData.NodeSize.y/2f:0f):0f);
+				txPos = (x * objectManager.MapData.NodeSize.x * (objectManager.MapData.IsIsoGrid?.5f:1f));
+				tyPos = ((y + 1) * objectManager.MapData.NodeSize.y) + (objectManager.MapData.IsIsoGrid?((x%2==1)?objectManager.MapData.NodeSize.y/2f:0f):0f);
+				Vector3 position = new Vector3 (xPos + objectManager.MapData.NodeSize.x / 2f, 0, zPos - objectManager.MapData.NodeSize.y / 2f);
+				Vector2 textureCenter = new Vector2(objectManager.MapData.NodeSize.x/2f + txPos,
+				                                    tyPos - objectManager.MapData.NodeSize.y / 2f);
 				nodes [x, y].listPosX = x;
 				nodes [x, y].listPosY = y;
 				nodes [x, y].setUnityPosition(position);
-				nodes [x, y].texturePosX = (int)(objectManager.MapData.nodeSize.x/2f + txPos);
-				nodes [x, y].texturePosY = (int)(tyPos - objectManager.MapData.nodeSize.y / 2f);
+				nodes [x, y].texturePosX = (int)(objectManager.MapData.NodeSize.x/2f + txPos);
+				nodes [x, y].texturePosY = (int)(tyPos - objectManager.MapData.NodeSize.y / 2f);
 			}
 		}
 	}
 
 	private void ConnectNodes ()
 	{
-		if(!objectManager.MapData.isIsoGrid)
+		if(!objectManager.MapData.IsIsoGrid)
 		{
 			for (int y=0; y<size_y; y++) {
 				for (int x=0; x<size_x; x++) {
@@ -136,42 +136,42 @@ public class NodeManager{
 
 	private void SetGridSize()
 	{
-		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		for(int x = 0; x<objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 			{
-				if(objectManager.MapData.tiles[x,y].isNode){
+				if(objectManager.MapData.Tiles[x,y].isNode){
 					xIndexOffset = x;
 					yIndexOffset = y;
 
-					x = objectManager.MapData.tiles.GetLength(0);
-					y = objectManager.MapData.tiles.GetLength(1);
+					x = objectManager.MapData.Tiles.GetLength(0);
+					y = objectManager.MapData.Tiles.GetLength(1);
 				}
 			}
 		}
 		
-		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		for(int x = 0; x<objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			if(objectManager.MapData.tiles[x,yIndexOffset].isNode){
+			if(objectManager.MapData.Tiles[x,yIndexOffset].isNode){
 				size_x++;
 			}
 		}
 		
-		for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+		for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 		{
-			if(objectManager.MapData.tiles[xIndexOffset,y].isNode){
+			if(objectManager.MapData.Tiles[xIndexOffset,y].isNode){
 				size_y++;
 			}
 		}
 
 		nodes = new Node[size_x, size_y];
 
-		for(int x = 0; x<objectManager.MapData.tiles.GetLength(0); x++)
+		for(int x = 0; x<objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			for(int y = 0; y<objectManager.MapData.tiles.GetLength(1); y++)
+			for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 			{
-				if(objectManager.MapData.tiles[x,y].isNode){
-					nodes [x - xIndexOffset, y - yIndexOffset] = new Node (objectManager.MapData.tiles[x,y].isBuildable, objectManager.MapData.tiles[x,y].isWalkable);
+				if(objectManager.MapData.Tiles[x,y].isNode){
+					nodes [x - xIndexOffset, y - yIndexOffset] = new Node (objectManager.MapData.Tiles[x,y].isBuildable, objectManager.MapData.Tiles[x,y].isWalkable);
 				}
 			}
 		}
@@ -181,8 +181,8 @@ public class NodeManager{
 	{
 		SetGridSize();
 
-		left = new Vector2(-(size_x * objectManager.MapData.nodeSize.x) / 2f, (size_y * objectManager.MapData.nodeSize.y) / 2f);
-		right = new Vector2((size_x * objectManager.MapData.nodeSize.x * (objectManager.MapData.isIsoGrid?.5f:1f)) / 2f, -(size_y * objectManager.MapData.nodeSize.y) / 2f);
+		left = new Vector2(-(size_x * objectManager.MapData.NodeSize.x) / 2f, (size_y * objectManager.MapData.NodeSize.y) / 2f);
+		right = new Vector2((size_x * objectManager.MapData.NodeSize.x * (objectManager.MapData.IsIsoGrid?.5f:1f)) / 2f, -(size_y * objectManager.MapData.NodeSize.y) / 2f);
 	}
 
 	/// <summary>
@@ -190,13 +190,13 @@ public class NodeManager{
 	/// </summary>
 	public Node GetNodeFromLocation (Vector3 location)
 	{
-		int xIndex = (int)Mathf.Floor ((location.x - left.x) / (objectManager.MapData.nodeSize.x));
-		int zIndex = size_y + ((int)Mathf.Floor ((location.z - left.y) / objectManager.MapData.nodeSize.y));
+		int xIndex = (int)Mathf.Floor ((location.x - left.x) / (objectManager.MapData.NodeSize.x));
+		int zIndex = size_y + ((int)Mathf.Floor ((location.z - left.y) / objectManager.MapData.NodeSize.y));
 
-		if(objectManager.MapData.isIsoGrid)
+		if(objectManager.MapData.IsIsoGrid)
 		{
-			xIndex = (int)Mathf.Round((2f*location.x + objectManager.MapData.nodeSize.x - 2f * left.x) / objectManager.MapData.nodeSize.x) - 2;
-			zIndex = (int)Mathf.Round((location.z - (objectManager.MapData.nodeSize.y / 2f) - right.y - ((xIndex%2==1)?objectManager.MapData.nodeSize.y/2f:0f)) / objectManager.MapData.nodeSize.y);
+			xIndex = (int)Mathf.Round((2f*location.x + objectManager.MapData.NodeSize.x - 2f * left.x) / objectManager.MapData.NodeSize.x) - 2;
+			zIndex = (int)Mathf.Round((location.z - (objectManager.MapData.NodeSize.y / 2f) - right.y - ((xIndex%2==1)?objectManager.MapData.NodeSize.y/2f:0f)) / objectManager.MapData.NodeSize.y);
 		}
 
 		// out of bounds check
@@ -212,13 +212,13 @@ public class NodeManager{
 	public Node GetClosestNode (Vector3 location)
 	{
 		
-		int xIndex = (int)Mathf.Floor ((location.x - left.x) / objectManager.MapData.nodeSize.x);
-		int zIndex = size_y + ((int)Mathf.Floor ((location.z - left.y) / objectManager.MapData.nodeSize.y));
+		int xIndex = (int)Mathf.Floor ((location.x - left.x) / objectManager.MapData.NodeSize.x);
+		int zIndex = size_y + ((int)Mathf.Floor ((location.z - left.y) / objectManager.MapData.NodeSize.y));
 
-		if(objectManager.MapData.isIsoGrid)
+		if(objectManager.MapData.IsIsoGrid)
 		{
-			xIndex = (int)Mathf.Round((2f*location.x + objectManager.MapData.nodeSize.x - 2f * left.x) / objectManager.MapData.nodeSize.x) - 2;
-			zIndex = (int)Mathf.Round((location.z - (objectManager.MapData.nodeSize.y / 2f) - right.y - ((xIndex%2==1)?objectManager.MapData.nodeSize.y/2f:0f)) / objectManager.MapData.nodeSize.y);
+			xIndex = (int)Mathf.Round((2f*location.x + objectManager.MapData.NodeSize.x - 2f * left.x) / objectManager.MapData.NodeSize.x) - 2;
+			zIndex = (int)Mathf.Round((location.z - (objectManager.MapData.NodeSize.y / 2f) - right.y - ((xIndex%2==1)?objectManager.MapData.NodeSize.y/2f:0f)) / objectManager.MapData.NodeSize.y);
 		}
 		
 		if (xIndex >= size_x)
@@ -258,13 +258,13 @@ public class NodeManager{
 
 	public Node GetDestinationNode()
 	{
-		Vector2 destIndex = objectManager.MapData.GetDestinationTileIndex ();
+		Vector2 destIndex = objectManager.MapData.DestinationNode;
 		return nodes[(int)destIndex.x - xIndexOffset, (int)destIndex.y - yIndexOffset];
 	}
 
 	public Node[] GetSpawnNodes()
 	{
-		Vector2[] spawnInecies = objectManager.MapData.GetEnemySpawnTileIndecies ();
+		Vector2[] spawnInecies = objectManager.MapData.EnemySpawnTileIndicies;
 		Node[] spawnNodes = new Node[spawnInecies.Length];
 
 		for(int x = 0; x< spawnInecies.Length; x++){
