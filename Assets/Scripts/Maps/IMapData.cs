@@ -1,4 +1,4 @@
-﻿namespace FinalParsec.Corsair
+﻿namespace Assets.Scripts.Maps
 {
     using UnityEngine;
 
@@ -27,6 +27,8 @@
         /// </summary>
         bool IsIsoGrid { get; }
 
+        //// TODO: Texture2D[] LoadTextures();
+
         /// <summary>
         ///     Gets the name of the map.
         /// </summary>
@@ -37,6 +39,8 @@
         /// </summary>
         Vector2 NodeSize { get; }
 
+        //// TODO: void SaveTextures(Texture2D[] textures);
+        
         /// <summary>
         ///     Gets the 2D tile set.
         /// </summary>

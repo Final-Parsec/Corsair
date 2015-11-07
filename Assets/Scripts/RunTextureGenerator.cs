@@ -1,5 +1,6 @@
 ﻿namespace FinalParsec.Corsair
 {
+    using Assets.Scripts.Maps;
     using UnityEngine;
 
     [RequireComponent(typeof(Renderer))]
