@@ -71,6 +71,10 @@
             }
 
             this.SetPage(0);
+            this.SelectTileTexture(this.tileTextureButtons.Select(ttb => ttb.Name).First());
+
+            // Disable the menu until it is needed.
+            this.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -81,7 +85,6 @@
         /// </param>
         private void SelectTileTexture(Text tileTextureName)
         {
-            Debug.Log("Tile selected: " + tileTextureName.text);
             this.selectedTileTextureName.text = tileTextureName.text;
             var selectedTexture = textures.First(t => t.name == tileTextureName.text).image;
             this.selectedTileTexturePreview.texture = selectedTexture;
