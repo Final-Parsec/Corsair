@@ -2,9 +2,7 @@ using Assets.Scripts.Turrets;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
+using FinalParsec.Corsair;
 
 public class UpgradeButton
 {
@@ -275,13 +273,13 @@ public class TurretFocusMenu : MonoBehaviour
 	void Start () {
 		TurretUpgrades.MakeUpgrades ();
 
-		upgradeBackground = GameObject.FindGameObjectWithTag(Tags.upgradePanel).GetComponent<Image>();
-		selectedTurretBackground = GameObject.FindGameObjectWithTag(Tags.selectedTurretPanel).GetComponent<Image> ();
-		selectedTurretImage = GameObject.FindGameObjectWithTag(Tags.selectedTurretPanel).transform.FindChild("SelectedImage").GetComponent<Image> ();
-		selectedTurretStats = GameObject.FindGameObjectWithTag (Tags.selectedTurretPanel).transform.Find ("TurretStats").GetComponent<Text> ();
+		upgradeBackground = GameObject.FindGameObjectWithTag(Tags.UpgradePanel).GetComponent<Image>();
+		selectedTurretBackground = GameObject.FindGameObjectWithTag(Tags.SelectedTurretPanel).GetComponent<Image> ();
+		selectedTurretImage = GameObject.FindGameObjectWithTag(Tags.SelectedTurretPanel).transform.FindChild("SelectedImage").GetComponent<Image> ();
+		selectedTurretStats = GameObject.FindGameObjectWithTag (Tags.SelectedTurretPanel).transform.Find ("TurretStats").GetComponent<Text> ();
 		
 		int upgradeType = 0;
-		foreach (GameObject obj in GameObject.FindGameObjectsWithTag(Tags.upgradeButton))
+		foreach (GameObject obj in GameObject.FindGameObjectsWithTag(Tags.UpgradeButton))
 		{
 			// The struggle
 			int upTypeReal = upgradeType;

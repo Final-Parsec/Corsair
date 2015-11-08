@@ -2,6 +2,7 @@ namespace FinalParsec.Corsair
 {
     using UnityEngine;
     using System.IO;
+    using Assets.Scripts.Maps;
 
     public class TextureGenerator
     {

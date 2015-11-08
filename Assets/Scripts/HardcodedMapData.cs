@@ -1,5 +1,6 @@
 ﻿namespace FinalParsec.Corsair
 {
+    using Assets.Scripts.Maps;
     using UnityEngine;
 
     /// <summary>
@@ -60,7 +61,7 @@
         /// </summary>
         public string MapName
         {
-            get { return "Baer World"; }
+            get { return "Test2"; }
         }
 
         /// <summary>
@@ -92,8 +93,8 @@
                 {
                     for (var y = 0; y < lengthY; y++)
                     {
-                        var testures = this.grid;
-                        var tile = new Tile(testures, false, false, false);
+                        var textures = this.grid;
+                        var tile = new Tile(textures, false, false, false);
                         this.tiles[x, y] = tile;
 
                         if (x > 1 && x < lengthX - 6 && y > 1 && y < lengthY - 6)
