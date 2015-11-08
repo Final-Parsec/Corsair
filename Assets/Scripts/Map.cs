@@ -38,7 +38,7 @@ public class Map : MonoBehaviour
 		MakeWaves ();
 
 		destinationNode = objectManager.NodeManager.GetDestinationNode();
-		destinationTransform.position = destinationNode.unityPosition;
+		destinationTransform.position = destinationNode.UnityPosition;
 		destinationTransform.position = new Vector3(destinationTransform.position.x, -.9f, destinationTransform.position.z);
 
 		enemySpawnNodes = objectManager.NodeManager.GetSpawnNodes ();
@@ -50,7 +50,7 @@ public class Map : MonoBehaviour
 		ad.RequestInterstitial ();
 
 //		foreach (Node node in objectManager.NodeManager.nodes){
-//			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.unityPosition, Quaternion.Euler(Vector3.zero));
+//			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.UnityPosition, Quaternion.Euler(Vector3.zero));
 //		}
 
 		LoadMapTexture ();
@@ -146,11 +146,11 @@ public class Map : MonoBehaviour
 
 				if(wave.enemyType == EnemyType.Max){
 					enemy = bossPrefabs [(int)wave.bossType];
-					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
+					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].UnityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
 					madeEnemy.name = enemy.name;
 				}else{
 					enemy = enemyPrefabs [(int)wave.enemyType];
-					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].unityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
+					GameObject madeEnemy = enemy.GetObjectFromPool(enemy.gameObject.name , enemySpawnNodes[spawnIndex].UnityPosition, Quaternion.Euler (new Vector3 (90, 0, 0)));
 					madeEnemy.name = enemy.name;
 				}
 
@@ -187,9 +187,9 @@ public class Map : MonoBehaviour
 		Node lastNode = objectManager.NodeManager.nodes [objectManager.NodeManager.size_x - 1,
 		                                                 objectManager.NodeManager.size_y - 1];
 		
-		Vector3 center = new Vector3 ((lastNode.unityPosition.x + firstNode.unityPosition.x) / 2f,
-		                              firstNode.unityPosition.y - 10,
-		                              (lastNode.unityPosition.z + firstNode.unityPosition.z) / 2f);
+		Vector3 center = new Vector3 ((lastNode.UnityPosition.x + firstNode.UnityPosition.x) / 2f,
+		                              firstNode.UnityPosition.y - 10,
+		                              (lastNode.UnityPosition.z + firstNode.UnityPosition.z) / 2f);
 
 		int xIndex = -1;
 		int yIndex = -1;
@@ -232,7 +232,7 @@ public class Map : MonoBehaviour
 					foreach(GameObject doodad in tile.doodads)
 					{
 						Instantiate(doodad,
-						            objectManager.NodeManager.GetNodeFromTileIndex(x, y).unityPosition,
+						            objectManager.NodeManager.GetNodeFromTileIndex(x, y).UnityPosition,
 						            Quaternion.Euler(Vector3.zero));
 					}
 				}

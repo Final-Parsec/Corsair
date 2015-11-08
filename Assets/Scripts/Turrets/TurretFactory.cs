@@ -17,14 +17,14 @@ public class TurretFactory : MonoBehaviour
 		if(cursorOnNode == null || objectManager.gameState.optionsOn)
 			return;
 
-		bool canBuild = objectManager.NodeManager.BlockNode (cursorOnNode.unityPosition);
+		bool canBuild = objectManager.NodeManager.BlockNode (cursorOnNode.UnityPosition);
 
 		if (turretCosts [(int)TurretType] <= objectManager.gameState.playerMoney && 
             objectManager.Pathfinding.CheckAndUpdatePaths () && 
             canBuild) 
         {
-			Vector3 correctedPosition = cursorOnNode.unityPosition;
-			correctedPosition.y = -((cursorOnNode.listPosY / objectManager.NodeManager.size_y) + (cursorOnNode.listPosX / objectManager.NodeManager.size_x));
+			Vector3 correctedPosition = cursorOnNode.UnityPosition;
+			correctedPosition.y = -((cursorOnNode.listIndexY / objectManager.NodeManager.size_y) + (cursorOnNode.listIndexX / objectManager.NodeManager.size_x));
 			Turret turret = ((GameObject) Instantiate (turretPrefabs [(int)TurretType], correctedPosition, Quaternion.Euler (new Vector3 (90, 0, 0)))).GetComponent<Turret>();
 			turret.Msrp = turretCosts [(int)TurretType];
             turret.TurretType = TurretType;
@@ -40,7 +40,7 @@ public class TurretFactory : MonoBehaviour
 		}
 		
 		Debug.Log ("Unable to place turret at this location.");
-		objectManager.NodeManager.UnBlockNode (cursorOnNode.unityPosition);
+		objectManager.NodeManager.UnBlockNode (cursorOnNode.UnityPosition);
 		objectManager.Pathfinding.CheckAndUpdatePaths ();
 	}
 

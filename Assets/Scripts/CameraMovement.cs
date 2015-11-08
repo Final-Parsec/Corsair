@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour{
@@ -30,14 +30,14 @@ public class CameraMovement : MonoBehaviour{
 		Node lastNode = objectManager.NodeManager.nodes [objectManager.NodeManager.size_x - 1,
 		                                                 objectManager.NodeManager.size_y - 1];
 
-		cameraMinDistance = new Vector2(firstNode.unityPosition.x,
-		                                firstNode.unityPosition.z);
-		cameraMaxDistance = new Vector2(lastNode.unityPosition.x,
-		                                lastNode.unityPosition.z);
+		cameraMinDistance = new Vector2(firstNode.UnityPosition.x,
+		                                firstNode.UnityPosition.z);
+		cameraMaxDistance = new Vector2(lastNode.UnityPosition.x,
+		                                lastNode.UnityPosition.z);
 
-		Vector3 center = new Vector3 ((lastNode.unityPosition.x + firstNode.unityPosition.x) / 2f,
+		Vector3 center = new Vector3 ((lastNode.UnityPosition.x + firstNode.UnityPosition.x) / 2f,
 		                              transform.position.y,
-		                              (lastNode.unityPosition.z + firstNode.unityPosition.z) / 2f);
+		                              (lastNode.UnityPosition.z + firstNode.UnityPosition.z) / 2f);
 
 		transform.position = center;
 	}

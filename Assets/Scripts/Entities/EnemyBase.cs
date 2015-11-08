@@ -83,7 +83,7 @@ public class EnemyBase : MonoBehaviour
     private void CorrectPosition()
     {
         // perfect for non mind control
-		float correctedY = -((onNode.listPosY / _ObjectManager.NodeManager.size_y) + (onNode.listPosX / _ObjectManager.NodeManager.size_x));
+		float correctedY = -((onNode.listIndexY / _ObjectManager.NodeManager.size_y) + (onNode.listIndexX / _ObjectManager.NodeManager.size_x));
         transform.position = new Vector3(transform.position.x, correctedY, transform.position.z);
     }
 
@@ -127,9 +127,9 @@ public class EnemyBase : MonoBehaviour
 		SetState((int)State.Walking);
 
 		// don't move in the Y direction.
-		Vector3 moveVector = new Vector3 (transform.position.x - path [currentWayPoint].unityPosition.x,
+		Vector3 moveVector = new Vector3 (transform.position.x - path [currentWayPoint].UnityPosition.x,
 		                                 0,
-		                                 transform.position.z - path [currentWayPoint].unityPosition.z).normalized;
+		                                 transform.position.z - path [currentWayPoint].UnityPosition.z).normalized;
 		
 		// update the position
 		transform.position = new Vector3 (transform.position.x - moveVector.x * (speed * (float)_ObjectManager.gameState.GameSpeed) * Time.deltaTime,
@@ -138,9 +138,9 @@ public class EnemyBase : MonoBehaviour
 		
 		// unit has reached the waypoint
 		Vector3 position = transform.position;
-		position.y = path [currentWayPoint].unityPosition.y;
+		position.y = path [currentWayPoint].UnityPosition.y;
 		//if (_ObjectManager._Map.GetNodeFromLocation(transform.position) == path[currentWayPoint]) {
-		if(Vector3.Distance(position, path [currentWayPoint].unityPosition) <= minWaypointDisplacement){
+		if(Vector3.Distance(position, path [currentWayPoint].UnityPosition) <= minWaypointDisplacement){
 
 			if(onNode.enemie == this)
 			{

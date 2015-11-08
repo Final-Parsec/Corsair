@@ -35,18 +35,14 @@ public class EventHandler : MonoBehaviour
 		}
 
 		//Debug.Log (objectManager.gameState.optionsOn);
-		if (objectManager.gameState.optionsOn)
+		if (objectManager.gameState.optionsOn ||
+			objectManager.gameState.gameOver ||
+			IsPointerOverUIObject (canvas, new Vector2 (Input.mousePosition.x, Input.mousePosition.y)) ||
+			(Input.touchCount == 1 && IsPointerOverUIObject (canvas, Input.touches [0].position))) 
+		{
 			return;
+		}
 
-		if(objectManager.gameState.gameOver)
-			return;
-
-		if(IsPointerOverUIObject(canvas, new Vector2(Input.mousePosition.x,Input.mousePosition.y)))
-			return;
-
-		if((Input.touchCount == 1 && IsPointerOverUIObject(canvas, Input.touches[0].position)))
-			return;
-		
 		// Left Click Down & Tuoch Event
 		if (!CameraMovement.IsCameraMoving() && Input.GetMouseButtonUp(0)) {
 			if(objectManager.TurretFocusMenu.isActive){

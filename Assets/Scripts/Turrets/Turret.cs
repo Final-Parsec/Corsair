@@ -319,9 +319,9 @@ public class Turret : MonoBehaviour
 
 		Node onNode = objectManager.NodeManager.GetNodeFromLocation(transform.position);
 
-		Vector3 start = new Vector3 (onNode.unityPosition.x + ((objectManager.MapData.NodeSize.x / 2) * (range - 1)),
+		Vector3 start = new Vector3 (onNode.UnityPosition.x + ((objectManager.MapData.NodeSize.x / 2) * (range - 1)),
 		                             0,
-		                             onNode.unityPosition.z - ((objectManager.MapData.NodeSize.y / 2) * (range - 1) + objectManager.MapData.NodeSize.y));
+		                             onNode.UnityPosition.z - ((objectManager.MapData.NodeSize.y / 2) * (range - 1) + objectManager.MapData.NodeSize.y));
 
 		Vector3 currentLoc = start;
 

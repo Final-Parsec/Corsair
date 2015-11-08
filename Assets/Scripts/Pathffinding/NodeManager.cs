@@ -41,9 +41,9 @@ public class NodeManager{
 				Vector3 position = new Vector3 (xPos + objectManager.MapData.NodeSize.x / 2f, 0, zPos - objectManager.MapData.NodeSize.y / 2f);
 				Vector2 textureCenter = new Vector2(objectManager.MapData.NodeSize.x/2f + txPos,
 				                                    tyPos - objectManager.MapData.NodeSize.y / 2f);
-				nodes [x, y].listPosX = x;
-				nodes [x, y].listPosY = y;
-				nodes [x, y].setUnityPosition(position);
+				nodes [x, y].listIndexX = x;
+				nodes [x, y].listIndexY = y;
+				nodes [x, y].UnityPosition = position;
 				nodes [x, y].texturePosX = (int)(objectManager.MapData.NodeSize.x/2f + txPos);
 				nodes [x, y].texturePosY = (int)(tyPos - objectManager.MapData.NodeSize.y / 2f);
 			}
@@ -59,28 +59,28 @@ public class NodeManager{
 					//Debug.Log(x+", "+ y);
 					
 					if (x - 1 >= 0) {
-						nodes [x, y].borderTiles [(int)Border.downRight] = nodes [x - 1, y];
+						nodes [x, y].BorderTiles [(int)Border.downRight] = nodes [x - 1, y];
 						if (y - 1 >= 0)
-							nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
+							nodes [x, y].BorderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
 						
 						if (y + 1 < size_y)
-							nodes [x, y].borderTiles [(int)Border.Right] = nodes [x - 1, y + 1];
+							nodes [x, y].BorderTiles [(int)Border.Right] = nodes [x - 1, y + 1];
 					}
 					
 					if (x + 1 < size_x) {
-						nodes [x, y].borderTiles [(int)Border.upLeft] = nodes [x + 1, y];
+						nodes [x, y].BorderTiles [(int)Border.upLeft] = nodes [x + 1, y];
 						if (y - 1 >= 0)
-							nodes [x, y].borderTiles [(int)Border.Left] = nodes [x + 1, y - 1];
+							nodes [x, y].BorderTiles [(int)Border.Left] = nodes [x + 1, y - 1];
 						
 						if (y + 1 < size_y)
-							nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
+							nodes [x, y].BorderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
 					}
 					
 					if (y - 1 >= 0)
-						nodes [x, y].borderTiles [(int)Border.downLeft] = nodes [x, y - 1];
+						nodes [x, y].BorderTiles [(int)Border.downLeft] = nodes [x, y - 1];
 					
 					if (y + 1 < size_y)
-						nodes [x, y].borderTiles [(int)Border.upRight] = nodes [x, y + 1];
+						nodes [x, y].BorderTiles [(int)Border.upRight] = nodes [x, y + 1];
 				}
 			}
 		}
@@ -91,44 +91,44 @@ public class NodeManager{
 					//Debug.Log(x+", "+ y);
 					if(x%2 == 0){
 						if (x - 1 >= 0) {
-							nodes [x, y].borderTiles [(int)Border.Left] = nodes [x - 1, y];
+							nodes [x, y].BorderTiles [(int)Border.Left] = nodes [x - 1, y];
 							if (y - 1 >= 0)
-								nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
+								nodes [x, y].BorderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
 						}
 
 						if (x + 1 < size_x) {
-							nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y];
+							nodes [x, y].BorderTiles [(int)Border.Up] = nodes [x + 1, y];
 							if (y - 1 >= 0)
-								nodes [x, y].borderTiles [(int)Border.Right] = nodes [x + 1, y - 1];
+								nodes [x, y].BorderTiles [(int)Border.Right] = nodes [x + 1, y - 1];
 						}
 					}
 
 					if(x%2 == 1){
 						if (x - 1 >= 0) {
-							nodes [x, y].borderTiles [(int)Border.Down] = nodes [x - 1, y];
+							nodes [x, y].BorderTiles [(int)Border.Down] = nodes [x - 1, y];
 							
 							if (y + 1 < size_y)
-								nodes [x, y].borderTiles [(int)Border.Left] = nodes [x - 1, y + 1];
+								nodes [x, y].BorderTiles [(int)Border.Left] = nodes [x - 1, y + 1];
 						}
 
 						if (x + 1 < size_x) {
-							nodes [x, y].borderTiles [(int)Border.Right] = nodes [x + 1, y];
+							nodes [x, y].BorderTiles [(int)Border.Right] = nodes [x + 1, y];
 							if (y + 1 < size_y)
-								nodes [x, y].borderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
+								nodes [x, y].BorderTiles [(int)Border.Up] = nodes [x + 1, y + 1];
 						}
 					}
 
 					if (x - 2 >= 0)
-						nodes [x, y].borderTiles [(int)Border.downLeft] = nodes [x - 2, y];
+						nodes [x, y].BorderTiles [(int)Border.downLeft] = nodes [x - 2, y];
 
 					if (x + 2 < size_x)
-						nodes [x, y].borderTiles [(int)Border.upRight] = nodes [x + 2, y];
+						nodes [x, y].BorderTiles [(int)Border.upRight] = nodes [x + 2, y];
 
 					if (y - 1 >= 0)
-						nodes [x, y].borderTiles [(int)Border.downRight] = nodes [x, y - 1];
+						nodes [x, y].BorderTiles [(int)Border.downRight] = nodes [x, y - 1];
 				
 					if (y + 1 < size_y)
-						nodes [x, y].borderTiles [(int)Border.upLeft] = nodes [x, y + 1];
+						nodes [x, y].BorderTiles [(int)Border.upLeft] = nodes [x, y + 1];
 				}
 			}
 		}
@@ -239,11 +239,11 @@ public class NodeManager{
 	{
 		Node node = GetNodeFromLocation (position);
 		
-		if (node == null || !node.isBuildable)
+		if (node == null || !node.IsBuildable)
 			return false;
 		
-		node.isWalkable = false;
-		node.isBuildable = false;
+		node.IsWalkable = false;
+		node.IsBuildable = false;
 		
 		return true;
 	}
@@ -252,8 +252,8 @@ public class NodeManager{
 	{
 		Node node = GetNodeFromLocation (position);
 		
-		node.isWalkable = true;
-		node.isBuildable = true;
+		node.IsWalkable = true;
+		node.IsBuildable = true;
 	}
 
 	public Node GetDestinationNode()
