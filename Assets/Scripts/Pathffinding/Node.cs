@@ -61,12 +61,7 @@ public class Node : IComparable
 		this.IsBuildable = isBuildable;
 	}
 	
-	public Node clone ()
-	{
-		return new Node (IsWalkable, IsBuildable, UnityPosition, new Vector2(listIndexX, listIndexY), new Vector2(texturePosX, texturePosY));
-	}
-
-	public void setUnityPosition (Vector3 unityPosition)
+	public void SetUnityPosition (Vector3 unityPosition)
 	{
 		this.UnityPosition = unityPosition;
 	}
@@ -79,43 +74,6 @@ public class Node : IComparable
 	public void MakeBuildable ()
 	{
 		IsBuildable = true;
-	}
-	
-	public Node[] getDiagnalNeighbors ()
-	{
-		return new Node[4] {BorderTiles [(int)Border.downLeft],
-								BorderTiles [(int)Border.downRight],
-								BorderTiles [(int)Border.upLeft],
-								BorderTiles [(int)Border.upRight]};
-	}
-
-	public List<Node> getDiagnalWalkableNeighbors ()
-	{
-		List<Node> returnList = new List<Node>();
-		
-		if(BorderTiles [(int)Border.Left]!=null && BorderTiles [(int)Border.Left].IsWalkable){
-			if(BorderTiles [(int)Border.Up]!=null &&BorderTiles [(int)Border.Up].IsWalkable)
-				returnList.Add(BorderTiles [(int)Border.upLeft]);
-			if(BorderTiles [(int)Border.Down]!=null &&BorderTiles [(int)Border.Down].IsWalkable)
-				returnList.Add(BorderTiles [(int)Border.downLeft]);
-		}
-
-		if(BorderTiles [(int)Border.Right]!=null &&BorderTiles [(int)Border.Right].IsWalkable){
-			if(BorderTiles [(int)Border.Up]!=null &&BorderTiles [(int)Border.Up].IsWalkable)
-				returnList.Add(BorderTiles [(int)Border.upRight]);
-			if(BorderTiles [(int)Border.Down]!=null &&BorderTiles [(int)Border.Down].IsWalkable)
-				returnList.Add(BorderTiles [(int)Border.downRight]);
-		}
-		
-		return returnList;
-	}
-
-	public Node[] getCloseNeighbors ()
-	{
-		return new Node[4] {BorderTiles [(int)Border.Left],
-								BorderTiles [(int)Border.Right],
-								BorderTiles [(int)Border.Down],
-								BorderTiles [(int)Border.Up]};
 	}
 
 	public int GetDirection(Node node)

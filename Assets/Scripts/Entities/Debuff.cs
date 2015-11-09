@@ -12,7 +12,6 @@ public class Debuff
 	float magnitude;
 	public EnemyState enemyState;
 	bool appliedEffect = false;
-	float originalSpeed;
 
 	// Time stuff
 	public float duration;

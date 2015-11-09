@@ -44,9 +44,6 @@ public class CameraMovement : MonoBehaviour{
 	
 	// Update is called once per frame
 	void Update () {
-		float theScreenWidth = Screen.width;
-		float theScreenHeight = Screen.height;
-
 		float moveRate = sensitivity * Time.deltaTime;
 		float scrollRate = scrollSensitivity * Time.deltaTime;
 		

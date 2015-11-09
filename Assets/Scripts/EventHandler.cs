@@ -10,13 +10,6 @@ public class EventHandler : MonoBehaviour
 	private readonly int numberOfTurrets = Enum.GetNames (typeof(TurretType)).Length;
     private ObjectManager objectManager;
 	private Canvas canvas;
-    private readonly List<string> turretFocusMenuObjects = new List<string>()
-	{
-		"UpgradeOne",
-		"UpgradeTwo",
-		"UpgradeThree",
-		"Sell"
-	};
 
 	// Initialization
 	void Start ()
@@ -45,22 +38,25 @@ public class EventHandler : MonoBehaviour
 
 		// Left Click Down & Tuoch Event
 		if (!CameraMovement.IsCameraMoving() && Input.GetMouseButtonUp(0)) {
-			if(objectManager.TurretFocusMenu.isActive){
+
+			if(objectManager.TurretFocusMenu.isActive)
+            {
 				objectManager.GuiButtonMethods.UpgradeMenuBackPressed();
 				return;
 			}
-
-			Vector3 mousePosition = Input.mousePosition;
 			
-			if (objectManager.TurretFocusMenu.SelectedTurret == null) {
-				objectManager.TurretFactory.PlaceOrSelectTurret(mousePosition);
+			if (objectManager.TurretFocusMenu.SelectedTurret == null)
+            {
+				StartCoroutine(objectManager.TurretFactory.PlaceOrSelectTurret());
 			}
 		}
 		
 		// Check if a number has been pressed and change turret type we're producing.
 		for (int i = 1; i <= numberOfTurrets; i++) {
 			TurretType associatedType = (TurretType)(i - 1);  // Subtract one because enum indexes begin start 0.
-			if (Input.GetKeyDown ("" + i)) {
+
+            if (Input.GetKeyDown ("" + i))
+            {
 				objectManager.TurretFactory.TurretType = associatedType;
 				Debug.Log ("Selected " + objectManager.TurretFactory.TurretType);
 			}

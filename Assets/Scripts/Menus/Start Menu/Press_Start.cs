@@ -2,16 +2,6 @@
 using System.Collections;
 
 public class Press_Start : MonoBehaviour {
-	MainMenu _Menu;
-	// Use this for initialization
-	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-	
 	/// <summary>
 	/// Raises the mouse Down event.
 	/// </summary>
@@ -25,5 +15,4 @@ public class Press_Start : MonoBehaviour {
 	void OnMouseUp(){
 		GetComponent<Renderer>().material.color = Color.white;
 	}
-	
 }

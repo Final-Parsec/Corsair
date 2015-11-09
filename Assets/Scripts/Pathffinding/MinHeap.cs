@@ -5,18 +5,9 @@ public class MinHeap
 {
 	//The heap is treated like it is 1 based not 0
 	public List<Node> heap;
-	private object threadId;
 	
 	public MinHeap (Node root)
 	{
-		threadId = null;
-		heap = new List<Node> ();
-		heap.Add (root);
-	}
-	
-	public MinHeap (Node root, int threadId)
-	{
-		this.threadId = threadId;
 		heap = new List<Node> ();
 		heap.Add (root);
 	}

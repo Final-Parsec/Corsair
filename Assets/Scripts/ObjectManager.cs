@@ -39,7 +39,7 @@ public class ObjectManager
 	{
 		get{
 			if(pathfinding == null)
-				pathfinding = GameObject.Find ("Map").GetComponent<Pathfinding> ();
+				pathfinding = new Pathfinding ();
 			return pathfinding;
 		}
 	}
