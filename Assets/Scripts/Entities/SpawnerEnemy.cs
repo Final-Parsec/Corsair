@@ -7,7 +7,7 @@ public class SpawnerEnemy : EnemyBase {
 	
 	public override void DestroyThisEntity ()
 	{
-		if(!(onNode == _ObjectManager.Map.destinationNode)){
+		if(!(onNode == this.objectManager.Map.destinationNode)){
 			for(int x=0; x<numBabies; x++)
 			{
 				babies.GetObjectFromPool(babies.gameObject.name , GetClosePosition(), Quaternion.Euler (new Vector3 (90, 0, 0)));

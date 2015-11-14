@@ -6,9 +6,9 @@ public class SpawnOfEnemy : EnemyBase
 	// Runs when entity is Instantiated
 	void OnEnable()
 	{
-		_ObjectManager = ObjectManager.GetInstance ();
-		_ObjectManager.AddEntity (this);
-		onNode = _ObjectManager.NodeManager.GetClosestNode (transform.position);
+		this.objectManager = ObjectManager.GetInstance ();
+		this.objectManager.AddEntity (this);
+		onNode = this.objectManager.NodeManager.GetClosestNode (transform.position);
 		InitAttributes();
 	}
 }

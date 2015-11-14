@@ -100,7 +100,6 @@ public class Pathfinding : MonoBehaviour
 			path.Add (itr.parent);
 			itr = itr.parent;
 		}
-		path.Add (start);
 		
 		return path;
 	}
