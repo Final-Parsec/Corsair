@@ -2,10 +2,17 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding
 {
-	private ObjectManager objectManager;
+    public bool pathsExist;
+    private ObjectManager objectManager;
+
+    public Pathfinding()
+    {
+        objectManager = ObjectManager.GetInstance();
+    }
 
 	public List<Node> Astar (Node start, Node goal)
 	{
@@ -104,43 +111,88 @@ public class Pathfinding : MonoBehaviour
 		return path;
 	}
 
-	/// <summary>
-	/// Checks Checks that there is a path and updates it's path and the Enemies on the field.
-	/// </summary>
-	/// <returns><c>true</c>, if there is a valid <c>false</c> otherwise.</returns>
-	public bool CheckAndUpdatePaths ()
+    /// <summary>
+    /// Checks Checks that there is a path and updates it's path and the Enemies on the field.
+    /// </summary>
+    /// <returns><c>true</c>, if there is a valid <c>false</c> otherwise.</returns>
+    public IEnumerator CheckAndUpdatePaths()
 	{
+        StringBuilder sb = new StringBuilder();
+
+        IDictionary<string, List<Node>> nodePaths = new Dictionary<string, List<Node>>();
 		Node destination = objectManager.Map.destinationNode;
 
 		foreach(Node spawn in objectManager.Map.enemySpawnNodes){
-			if (Astar (spawn, destination) == null)
-				return false;
+            sb.Clear();
+            sb.Append(spawn.listIndexX).Append(spawn.listIndexY).Append(destination.listIndexX).Append(destination.listIndexY);
 
-		}
-		
-		foreach (EnemyBase entity in objectManager.enemies) {
-			List<Node> path;
-
-            
-			if(entity.mindControlled > 0)
+            if (nodePaths.ContainsKey(sb.ToString()))
             {
-				path = Astar(entity.onNode, entity.spawnNode);
+                continue;
+            }
+
+            List<Node> path = Astar(spawn, destination);
+            if (path == null)
+            {
+                pathsExist = false;
+                yield break;
+            }
+            nodePaths.Add(sb.ToString(), path);
+		}
+
+        int count = 0;
+        int numEnemies = objectManager.enemies.Count;
+        for (int index = 0; index < numEnemies; index++) {
+            if (index >= objectManager.enemies.Count)
+            {
+                pathsExist = true;
+                yield break;
+            }
+
+            EnemyBase agent = objectManager.enemies[index];
+            List<Node> path;
+            sb.Clear();
+            if (agent.mindControlled > 0)
+            {
+                sb.Append(agent.onNode.listIndexX).Append(agent.onNode.listIndexY).Append(agent.spawnNode.listIndexX).Append(agent.spawnNode.listIndexY);
+            }
+            else
+            {
+                sb.Append(agent.onNode.listIndexX).Append(agent.onNode.listIndexY).Append(destination.listIndexX).Append(destination.listIndexY);
+            }
+
+            if (nodePaths.ContainsKey(sb.ToString()))
+            {
+                agent.SetPath(nodePaths[sb.ToString()]);
+                continue;
+            }
+
+            count++;
+
+            if (agent.mindControlled > 0)
+            {
+				path = Astar(agent.onNode, agent.spawnNode);
             }
 			else
             {
-                path = Astar(entity.onNode, destination);
+                path = Astar(agent.onNode, destination);
             }
 
-			if (path == null)
-				return false;
-			entity.SetPath (path);
-		}
-		return true;
-	}
+            if (path == null)
+            {
+                pathsExist = false;
+                yield break;
+            }
 
-	// Use this for initialization
-	void Start ()
-	{
-		objectManager = ObjectManager.GetInstance ();
+			agent.SetPath (path);
+            nodePaths.Add(sb.ToString(), path);
+
+            if (count % 10 == 0)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+		}
+
+        pathsExist = true;
 	}
 }

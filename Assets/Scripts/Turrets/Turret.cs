@@ -38,8 +38,7 @@ public class Turret : MonoBehaviour
 	private Sprite defaultSprite;
 	private EnemyBase target = null;
 	private float nextDamageEvent;
-	private ObjectManager objectManager;	
-	private static readonly object syncRoot = new object ();
+	private ObjectManager objectManager;
 	
 	// Properties
 	private float AttackDelay

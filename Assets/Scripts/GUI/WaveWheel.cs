@@ -3,11 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class WaveWheel : MonoBehaviour {
-
-	private RawImage waveA;
-	private RawImage waveB;
-	private RawImage waveC;
-
+    
 	private Texture nextWaveTexture;
 	private string nextWaveLevel = "";
 

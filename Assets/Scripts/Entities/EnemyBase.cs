@@ -141,8 +141,7 @@ public class EnemyBase : MonoBehaviour
 		this.path = path;
 	    this.currentWayPoint = path.Count - 1;
 	    this.animator.SetInteger("walking", this.onNode.GetDirection(path[this.currentWayPoint]));
-		// Start walk animation.
-		
+
 	}
 
 	// called in update
