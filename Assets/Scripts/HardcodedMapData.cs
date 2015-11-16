@@ -11,7 +11,7 @@
         private readonly Texture2D[] grid;
 
         /// <summary>
-        ///     Backing store for <see cref="Tiles" />.
+        ///     Backing field for <see cref="Tiles" />.
         /// </summary>
         private Tile[,] tiles;
 
