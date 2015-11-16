@@ -1,11 +1,10 @@
 using UnityEngine;
-using System.Collections;
 
 public class SpawnerEnemy : EnemyBase {
 	public GameObject babies;
 	public int numBabies;
 	
-	public override void DestroyThisEntity ()
+	public override void DestroyThis ()
 	{
 		if(!(onNode == this.objectManager.Map.destinationNode)){
 			for(int x=0; x<numBabies; x++)
@@ -13,7 +12,7 @@ public class SpawnerEnemy : EnemyBase {
 				babies.GetObjectFromPool(babies.gameObject.name , GetClosePosition(), Quaternion.Euler (new Vector3 (90, 0, 0)));
 			}
 		}
-		base.DestroyThisEntity();
+		base.DestroyThis();
 	}
 	
 	private Vector3 GetClosePosition(){

@@ -38,11 +38,11 @@ public class ReverseDirection : DebuffBase
 	        return false;
         }
         
-        this.owner.StopMindControlling = false;
-        this.owner.mindControlled++;
-	    if (this.owner.mindControlled == 1)
+        this.owner.StopMovingBackwards = false;
+        this.owner.movingBackwards++;
+	    if (this.owner.movingBackwards == 1)
 	    {
-	        this.MoveOwner(this.owner.spawnNode);
+	        this.MoveOwner(this.owner.SpawnNode);
 	    }
 	    this.appliedEffect = true;
 
@@ -54,11 +54,11 @@ public class ReverseDirection : DebuffBase
     /// </summary>
 	public override void EndEffect ()
 	{
-		this.owner.mindControlled--;
-		if(this.owner.mindControlled <= 0)
+		this.owner.movingBackwards--;
+		if(this.owner.movingBackwards <= 0)
         {
             this.MoveOwner(this.objectManager.Map.destinationNode);
-            this.owner.StopMindControlling = true;
+            this.owner.StopMovingBackwards = true;
         }
 	}
 

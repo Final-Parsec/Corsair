@@ -104,6 +104,11 @@ public class TurretFocusMenu : MonoBehaviour
 	
 	public void Upgrade(int upgradeType)
 	{
+        if (this.SelectedTurret == null)
+        {
+            return;
+        }
+
 		objectManager.GuiButtonMethods.PlayDefaultSound();
 		
 		switch (upgradeType) 

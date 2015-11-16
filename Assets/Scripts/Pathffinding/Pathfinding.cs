@@ -152,9 +152,9 @@ public class Pathfinding
             EnemyBase agent = objectManager.enemies[index];
             List<Node> path;
             sb.Clear();
-            if (agent.mindControlled > 0)
+            if (agent.movingBackwards > 0)
             {
-                sb.Append(agent.onNode.listIndexX).Append(agent.onNode.listIndexY).Append(agent.spawnNode.listIndexX).Append(agent.spawnNode.listIndexY);
+                sb.Append(agent.onNode.listIndexX).Append(agent.onNode.listIndexY).Append(agent.SpawnNode.listIndexX).Append(agent.SpawnNode.listIndexY);
             }
             else
             {
@@ -169,9 +169,9 @@ public class Pathfinding
 
             count++;
 
-            if (agent.mindControlled > 0)
+            if (agent.movingBackwards > 0)
             {
-				path = Astar(agent.onNode, agent.spawnNode);
+				path = Astar(agent.onNode, agent.SpawnNode);
             }
 			else
             {

@@ -59,7 +59,7 @@ public enum ObstacleType
 	WeaponsmithForge45
 }
 
-public enum EnemyState
+public enum StatusEffects
 {
 	Burn,
 	Poison,

@@ -70,10 +70,10 @@ public class Projectile : MonoBehaviour
             {
                 if (Slow > 0)
                 {
-					target.Slow(Slow, SlowDuration, (int)Owner.TurretType);
+					target.Slow(Slow, SlowDuration);
                 }
 
-				target.Damage (Damage, (int)Owner.TurretType);
+				target.Damage (Damage);
 				if(DamageOverTime > 0)
 				{
 	                if (Owner.TurretType == TurretType.EarthTurret)
@@ -82,7 +82,7 @@ public class Projectile : MonoBehaviour
 	                }
 	                else if (Owner.TurretType == TurretType.FireTurret)
 	                {
-						target.DamageOverTime(DamageOverTime, 3.0f, .5f, EnemyState.Burn, (int)Owner.TurretType);
+						target.DamageOverTime(DamageOverTime, 3.0f, .5f, StatusEffects.Burn);
 	                }
 	                else if (Owner.TurretType == TurretType.StormTurret)
 	                {
@@ -90,13 +90,13 @@ public class Projectile : MonoBehaviour
 	                }
 	                else if (Owner.TurretType == TurretType.VoodooTurret)
 	                {
-						target.DamageOverTime(DamageOverTime, 3.0f, .5f, EnemyState.Poison, (int)Owner.TurretType);
+						target.DamageOverTime(DamageOverTime, 3.0f, .5f, StatusEffects.Poison);
 	                }  
 				}
 
 				if(Owner.MindControlDuration > 0)
 				{
-					target.MindControl(Owner.MindControlDuration, (int)Owner.TurretType);
+					target.ReverseDirection(Owner.MindControlDuration);
 				}
               
                 if (AoeDamage > 0 && AoeRange > 0)
