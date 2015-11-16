@@ -1,12 +1,11 @@
 namespace FinalParsec.Corsair
 {
-    using UnityEngine;
     using System.IO;
-    using Assets.Scripts.Maps;
+    using Maps;
+    using UnityEngine;
 
     public class TextureGenerator
     {
-
         // Grid/Node
         private int sizeX;
         private int sizeY;

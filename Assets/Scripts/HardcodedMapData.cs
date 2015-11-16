@@ -1,6 +1,6 @@
 ﻿namespace FinalParsec.Corsair
 {
-    using Assets.Scripts.Maps;
+    using Maps;
     using UnityEngine;
 
     /// <summary>
@@ -43,7 +43,7 @@
         {
             get
             {
-                Vector2[] arr = {new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25)};
+                Vector2[] arr = { new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25) };
                 return arr;
             }
         }

@@ -1,9 +1,9 @@
-﻿namespace Assets.Scripts.Maps
+﻿namespace FinalParsec.Corsair.Maps
 {
     using UnityEngine;
 
     /// <summary>
-    ///     Describes a standard means to get information about a map.
+    ///     Contract for a class which can be used to get information about a map.
     /// </summary>
     public interface IMapData
     {

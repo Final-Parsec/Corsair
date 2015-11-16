@@ -1,7 +1,5 @@
-﻿
-namespace Assets.Scripts.Turrets
+﻿namespace FinalParsec.Corsair.Turrets
 {
-
 	using UnityEngine;
 	using System.Collections.Generic;
 

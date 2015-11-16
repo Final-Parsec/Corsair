@@ -1,8 +1,8 @@
-using Assets.Scripts.Turrets;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using FinalParsec.Corsair;
+using FinalParsec.Corsair.Turrets;
 
 public class UpgradeButton
 {
