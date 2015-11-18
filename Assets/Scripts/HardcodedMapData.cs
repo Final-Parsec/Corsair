@@ -62,6 +62,7 @@
         public string MapName
         {
             get { return "Test2"; }
+            set { }
         }
 
         /// <summary>

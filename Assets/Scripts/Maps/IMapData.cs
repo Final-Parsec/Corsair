@@ -32,7 +32,7 @@
         /// <summary>
         ///     Gets the name of the map.
         /// </summary>
-        string MapName { get; }
+        string MapName { get; set; }
 
         /// <summary>
         ///     Gets the dimensions of the node map.

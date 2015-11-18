@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-using GoogleMobileAds;
 using GoogleMobileAds.Api;
-using System.Collections;
 
 public class GoogleMobileAdsHandler : IInAppPurchaseHandler
 {
@@ -12,7 +10,6 @@ public class GoogleMobileAdsHandler : IInAppPurchaseHandler
     public void OnInAppPurchaseFinished(IInAppPurchaseResult result)
     {
         result.FinishPurchase();
-        GoogleMobileAdsScript.OutputMessage = "Purchase Succeeded! Credit user here.";
     }
 
     //Check SKU against valid SKUs.
@@ -40,14 +37,8 @@ public class GoogleMobileAdsScript : MonoBehaviour
 
     private BannerView bannerView;
     private InterstitialAd interstitial;
-    private static string outputMessage = "";
 
-	public bool disableAds = false;
-
-    public static string OutputMessage
-    {
-        set { outputMessage = value; }
-    }
+    public bool disableAds = false;
 
 	void Awake()
 	{

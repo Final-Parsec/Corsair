@@ -1,4 +1,4 @@
-﻿namespace FinalParsec.Corsair.Maps
+﻿namespace FinalParsec.Corsair.Maps.MapEditor
 {
     using System;
     using System.IO;
@@ -12,15 +12,15 @@
     internal class MapLoader : IMapLoader
     {
         /// <summary>
+        ///     The file extension for the map data files stored on the file system.
+        /// </summary>
+        private const string MapDataFileExtension = ".mapdata";
+
+        /// <summary>
         ///     The singlteton instance of the <see cref="MapLoader" /> class.
         /// </summary>
         private static IMapLoader instance = new MapLoader();
 
-        /// <summary>
-        ///     The file extension for the map data files stored on the file system.
-        /// </summary>
-        private const string MapDataFileExtension = ".mapdata";
-        
         private MapLoader()
         {
             this.CurrentMap = new MapData(null);
@@ -31,27 +31,18 @@
         /// </summary>
         public static IMapLoader Instance
         {
-            get
-            {
-                return instance;
-            }
-            private set
-            {
-                instance = value;
-            }
+            get { return MapLoader.instance; }
+            private set { MapLoader.instance = value; }
         }
 
         /// <summary>
         ///     Gets the currently selected map.
         /// </summary>
-        public IMapData CurrentMap
-        {
-            get;
-            private set;
-        }
+        public IMapData CurrentMap { get; private set; }
 
         /// <summary>
-        ///     Loads the map identified by the <see cref="mapName" /> from a data store into the <see cref="CurrentMap" /> property.
+        ///     Loads the map identified by the <see cref="mapName" /> from a data store into the <see cref="CurrentMap" />
+        ///     property.
         /// </summary>
         /// <param name="mapName">
         ///     The unique name of the map to be loaded.
@@ -66,7 +57,7 @@
 
             var binaryFormatter = new BinaryFormatter();
             var file = File.Open(mapFilePath, FileMode.Open);
-            this.CurrentMap = (MapData)binaryFormatter.Deserialize(file);
+            this.CurrentMap = (MapData) binaryFormatter.Deserialize(file);
             file.Close();
         }
 
@@ -79,6 +70,8 @@
         /// </param>
         public void SaveCurrentMap(string mapName)
         {
+            this.CurrentMap.MapName = mapName;
+
             var binaryFormatter = new BinaryFormatter();
             var file = File.Create(GetPathForMap(mapName));
             binaryFormatter.Serialize(file, this.CurrentMap);
@@ -103,14 +96,14 @@
                 throw new ArgumentNullException("mapName", @"You must supply a map name.");
             }
 
-            Regex containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
+            var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
             if (string.IsNullOrEmpty(mapName) ||
                 containsABadCharacter.IsMatch(mapName))
             {
                 throw new ArgumentException(@"The map name is not valid.", "mapName");
             }
 
-            Debug.Log(Application.persistentDataPath + Path.DirectorySeparatorChar  + mapName + MapDataFileExtension);
+            Debug.Log(Application.persistentDataPath + Path.DirectorySeparatorChar + mapName + MapDataFileExtension);
             return Application.persistentDataPath + Path.DirectorySeparatorChar + mapName + MapDataFileExtension;
         }
     }

@@ -24,7 +24,7 @@
             get
             {
                 return mapNameTextField.GetComponent<Text>().text;
-            }            
+            }
         }
 
         /// <summary>

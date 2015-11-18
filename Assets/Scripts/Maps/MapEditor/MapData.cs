@@ -1,6 +1,8 @@
-﻿namespace FinalParsec.Corsair.Maps
+﻿namespace FinalParsec.Corsair.Maps.MapEditor
 {
     using System;
+    using System.Linq;
+    using System.Runtime.Serialization;
     using UnityEngine;
 
     /// <summary>
@@ -17,16 +19,16 @@
         private float animationSpeed = .28f;
 
         /// <summary>
-        ///     Backing field for <see cref="DestinationMode" /> property.
+        ///     Backing field for <see cref="DestinationNode" /> property.
         /// </summary>
         [SerializeField]
-        private Vector2 destinationMode = new Vector2(50, 29);
+        private SerializableVector2 destinationNode = new SerializableVector2(new Vector2(50, 29));
 
         /// <summary>
         ///     Backing field for <see cref="EnemySpawnTileIndicies" /> property.
         /// </summary>
         [SerializeField]
-        private Vector2[] enemySpawnTileIndicies = { new Vector2(5, 5), new Vector2(5, 15), new Vector2(5, 25) };
+        private SerializableVector2[] enemySpawnTileIndicies = { new SerializableVector2(new Vector2(5, 5)), new SerializableVector2(new Vector2(5, 15)), new SerializableVector2(new Vector2(5, 25)) };
 
         /// <summary>
         ///     Backing field for <see cref="IsIsoGrid" /> property.
@@ -44,7 +46,7 @@
         ///     Backing field for <see cref="NodeSize" /> property.
         /// </summary>
         [SerializeField]
-        private Vector2 nodeSize = new Vector2(32, 16);
+        private SerializableVector2 nodeSize = new SerializableVector2(new Vector2(32, 16));
 
         /// <summary>
         ///     Backing field for <see cref="Tiles" /> property.
@@ -55,7 +57,7 @@
         ///     Backing field for <see cref="TileSize" /> property.
         /// </summary>
         [SerializeField]
-        private Vector2 tileSize = new Vector2(64, 32);
+        private SerializableVector2 tileSize = new SerializableVector2(new Vector2(64, 32));
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MapData" /> class.
@@ -85,7 +87,7 @@
         {
             get
             {
-                return this.destinationMode;
+                return this.destinationNode.ToVector2();
             }
         }
 
@@ -96,7 +98,7 @@
         {
             get
             {
-                return this.enemySpawnTileIndicies;
+                return this.enemySpawnTileIndicies.Select(serializableVector => serializableVector.ToVector2()).ToArray();
             }
         }
 
@@ -120,6 +122,10 @@
             {
                 return this.mapName;
             }
+            set
+            {
+                this.mapName = value;
+            }
         }
 
         /// <summary>
@@ -129,7 +135,7 @@
         {
             get
             {
-                return this.nodeSize;
+                return this.nodeSize.ToVector2();
             }
         }
 
@@ -137,11 +143,11 @@
         ///     Gets or sets the tile texture to use for all tiles.
         ///     This is temporary.
         /// </summary>
-        public Texture2D TileTexture
-        {
-            get;
-            set;
-        }
+        ////public Texture2D TileTexture
+        ////{
+        ////    get;
+        ////    set;
+        ////}
 
         /// <summary>
         ///     Gets the 2D tile set.
@@ -164,7 +170,7 @@
                 {
                     for (var y = 0; y < lengthY; y++)
                     {
-                        var tile = new Tile(new Texture2D[] { this.TileTexture }, false, false, false);
+                        var tile = new Tile(new [] { new Texture2D(0,0) }, false, false, false);
                         this.tiles[x, y] = tile;
 
                         if (x > 1 && x < lengthX - 6 && y > 1 && y < lengthY - 6)
@@ -187,7 +193,7 @@
         {
             get
             {
-                return this.tileSize;
+                return this.tileSize.ToVector2();
             }
         }
     }
