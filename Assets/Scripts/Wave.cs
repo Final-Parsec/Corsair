@@ -2,29 +2,19 @@ using System;
 public class Wave
 {
 
-	public EnemyType enemyType;
-	public BossType bossType;
+    public WaveId waveId;
 
 	public float nextEnemySpawnEvent = 0;
 	public float spawnDelay;
 	public int numberOfEnemies;
+    public int waveNumber;
 
-	public Wave (EnemyType enemyType, float spawnDelay, int numberOfEnemies)
+	public Wave (WaveId waveId, float spawnDelay, int numberOfEnemies, int waveNumber)
 	{
-		bossType = BossType.Max;
-		this.enemyType = enemyType;
+		this.waveId = waveId;
 		this.spawnDelay = spawnDelay;
 		this.numberOfEnemies = numberOfEnemies;
-
-	}
-
-	public Wave (BossType bossType, float spawnDelay, int numberOfEnemies)
-	{
-		enemyType = EnemyType.Max;
-		this.bossType = bossType;
-		this.spawnDelay = spawnDelay;
-		this.numberOfEnemies = numberOfEnemies;
-		
+	    this.waveNumber = waveNumber;
 	}
 }
 

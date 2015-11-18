@@ -166,7 +166,7 @@ public class EnemyBase : Agent
 	    this.minWaypointDisplacement = this.objectManager.MapData.NodeSize.x / 10;
 	    this.spriteRenderer = this.GetComponent<SpriteRenderer> ();
 	    this.animator = this.GetComponent<Animator>();
-	    this.SetPath (this.objectManager.Pathfinding.Astar (this.onNode, this.objectManager.Map.destinationNode));
+	    this.SetPath (this.objectManager.Pathfinding.Astar (this.onNode, this.objectManager.WaveManager.destinationNode));
 	    this.animator.speed = this.speed;
 
 	    this.maxHealth += (int)(this.maxHealth * ((float)this.objectManager.gameState.dificultyFactor * (float)(this.objectManager.gameState.waveCount)));
@@ -439,7 +439,7 @@ public class EnemyBase : Agent
         TextMesh deathInt = this.objectManager.Map.enemyDeathInt.GetObjectFromPool<TextMesh>(this.objectManager.Map.enemyDeathInt.name, new Vector3(this.transform.position.x, 40, this.transform.position.z), Quaternion.Euler(new Vector3(90, 0, 0)));
         deathInt.gameObject.name = this.objectManager.Map.enemyDeathInt.name;
 
-        if (this.onNode == this.objectManager.Map.destinationNode)
+        if (this.onNode == this.objectManager.WaveManager.destinationNode)
         {
             this.objectManager.gameState.PlayerHealth -= this.damageValue;
             deathInt.text = "-" + this.damageValue;

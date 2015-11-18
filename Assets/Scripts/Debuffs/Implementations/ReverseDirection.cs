@@ -57,7 +57,7 @@ public class ReverseDirection : DebuffBase
 		this.owner.movingBackwards--;
 		if(this.owner.movingBackwards <= 0)
         {
-            this.MoveOwner(this.objectManager.Map.destinationNode);
+            this.MoveOwner(this.objectManager.WaveManager.destinationNode);
             this.owner.StopMovingBackwards = true;
         }
 	}

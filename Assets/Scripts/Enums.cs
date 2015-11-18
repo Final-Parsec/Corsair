@@ -5,13 +5,13 @@ public enum Border
 {
 	Center=-1,
 	Down=3,
-	downLeft=0,
+	DownLeft=0,
 	Left=4,
-	upLeft=6,
+	UpLeft=6,
 	Up=1,
-	upRight=2,
+	UpRight=2,
 	Right=5,
-	downRight=7
+	DownRight=7
 }
 
 public enum EnemyType
@@ -24,6 +24,21 @@ public enum EnemyType
 	SpawnerFire,
 	SpawnerStorm,
 	Max
+}
+
+public enum WaveId
+{
+    Start = -1,
+    Zombie,
+    Horde,
+    PregerWench,
+    SeaDog,
+    Dog,
+    Seagull,
+    Boss1,
+    Boss2,
+    Boss3,
+    Max
 }
 
 public enum BossType

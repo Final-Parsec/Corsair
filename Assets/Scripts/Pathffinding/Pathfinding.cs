@@ -120,9 +120,9 @@ public class Pathfinding
         StringBuilder sb = new StringBuilder();
 
         IDictionary<string, List<Node>> nodePaths = new Dictionary<string, List<Node>>();
-		Node destination = objectManager.Map.destinationNode;
+		Node destination = objectManager.WaveManager.destinationNode;
 
-		foreach(Node spawn in objectManager.Map.enemySpawnNodes){
+		foreach(Node spawn in objectManager.WaveManager.enemySpawnNodes){
             sb.Clear();
             sb.Append(spawn.listIndexX).Append(spawn.listIndexY).Append(destination.listIndexX).Append(destination.listIndexY);
 

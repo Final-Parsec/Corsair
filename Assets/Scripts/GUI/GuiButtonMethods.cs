@@ -104,7 +104,7 @@ public class GuiButtonMethods : MonoBehaviour
 		moneyValue.text = objectManager.gameState.playerMoney.ToString();
 		healthValue.text = objectManager.gameState.PlayerHealth.ToString();
 
-		if(objectManager.Map.upcomingWaves.Count == 0 &&
+		if(objectManager.gameState.waveCount >= objectManager.gameState.numberOfWaves &&
 		   objectManager.enemies.Count == 0 &&
 		   objectManager.gameState.PlayerHealth > 0 &&
 		   !objectManager.gameState.gameOver)
@@ -157,17 +157,14 @@ public class GuiButtonMethods : MonoBehaviour
 			objectManager.gameState.gameStarted = true;
 
 		}
-
-		if (objectManager.Map.currentWaves.Count < 5)
-		{
-			objectManager.Map.playerTriggeredWave = true;
+        
+		objectManager.WaveManager.playerTriggeredWave = true;
 			
-			// only if you actually sent a wave and it isn't just almost the end of the game
-			if(objectManager.Map.upcomingWaves.Count > 0 && !objectManager.gameState.gameOver)
-			{
-				objectManager.gameState.playerMoney += objectManager.gameState.nextWaveCountDown;
-				objectManager.gameState.score += objectManager.gameState.nextWaveCountDown;
-			}
+		// only if you actually sent a wave and it isn't just almost the end of the game
+		if(objectManager.gameState.waveCount < objectManager.gameState.numberOfWaves && !objectManager.gameState.gameOver)
+		{
+			objectManager.gameState.playerMoney += objectManager.gameState.nextWaveCountDown;
+			objectManager.gameState.score += objectManager.gameState.nextWaveCountDown;
 		}
 	}
 
@@ -175,13 +172,11 @@ public class GuiButtonMethods : MonoBehaviour
 	{
 		PlayDefaultSound();
 
-		if ((objectManager.Map.upcomingWaves.Count == 0 &&
-		     objectManager.enemies.Count == 0 &&
-		     objectManager.gameState.PlayerHealth > 0) ||
-		     objectManager.gameState.PlayerHealth <= 0)
+		if (objectManager.gameState.gameOver)
 		{
 			return;
 		}
+
 		objectManager.gameState.optionsOn = !optionScreen.activeSelf;
 		if(!optionScreen.activeSelf){
 			optionScreen.SetActive (true);

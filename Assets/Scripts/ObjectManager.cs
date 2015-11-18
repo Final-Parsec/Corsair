@@ -24,7 +24,18 @@ public class ObjectManager
 		}
 	}
 
-	private EventHandler eventHandler;
+    private WaveManager waveManager;
+    public WaveManager WaveManager
+    {
+        get
+        {
+            if (waveManager == null)
+                waveManager = GameObject.Find("Map").GetComponent<WaveManager>();
+            return waveManager;
+        }
+    }
+
+    private EventHandler eventHandler;
 	public EventHandler EventHandler
 	{
 		get{

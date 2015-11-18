@@ -57,7 +57,7 @@ public class NodeManager{
 					//Debug.Log(x+", "+ y);
 					
 					if (x - 1 >= 0) {
-						nodes [x, y].BorderTiles [(int)Border.downRight] = nodes [x - 1, y];
+						nodes [x, y].BorderTiles [(int)Border.DownRight] = nodes [x - 1, y];
 						if (y - 1 >= 0)
 							nodes [x, y].BorderTiles [(int)Border.Down] = nodes [x - 1, y - 1];
 						
@@ -66,7 +66,7 @@ public class NodeManager{
 					}
 					
 					if (x + 1 < size_x) {
-						nodes [x, y].BorderTiles [(int)Border.upLeft] = nodes [x + 1, y];
+						nodes [x, y].BorderTiles [(int)Border.UpLeft] = nodes [x + 1, y];
 						if (y - 1 >= 0)
 							nodes [x, y].BorderTiles [(int)Border.Left] = nodes [x + 1, y - 1];
 						
@@ -75,10 +75,10 @@ public class NodeManager{
 					}
 					
 					if (y - 1 >= 0)
-						nodes [x, y].BorderTiles [(int)Border.downLeft] = nodes [x, y - 1];
+						nodes [x, y].BorderTiles [(int)Border.DownLeft] = nodes [x, y - 1];
 					
 					if (y + 1 < size_y)
-						nodes [x, y].BorderTiles [(int)Border.upRight] = nodes [x, y + 1];
+						nodes [x, y].BorderTiles [(int)Border.UpRight] = nodes [x, y + 1];
 				}
 			}
 		}
@@ -117,16 +117,16 @@ public class NodeManager{
 					}
 
 					if (x - 2 >= 0)
-						nodes [x, y].BorderTiles [(int)Border.downLeft] = nodes [x - 2, y];
+						nodes [x, y].BorderTiles [(int)Border.DownLeft] = nodes [x - 2, y];
 
 					if (x + 2 < size_x)
-						nodes [x, y].BorderTiles [(int)Border.upRight] = nodes [x + 2, y];
+						nodes [x, y].BorderTiles [(int)Border.UpRight] = nodes [x + 2, y];
 
 					if (y - 1 >= 0)
-						nodes [x, y].BorderTiles [(int)Border.downRight] = nodes [x, y - 1];
+						nodes [x, y].BorderTiles [(int)Border.DownRight] = nodes [x, y - 1];
 				
 					if (y + 1 < size_y)
-						nodes [x, y].BorderTiles [(int)Border.upLeft] = nodes [x, y + 1];
+						nodes [x, y].BorderTiles [(int)Border.UpLeft] = nodes [x, y + 1];
 				}
 			}
 		}
