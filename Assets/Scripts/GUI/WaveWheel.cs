@@ -1,156 +1,97 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
+[RequireComponent(typeof(Canvas))]
 public class WaveWheel : MonoBehaviour {
     
-	//private Texture nextWaveTexture;
-	//private string nextWaveLevel = "";
 
-	//private Texture[] waveTextures = new Texture[5];
-	//private GameObject[] waveImages = new GameObject[3];
+    private List<WaveSprite> sprites = new List<WaveSprite>();
+    private IDictionary<WaveId, Texture> waveTextures = new Dictionary<WaveId, Texture>();
+    public WaveSprite waveSprite;
 
-	//private bool updateSpriteImages;
-	//// used in Map
-	//public bool UpdateSpriteImages{
-	//	get {
-	//		return updateSpriteImages;
-	//	}
-	//	set {
-	//		updateSpriteImages = value;
-	//		nextWaveLevel = ""+(_ObjectManager.gameState.waveCount+3);
-	//		if(_ObjectManager.Map.upcomingWaves.Count >= 3 && _ObjectManager.Map.upcomingWaves[2].enemyType != EnemyType.Max){
-	//			nextWaveTexture = GetTexture((int)_ObjectManager.Map.upcomingWaves[2].enemyType);
-
-	//		}
-	//		else if(_ObjectManager.Map.upcomingWaves.Count >= 3){
-	//			nextWaveTexture = GetTexture((int)_ObjectManager.Map.upcomingWaves[2].bossType);
-	//		}
-	//		else{
-	//			nextWaveTexture = GetTexture(-1);
-	//			nextWaveLevel = ""+000;
-	//		}
-	//	}
-	//}
-
-	//private ObjectManager _ObjectManager;
+    private ObjectManager objectManager;
+    private Vector2 size = new Vector2(150, 75);
+    private float speed;
 
 
-	//// Use this for initialization
-	//void Start () {
-	//	_ObjectManager = ObjectManager.GetInstance ();
+    // Use this for initialization
+    void Start()
+    {
+        objectManager = ObjectManager.GetInstance();
 
-	//	waveTextures[0] = Resources.Load ("GUI/Wave Images/Blue") as Texture;
-	//	waveTextures[1] = Resources.Load ("GUI/Wave Images/Red") as Texture;
-	//	waveTextures[2] = Resources.Load ("GUI/Wave Images/Purple") as Texture;
-	//	waveTextures[3] = Resources.Load ("GUI/Wave Images/Green") as Texture;
-	//	waveTextures[4] = Resources.Load ("GUI/Wave Images/Black") as Texture;
+        Texture def = Resources.Load("GUI/Wave Images/Default") as Texture;
+        // Load textures
+        for (int x = 0; x < (int)WaveId.Max; x++)
+        {
+            WaveId wave = ((WaveId)x);
+            Texture tex = Resources.Load("GUI/Wave Images/" + wave.ToString()) as Texture;
+            if (tex != null)
+            {
+                waveTextures.Add(wave, tex);
+                Debug.Log("Loaded Wave Image " + wave.ToString());
+            }
+            else if (def != null)
+            {
+                waveTextures.Add(wave, def);
+                Debug.Log("Loaded Default Wave Image.");
+            }
+        }
+        
+        LinkedListNode<Wave> node = objectManager.WaveManager.upcomingWaves.First;
+        for (int x = 0; x < objectManager.WaveManager.upcomingWaves.Count; x++)
+        {
+            sprites.Add(Instantiate(waveSprite, new Vector3(0, 0, 0), Quaternion.Euler(Vector3.zero)) as WaveSprite);
 
-	//	GameObject waveA = GameObject.Find ("WaveA");
-	//	GameObject waveB = GameObject.Find ("WaveB");
-	//	GameObject waveC = GameObject.Find ("WaveC");
+            // TODO: set wave number
 
-	//	// Initial wave images
-	//	waveB.GetComponent<RawImage>().texture = GetTexture((int)_ObjectManager.Map.upcomingWaves[0].enemyType);
-	//	waveB.transform.FindChild("Number").GetComponent<Text>().text = ""+(_ObjectManager.gameState.waveCount+1);
-	//	waveB.transform.FindChild("Name").GetComponent<Text>().text = GetWaveName(_ObjectManager.Map.upcomingWaves[0], waveB);
+            if(x == 0)
+            {
+                sprites[x].rectTransform.SetSize(size);
+                sprites[x].rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
+            }
+            else
+            {
+                sprites[x].rectTransform.SetSize(size);
+                var position = new Vector2(size.x * x, 0);
+                sprites[x].rectTransform.SetLeftBottomPosition(position);
+            }
 
-	//	waveC.GetComponent<RawImage>().texture = GetTexture((int)_ObjectManager.Map.upcomingWaves[1].enemyType);
-	//	waveC.transform.FindChild("Number").GetComponent<Text>().text = ""+(_ObjectManager.gameState.waveCount+2);
-	//	waveC.transform.FindChild("Name").GetComponent<Text>().text = GetWaveName(_ObjectManager.Map.upcomingWaves[1], waveC);
+            sprites[x].SetTexture(waveTextures[node.Value.waveId]);
+            sprites[x].rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            sprites[x].rectTransform.SetAnchorBotLeft();
+            sprites[x].rectTransform.parent = this.transform;
 
-	//	waveImages[0] = waveA;
-	//	waveImages[1] = waveB;
-	//	waveImages[2] = waveC;
-	//}
-	
-	//// Update is called once per frame
-	//void Update () {
+            if (node.Next != null)
+            {
+                node = node.Next;
+            }
+        }
 
-	//	float distanceRatio = -1 * (_ObjectManager.gameState.nextWaveCountDown+1) /_ObjectManager.Map.waveSpawnDelay;
+        speed = Mathf.Abs(sprites[0].rectTransform.localPosition.x - sprites[1].rectTransform.localPosition.x) / objectManager.WaveManager.waveSpawnDelay;
+    }
 
-	//	waveImages[0].transform.rotation = Quaternion.Euler(0,
-	//	                                                	0,
-	//	                                                    45 + 45*distanceRatio);
+    // Update is called once per frame
+    void Update()
+    {
+        if (objectManager.gameState.gameSpeed == GameSpeed.Paused || !objectManager.gameState.gameStarted)
+        {
+            return;
+        }
 
-	//	waveImages[1].transform.rotation = Quaternion.Euler(0,
-	//	                                                    0,
-	//	                                                    0 + 45*distanceRatio);
+        float distanceRatio = -1 * (objectManager.gameState.nextWaveCountDown + 1) / objectManager.WaveManager.waveSpawnDelay;
+        foreach (var sprite in sprites)
+        {
+            float gameSpeedAdjusted = speed * (float)this.objectManager.gameState.GameSpeed * Time.deltaTime;
+            sprite.rectTransform.localPosition = new Vector3(sprite.rectTransform.localPosition.x - gameSpeedAdjusted,
+                                                  sprite.rectTransform.localPosition.y,
+                                                  sprite.rectTransform.localPosition.z);
+        }
+        
+    }
 
-	//	waveImages[2].transform.rotation = Quaternion.Euler(0,
-	//	                                                    0,
-	//	                                                    -45 + 45*distanceRatio);
-
-	//	ChangeSpriteImages();
-	//}
-
-	//private void ChangeSpriteImages(){
-	//	if(updateSpriteImages){
-	//		updateSpriteImages = false;
-			
-	//		GameObject temp;
-	//		temp = waveImages[0];
-	//		waveImages[0] = waveImages[1];
-	//		waveImages[1] = waveImages[2];
-	//		waveImages[2] = temp;
-			
-	//		waveImages[2].GetComponent<RawImage>().texture = nextWaveTexture;
-	//		waveImages[2].transform.FindChild("Number").GetComponent<Text>().text = nextWaveLevel;
-
-	//		if(_ObjectManager.Map.upcomingWaves.Count < 2)
-	//			waveImages[2].transform.FindChild("Name").GetComponent<Text>().text = "";
-	//		else
-	//			waveImages[2].transform.FindChild("Name").GetComponent<Text>().text = GetWaveName(_ObjectManager.Map.upcomingWaves[1], waveImages[2]);
-	//	}
-	//}
-
-	//private Texture GetTexture(int enemyType)
-	//{
-	//	if(enemyType == 0 || enemyType == 5)
-	//		return waveTextures[0]; // storm
-
-	//	if(enemyType == 3 || enemyType == 4)
-	//		return waveTextures[1]; // fire
-
-	//	if(enemyType == 1)
-	//		return waveTextures[2]; // storm
-
-	//	if(enemyType == 2)
-	//		return waveTextures[3]; // storm
-
-	//	return waveTextures[4]; // game over
-	//}
-
-	//private string GetWaveName(Wave wave, GameObject waveX)
-	//{
-	//	int waveType = (int)wave.enemyType;
-	//	Text bossDisplay = waveX.transform.FindChild ("BossName").GetComponent<Text> ();
-
-	//	if (wave.enemyType == EnemyType.Max) 
-	//	{
-	//		waveType = (int)wave.bossType;
-	//		bossDisplay.color = new Color (bossDisplay.color.r,
-	//		                              bossDisplay.color.g,
-	//		                              bossDisplay.color.b,
-	//		                              1f);
-	//	} 
-	//	else 
-	//	{
-	//		bossDisplay.color = new Color(bossDisplay.color.r,
-	//		                              bossDisplay.color.g,
-	//		                              bossDisplay.color.b,
-	//		                              0f);
-	//	}
-
-	//	if(waveType == 0 || waveType == 1)
-	//		return "Fast"; // fast
-		
-	//	if(waveType == 2 || waveType == 3)
-	//		return "Strong"; // strong
-		
-	//	if(waveType == 4 || waveType == 5)
-	//		return "Spawner"; // spawner
-		
-	//	return "Game Over";
-	//}
+    private void ChangeSpriteImages()
+    {
+    }
 }
