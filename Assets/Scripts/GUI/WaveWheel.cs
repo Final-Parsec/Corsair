@@ -14,6 +14,7 @@ public class WaveWheel : MonoBehaviour {
     private ObjectManager objectManager;
     private Vector2 size = new Vector2(150, 75);
     private float speed;
+    private float xScreenEdge;
 
 
     // Use this for initialization
@@ -50,6 +51,7 @@ public class WaveWheel : MonoBehaviour {
             {
                 sprites[x].rectTransform.SetSize(size);
                 sprites[x].rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
+                xScreenEdge = sprites[x].rectTransform.localPosition.x;
             }
             else
             {
@@ -88,6 +90,16 @@ public class WaveWheel : MonoBehaviour {
                                                   sprite.rectTransform.localPosition.y,
                                                   sprite.rectTransform.localPosition.z);
         }
+
+        if (sprites[0].rectTransform.localPosition.x <= xScreenEdge - size.x && objectManager.gameState.waveCount < objectManager.gameState.numberOfWaves)
+        {
+            WaveSprite sprite = sprites[0];
+            sprites.RemoveAt(0);
+            sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId]);
+            sprite.rectTransform.SetLeftBottomPosition(new Vector2(size.x * sprites.Count, 0));
+            sprites.Add(sprite);
+        }
+
         
     }
 
