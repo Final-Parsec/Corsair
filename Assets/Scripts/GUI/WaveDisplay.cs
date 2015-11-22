@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 [RequireComponent(typeof(Canvas))]
-public class WaveWheel : MonoBehaviour {
+public class WaveDisplay : MonoBehaviour {
     
 
     private List<WaveSprite> sprites = new List<WaveSprite>();
@@ -13,6 +13,7 @@ public class WaveWheel : MonoBehaviour {
 
     private ObjectManager objectManager;
     private Vector2 size = new Vector2(150, 75);
+    private float xSize;
     private float speed;
     private float xScreenEdge;
 
@@ -51,7 +52,7 @@ public class WaveWheel : MonoBehaviour {
             {
                 sprites[x].rectTransform.SetSize(size);
                 sprites[x].rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
-                xScreenEdge = sprites[x].rectTransform.localPosition.x;
+                xScreenEdge = sprites[x].rectTransform.position.x;
             }
             else
             {
@@ -70,8 +71,10 @@ public class WaveWheel : MonoBehaviour {
                 node = node.Next;
             }
         }
+        xSize = Mathf.Abs(sprites[0].rectTransform.position.x - sprites[1].rectTransform.position.x);
+        speed = xSize / objectManager.WaveManager.waveSpawnDelay;
 
-        speed = Mathf.Abs(sprites[0].rectTransform.localPosition.x - sprites[1].rectTransform.localPosition.x) / objectManager.WaveManager.waveSpawnDelay;
+        objectManager.WaveManager.SendWave += UpdateWaveSprites;
     }
 
     // Update is called once per frame
@@ -91,19 +94,25 @@ public class WaveWheel : MonoBehaviour {
                                                   sprite.rectTransform.localPosition.z);
         }
 
-        if (sprites[0].rectTransform.localPosition.x <= xScreenEdge - size.x && objectManager.gameState.waveCount < objectManager.gameState.numberOfWaves)
+        if (sprites[0].rectTransform.position.x < xScreenEdge - xSize - 5 && objectManager.WaveManager.upcomingWaves.Last.Value.waveNumber <= objectManager.gameState.numberOfWaves)
         {
             WaveSprite sprite = sprites[0];
             sprites.RemoveAt(0);
             sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId]);
-            sprite.rectTransform.SetLeftBottomPosition(new Vector2(size.x * sprites.Count, 0));
+            sprite.rectTransform.position = new Vector3(sprite.rectTransform.position.x + xSize * (sprites.Count + 1),
+                                                        sprite.rectTransform.position.y,
+                                                        sprite.rectTransform.position.z);
             sprites.Add(sprite);
         }
-
-        
     }
 
-    private void ChangeSpriteImages()
+    public void DeReference()
     {
+        objectManager.WaveManager.SendWave -= UpdateWaveSprites;
+    }
+
+    private void UpdateWaveSprites()
+    {
+        
     }
 }

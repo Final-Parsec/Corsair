@@ -11,6 +11,12 @@ public class WaveManager : MonoBehaviour
 
     private readonly IWaveGenerator waveGene = new RandomWaveGenerator(8008);
 
+    /// <summary>
+    /// Executes event when the <see cref="Wave"/> is sent.
+    /// </summary>
+    public delegate void SendWaveAction();
+    public event SendWaveAction SendWave;
+
     [HideInInspector]
     public LinkedList<Wave> upcomingWaves = new LinkedList<Wave>();
     private float nextWaveSpawnEvent;
@@ -52,7 +58,7 @@ public class WaveManager : MonoBehaviour
             if ((Time.time >= this.nextWaveSpawnEvent || this.playerTriggeredWave) &&
                 (this.objectManager.gameState.waveCount < this.objectManager.gameState.numberOfWaves))
             {
-                //this.objectManager.WaveWheel.UpdateSpriteImages = true;
+                //this.objectManager.WaveDisplay.UpdateSpriteImages = true;
 
                 this.playerTriggeredWave = false;
                 this.nextWaveSpawnEvent = Time.time + this.waveSpawnDelay;
@@ -81,6 +87,11 @@ public class WaveManager : MonoBehaviour
         Wave wave = this.DequeueWave();
         if (wave != null)
         {
+            if (SendWave != null)
+            {
+                SendWave();
+            }
+
             this.objectManager.gameState.waveCount++;
             this.StartCoroutine(this.CreateEnemies(wave, this.enemySpawnNodes));
         }

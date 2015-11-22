@@ -75,13 +75,13 @@ public class ObjectManager
 		}
 	}
 
-	private WaveWheel waveWheel;
-	public WaveWheel WaveWheel 
+	private WaveDisplay waveDisplay;
+	public WaveDisplay WaveDisplay 
 	{ 
 		get{
-			if(waveWheel == null)
-				waveWheel = GameObject.Find("WaveWheel").GetComponent<WaveWheel>();
-			return waveWheel;
+			if(waveDisplay == null)
+				waveDisplay = GameObject.Find("Canvas").GetComponent<WaveDisplay>();
+			return waveDisplay;
 		} 
 	}
 
@@ -176,6 +176,7 @@ public class ObjectManager
 
 	public void DestroySinglton ()
 	{
+	    WaveDisplay.DeReference();
 		ObjectManager.instance = null;
 	}
 }
