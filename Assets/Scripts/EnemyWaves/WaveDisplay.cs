@@ -13,7 +13,6 @@ public class WaveDisplay : MonoBehaviour {
 
     private ObjectManager objectManager;
     private Vector2 size = new Vector2(150, 75);
-    private float xSize;
     private float speed;
     private float xScreenEdge;
 
@@ -71,8 +70,7 @@ public class WaveDisplay : MonoBehaviour {
                 node = node.Next;
             }
         }
-        xSize = Mathf.Abs(sprites[0].rectTransform.position.x - sprites[1].rectTransform.position.x);
-        speed = xSize / objectManager.WaveManager.waveSpawnDelay;
+        speed = Mathf.Abs(sprites[0].rectTransform.position.x - sprites[1].rectTransform.position.x) / objectManager.WaveManager.waveSpawnDelay;
 
         objectManager.WaveManager.SendWave += UpdateWaveSprites;
     }
@@ -94,15 +92,9 @@ public class WaveDisplay : MonoBehaviour {
                                                   sprite.rectTransform.localPosition.z);
         }
 
-        if (sprites[0].rectTransform.position.x < xScreenEdge - xSize - 5 && objectManager.WaveManager.upcomingWaves.Last.Value.waveNumber <= objectManager.gameState.numberOfWaves)
+        if (sprites[0].rectTransform.position.x < xScreenEdge - size.x - 5)
         {
-            WaveSprite sprite = sprites[0];
-            sprites.RemoveAt(0);
-            sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId]);
-            sprite.rectTransform.position = new Vector3(sprite.rectTransform.position.x + xSize * (sprites.Count + 1),
-                                                        sprite.rectTransform.position.y,
-                                                        sprite.rectTransform.position.z);
-            sprites.Add(sprite);
+            this.BackOfTheLine(sprites[0]);
         }
     }
 
@@ -113,6 +105,34 @@ public class WaveDisplay : MonoBehaviour {
 
     private void UpdateWaveSprites()
     {
+        if (objectManager.gameState.waveCount == 1)
+        {
+            return;
+        }
+
+        for (int x = 0; x < sprites.Count; x++)
+        {
+            var position = new Vector3(xScreenEdge + (size.x * x) - size.x,
+                                       sprites[x].rectTransform.position.y,
+                                       sprites[x].rectTransform.position.z);
+            sprites[x].rectTransform.position = position;
+        }
         
+        this.BackOfTheLine(sprites[0]);
+    }
+
+    private void BackOfTheLine(WaveSprite sprite)
+    {
+        if (objectManager.WaveManager.upcomingWaves.Last.Value.waveNumber > objectManager.gameState.numberOfWaves)
+        {
+            sprite.gameObject.SetActive(false);
+        }
+
+        sprites.RemoveAt(0);
+        sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId]);
+        sprite.rectTransform.position = new Vector3(sprite.rectTransform.position.x + size.x * (sprites.Count + 1),
+                                                    sprite.rectTransform.position.y,
+                                                    sprite.rectTransform.position.z);
+        sprites.Add(sprite);
     }
 }

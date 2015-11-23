@@ -87,13 +87,13 @@ public class WaveManager : MonoBehaviour
         Wave wave = this.DequeueWave();
         if (wave != null)
         {
+            this.objectManager.gameState.waveCount++;
+            this.StartCoroutine(this.CreateEnemies(wave, this.enemySpawnNodes));
+
             if (SendWave != null)
             {
                 SendWave();
             }
-
-            this.objectManager.gameState.waveCount++;
-            this.StartCoroutine(this.CreateEnemies(wave, this.enemySpawnNodes));
         }
     }
 
