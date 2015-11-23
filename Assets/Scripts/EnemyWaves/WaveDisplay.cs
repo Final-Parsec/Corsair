@@ -73,6 +73,18 @@ public class WaveDisplay : MonoBehaviour {
         speed = Mathf.Abs(sprites[0].rectTransform.position.x - sprites[1].rectTransform.position.x) / objectManager.WaveManager.waveSpawnDelay;
 
         objectManager.WaveManager.SendWave += UpdateWaveSprites;
+
+        Texture activeWaveTex = Resources.Load("GUI/Wave Images/ActiveWave") as Texture;
+        if (activeWaveTex != null)
+        {
+            WaveSprite activeWave = Instantiate(waveSprite, new Vector3(0, 0, 1), Quaternion.Euler(Vector3.zero)) as WaveSprite;
+            activeWave.rectTransform.SetSize(size);
+            activeWave.rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
+            activeWave.SetTexture(activeWaveTex);
+            activeWave.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            activeWave.rectTransform.SetAnchorBotLeft();
+            activeWave.rectTransform.parent = this.transform;
+        }
     }
 
     // Update is called once per frame
