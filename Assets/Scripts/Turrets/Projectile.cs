@@ -68,6 +68,8 @@ public class Projectile : MonoBehaviour
             transform.gameObject.ReturnToPool(this.gameObject.name);
 			if (target != null) 
             {
+                targetPosition = target.transform.position;
+
                 if (Slow > 0)
                 {
 					target.Slow(Slow, SlowDuration);

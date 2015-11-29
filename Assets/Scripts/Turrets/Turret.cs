@@ -1,7 +1,5 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Turret : MonoBehaviour
 {
@@ -118,8 +116,6 @@ public class Turret : MonoBehaviour
     // How much the turret can be sold for. 
     // Based on upgrades, bling, and current market conditions.
     public int Msrp { get; set; }
-
-    
 
     public TurretType TurretType { get; set; }
 
@@ -238,18 +234,18 @@ public class Turret : MonoBehaviour
 	{
 		if (target != null || !IsTargetInRange()) 
 		{
-			removeTargetCallbacks();
+			RemoveTargetCallbacks();
 			target = null;
 		}
 	}	
 
 	void OnTargetKilled ()
 	{
-		removeTargetCallbacks();
+		RemoveTargetCallbacks();
 		target = null;
 	}	
 
-	private void removeTargetCallbacks()
+	private void RemoveTargetCallbacks()
 	{
 		if (target != null)
 		{
@@ -393,7 +389,7 @@ public class Turret : MonoBehaviour
 		{
 			if(node.enemie != null)
 			{
-				removeTargetCallbacks();
+				RemoveTargetCallbacks();
 				target = node.enemie;
 				target.Killed += OnTargetKilled;
 				target.NodeExit += OnNodeExit;

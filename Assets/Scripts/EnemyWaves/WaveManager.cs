@@ -58,11 +58,11 @@ public class WaveManager : MonoBehaviour
             if ((Time.time >= this.nextWaveSpawnEvent || this.playerTriggeredWave) &&
                 (this.objectManager.gameState.waveCount < this.objectManager.gameState.numberOfWaves))
             {
-                //this.objectManager.WaveDisplay.UpdateSpriteImages = true;
-
-                this.playerTriggeredWave = false;
                 this.nextWaveSpawnEvent = Time.time + this.waveSpawnDelay;
                 this.SpawnWave();
+
+                // Clear flag at the end. WaveDisplay depends on it.
+                this.playerTriggeredWave = false;
             }
         }
     }

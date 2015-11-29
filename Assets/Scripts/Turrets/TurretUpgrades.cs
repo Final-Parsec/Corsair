@@ -7,19 +7,19 @@
 	{
 		public static Dictionary<string, Upgrade[]> upgrades = new Dictionary<string, Upgrade[]>();
 
-		static public int infernoCost = 40;
-		static public int armageddonCost = 20;
-		static public int burnCost = 30;
+		public static int infernoCost = 40;
+        public static int armageddonCost = 20;
+        public static int burnCost = 30;
 
-		static public int chainLightningCost = 20;
-		static public int frostCost = 30;
-		static public int lightningStrikeCost = 30;
+        public static int chainLightningCost = 20;
+        public static int frostCost = 30;
+        public static int lightningStrikeCost = 30;
 
-		static public int poisonCost = 30;
-		static public int mindControlCost = 50;
-		static public int hexCost = 20;
+        public static int poisonCost = 30;
+        public static int mindControlCost = 50;
+        public static int hexCost = 20;
 
-		static public float costScaling = .5f; // costs of upgrades increase by 50% with each upgrade
+        public static float costScaling = .5f; // costs of upgrades increase by 50% with each upgrade
 
 		public static void MakeUpgrades()
 		{

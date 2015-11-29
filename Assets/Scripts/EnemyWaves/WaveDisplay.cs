@@ -1,19 +1,19 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
-using System.IO;
 
 [RequireComponent(typeof(Canvas))]
 public class WaveDisplay : MonoBehaviour {
     
 
-    private List<WaveSprite> sprites = new List<WaveSprite>();
-    private IDictionary<WaveId, Texture> waveTextures = new Dictionary<WaveId, Texture>();
+    private readonly List<WaveSprite> sprites = new List<WaveSprite>();
+    private readonly IDictionary<WaveId, Texture> waveTextures = new Dictionary<WaveId, Texture>();
     public WaveSprite waveSprite;
 
     private ObjectManager objectManager;
     private Vector2 size = new Vector2(150, 75);
     private float speed;
+    private float turboSpeed = 350;
+    private int turboCount = 0;
     private float xScreenEdge;
 
 
@@ -94,19 +94,22 @@ public class WaveDisplay : MonoBehaviour {
         {
             return;
         }
-
-        float distanceRatio = -1 * (objectManager.gameState.nextWaveCountDown + 1) / objectManager.WaveManager.waveSpawnDelay;
+        
         foreach (var sprite in sprites)
         {
-            float gameSpeedAdjusted = speed * (float)this.objectManager.gameState.GameSpeed * Time.deltaTime;
-            sprite.rectTransform.localPosition = new Vector3(sprite.rectTransform.localPosition.x - gameSpeedAdjusted,
+            float adjustedSpeed = (speed + (turboCount != 0 ? turboSpeed : 0)) * (float)this.objectManager.gameState.GameSpeed * Time.deltaTime;
+            sprite.rectTransform.localPosition = new Vector3(sprite.rectTransform.localPosition.x - adjustedSpeed,
                                                   sprite.rectTransform.localPosition.y,
                                                   sprite.rectTransform.localPosition.z);
         }
-
+        
         if (sprites[0].rectTransform.position.x < xScreenEdge - size.x - 5)
         {
             this.BackOfTheLine(sprites[0]);
+            if (turboCount > 0)
+            {
+                turboCount--;
+            }
         }
     }
 
@@ -122,15 +125,10 @@ public class WaveDisplay : MonoBehaviour {
             return;
         }
 
-        for (int x = 0; x < sprites.Count; x++)
+        if (objectManager.WaveManager.playerTriggeredWave)
         {
-            var position = new Vector3(xScreenEdge + (size.x * x) - size.x,
-                                       sprites[x].rectTransform.position.y,
-                                       sprites[x].rectTransform.position.z);
-            sprites[x].rectTransform.position = position;
+            turboCount++;
         }
-        
-        this.BackOfTheLine(sprites[0]);
     }
 
     private void BackOfTheLine(WaveSprite sprite)
