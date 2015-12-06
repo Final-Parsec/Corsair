@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using SimpleJSON;
 
 [RequireComponent(typeof(AudioSource))]
@@ -12,7 +10,6 @@ public class GuiButtonMethods : MonoBehaviour
 	private const string Url = "http://finalparsec.com/scores/";
 
     private ObjectManager objectManager;
-	private CanvasGroup[] canvasGroups;
 
 	private Text sendWaveTime;
 	private Text sendWaveName;
@@ -36,6 +33,9 @@ public class GuiButtonMethods : MonoBehaviour
 	private GameObject upgradeMenu;
 	private Animator upgradeAnimator;
 
+	private GameObject selectionMenu;
+	private Animator selectionAnimator;
+
 	private AudioSource audioSource;
 	private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
 
@@ -51,13 +51,11 @@ public class GuiButtonMethods : MonoBehaviour
 		
 		// Turret Selection Buttons
 		GameObject turretButtonPanel = GameObject.Find ("TurretSelectPanel");
-		canvasGroups = turretButtonPanel.GetComponentsInChildren<CanvasGroup>();
-		canvasGroups [0].alpha = 1f;
 
-		GameObject.Find ("EarthPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.EarthTurret] + ")";
-		GameObject.Find ("FirePrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.FireTurret] + ")";
-		GameObject.Find ("StormPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.StormTurret] + ")";
-		GameObject.Find ("VoodooPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.VoodooTurret] + ")";
+		//GameObject.Find ("EarthPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.EarthTurret] + ")";
+		//GameObject.Find ("FirePrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.FireTurret] + ")";
+		//GameObject.Find ("StormPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.StormTurret] + ")";
+		//GameObject.Find ("VoodooPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.VoodooTurret] + ")";
     
 		// Send Wave Button
 		sendWaveName = GameObject.Find ("SendWaveName").GetComponent<Text>();
@@ -95,8 +93,11 @@ public class GuiButtonMethods : MonoBehaviour
 		upgradeMenu = GameObject.Find ("UpgradeMenu");
 		upgradeAnimator = upgradeMenu.GetComponent<Animator>();
 
+        // Turret Upgrade Menu
+        selectionMenu = GameObject.Find("TurretSelectPanel");
+        selectionAnimator = selectionMenu.GetComponent<Animator>();
 
-	}
+    }
 	
 	void Update()
 	{
@@ -134,13 +135,6 @@ public class GuiButtonMethods : MonoBehaviour
 	{
 		PlayDefaultSound();
         objectManager.TurretFactory.TurretType = (TurretType)turretType;
-
-		foreach (CanvasGroup uiSprite in canvasGroups)
-        {
-            uiSprite.alpha = .7f;
-        }
-
-		canvasGroups[turretType].alpha = 1f;   
     }
 
 	public void SendWavePressed()
@@ -294,7 +288,24 @@ public class GuiButtonMethods : MonoBehaviour
 		objectManager.TurretRange.gameObject.SetActive(false);
 	}
 
-	public void SpeedUp()
+    public void TurretMenuToggelPressed()
+    {
+
+        if (!selectionAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeLeftIn"))
+        {
+            PlayDefaultSound();
+            selectionAnimator.SetTrigger("Swipe Left In");
+        }
+        else
+        {
+            PlayDefaultSound();
+            selectionAnimator.SetTrigger("Swipe Left Out");
+        }
+
+        objectManager.TurretRange.gameObject.SetActive(false);
+    }
+
+    public void SpeedUp()
 	{
 		PlayDefaultSound();
 		switch(objectManager.gameState.GameSpeed)
