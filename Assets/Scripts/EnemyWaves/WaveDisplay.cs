@@ -63,7 +63,7 @@ public class WaveDisplay : MonoBehaviour {
             sprites[x].SetTexture(waveTextures[node.Value.waveId]);
             sprites[x].rectTransform.pivot = new Vector2(0.5f, 0.5f);
             sprites[x].rectTransform.SetAnchorBotLeft();
-            sprites[x].rectTransform.parent = this.transform;
+            sprites[x].rectTransform.SetParent(this.transform);
 
             if (node.Next != null)
             {
@@ -83,7 +83,7 @@ public class WaveDisplay : MonoBehaviour {
             activeWave.SetTexture(activeWaveTex);
             activeWave.rectTransform.pivot = new Vector2(0.5f, 0.5f);
             activeWave.rectTransform.SetAnchorBotLeft();
-            activeWave.rectTransform.parent = this.transform;
+            activeWave.rectTransform.SetParent(this.transform);
         }
     }
 

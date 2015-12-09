@@ -70,35 +70,24 @@ public class Projectile : MonoBehaviour
             {
                 targetPosition = target.transform.position;
 
+                if (Damage > 0)
+                {
+                    target.Damage(Damage);
+                }
+
                 if (Slow > 0)
                 {
 					target.Slow(Slow, SlowDuration);
                 }
 
-				target.Damage (Damage);
 				if(DamageOverTime > 0)
 				{
-	                if (Owner.TurretType == TurretType.EarthTurret)
-	                {
-	                    
-	                }
-	                else if (Owner.TurretType == TurretType.FireTurret)
-	                {
-						target.DamageOverTime(DamageOverTime, 3.0f, .5f, StatusEffects.Burn);
-	                }
-	                else if (Owner.TurretType == TurretType.StormTurret)
-	                {
-
-	                }
-	                else if (Owner.TurretType == TurretType.VoodooTurret)
-	                {
-						target.DamageOverTime(DamageOverTime, 3.0f, .5f, StatusEffects.Poison);
-	                }  
+					target.DamageOverTime(DamageOverTime, 3.0f, .5f, StatusEffects.Burn);
 				}
 
-				if(Owner.MindControlDuration > 0)
+				if(Owner.turretModel.MindControlDuration > 0)
 				{
-					target.ReverseDirection(Owner.MindControlDuration);
+					target.ReverseDirection(Owner.turretModel.MindControlDuration);
 				}
               
                 if (AoeDamage > 0 && AoeRange > 0)

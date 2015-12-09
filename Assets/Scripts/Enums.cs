@@ -1,5 +1,5 @@
+
 using System;
-using UnityEngine;
 
 public enum Border
 {
@@ -12,18 +12,6 @@ public enum Border
 	UpRight=2,
 	Right=5,
 	DownRight=7
-}
-
-public enum EnemyType
-{
-	Start=-1,
-	FastStorm,
-	FastVoodoo,
-	StrongEarth,
-	StrongFire,
-	SpawnerFire,
-	SpawnerStorm,
-	Max
 }
 
 public enum WaveId
@@ -41,37 +29,16 @@ public enum WaveId
     Max
 }
 
-public enum BossType
-{
-	Start=-1,
-	FastStormBoss,
-	FastVoodooBoss,
-	StrongEarthBoss,
-	StrongFireBoss,
-	SpawnerFireBoss,
-	SpawnerStormBoss,
-	Max
-}
-
 public enum TurretType
 {
-	EarthTurret=0,
-	FireTurret,
-	StormTurret,
-	VoodooTurret
-}
-
-public enum ObstacleType
-{
-	Barracks45,
-	Church45,
-	Firestation45,
-	GardenEmpty45,
-	GardenFull45,
-	GardenHalf45,
-	SimpleHouse,
-	Weaponsmith45,
-	WeaponsmithForge45
+    Pistolman = 0,
+    Rifleman,
+    Cannon,
+    Netter,
+    Buckshot,
+    Molotov,
+    Sirens,
+    PiroThePirateHero
 }
 
 public enum StatusEffects
@@ -101,3 +68,11 @@ public enum State
 {
 	Walking=0
 };
+
+[Flags]
+public enum AttackOptionsFlags
+{
+    None = 0,
+    Ground = 1,
+    Air = 2
+}

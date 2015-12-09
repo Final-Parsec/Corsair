@@ -1,25 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Scripts.Turrets;
 
 public class Turret : MonoBehaviour
 {
-	// Configurable
-	public float accuracyError = 2.0f;
-    public int aoeDamage = 0;
-    public int aoeRange = 0;
-	public int damage = 10;
-    public int damageOverTime = 0;
-	public float range = 5;
-	public List<Node> nodesInRange = new List<Node>();
-	public int rateOfFire = 5;
-	public float Slow { get; set; }
-	public float SlowDuration { get; set; }
-	public int MindControlDuration { get; set; }
+    public TurretModel turretModel;
+    public List<Node> nodesInRange = new List<Node>();
 
-	public float focusMenuBlue = 0;
-	public float focusMenuGreen = 175;
-	public float focusMenuRed = 0;
-	public GameObject projectileType;
+    public GameObject projectileType;
 	public Sprite selectedSprite;
     public Sprite levelOneSprite;
     public Sprite levelTwoSprite;
@@ -43,18 +31,18 @@ public class Turret : MonoBehaviour
 	{
 		get 
 		{
-			int inverted = rateOfFire;
-			if (rateOfFire == 0) 
+			int inverted = turretModel.rateOfFire;
+			if (turretModel.rateOfFire == 0) 
             { 
 				return float.MaxValue;
 			}
-			else if (rateOfFire < 5)
+			else if (turretModel.rateOfFire < 5)
             {
-				inverted = rateOfFire + 2 * (5 - rateOfFire);
+				inverted = turretModel.rateOfFire + 2 * (5 - turretModel.rateOfFire);
 			}
-			else if (rateOfFire > 5) 
+			else if (turretModel.rateOfFire > 5) 
             {
-				inverted = rateOfFire - 2 * (rateOfFire - 5);
+				inverted = turretModel.rateOfFire - 2 * (turretModel.rateOfFire - 5);
 			}
 			
 			return (((float)inverted - 1f) / (10f - 1f)) * (MaxAttackDelay - MinAttackDelay) + .1f;
@@ -68,7 +56,7 @@ public class Turret : MonoBehaviour
 			float minRange = Mathf.Min(objectManager.MapData.NodeSize.x, objectManager.MapData.NodeSize.y) * 1.5f;
             float maxRange = minRange * 4f;
 
-            float computedRange = (((float)aoeRange - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
+            float computedRange = (((float)turretModel.aoeRange - 1f) / (10f - 1f)) * (maxRange - minRange) + minRange;
             computedRange = computedRange / transform.localScale.x;
 
             return computedRange;
@@ -117,32 +105,12 @@ public class Turret : MonoBehaviour
     // Based on upgrades, bling, and current market conditions.
     public int Msrp { get; set; }
 
-    public TurretType TurretType { get; set; }
-
-    public int UpgradeOneLevel { get; set; }
-    public int UpgradeTwoLevel { get; set; }
-    public int UpgradeThreeLevel { get; set; }
-
-
-	public void UpgradeTurret(Upgrade upgrade, int upgradeLevel)
+	public void UpgradeTurret(Upgrade upgrade, int upgradePath)
 	{
 		if (upgrade.Cost > objectManager.gameState.playerMoney)
 			return;
 		objectManager.gameState.playerMoney -= (int)upgrade.Cost;
 		Msrp += (int)upgrade.Cost / 2;
-
-		switch(upgradeLevel)
-		{
-		case 1:
-			UpgradeOneLevel++;
-			break;
-		case 2:
-			UpgradeTwoLevel++;
-			break;
-		case 3:
-			UpgradeThreeLevel++;
-			break;
-		}
 
 		Level++;     
 
@@ -151,33 +119,33 @@ public class Turret : MonoBehaviour
 			switch(stat.AttribId)
 			{
 			case Attribute.Range:
-				range += (int)stat.Value;
+                    turretModel.range += (int)stat.Value;
 				FillNodesInRange();
-				objectManager.TurretRange.ChangeSprite((int)range);
+				objectManager.TurretRange.ChangeSprite((int)turretModel.range);
 				break;
 			case Attribute.RateOfFire:
-				rateOfFire += (int)stat.Value;
+                    turretModel.rateOfFire += (int)stat.Value;
 				break;
 			case Attribute.AoeDamage:
-				aoeDamage += (int)stat.Value;
+                    turretModel.aoeDamage += (int)stat.Value;
 				break;
 			case Attribute.AoeRange:
-				aoeRange += (int)stat.Value;
+                    turretModel.aoeRange += (int)stat.Value;
 				break;
 			case Attribute.Damage:
-				damage += (int)stat.Value;
+                    turretModel.damage += (int)stat.Value;
 				break;
 			case Attribute.DamageOverTime:
-				damageOverTime += (int)stat.Value;
+                    turretModel.damageOverTime += (int)stat.Value;
 				break;
 			case Attribute.Slow:
-				Slow += stat.Value;
+                    turretModel.Slow += stat.Value;
 				break;
 			case Attribute.SlowDuration:
-				SlowDuration += stat.Value;
+                    turretModel.SlowDuration += stat.Value;
 				break;
 			case Attribute.MindControlDuration:
-				MindControlDuration += (int)stat.Value;
+                    turretModel.MindControlDuration += (int)stat.Value;
 				break;
 			default:
 				Debug.Log("Unknown upgrade " + stat.AttribId);
@@ -192,7 +160,6 @@ public class Turret : MonoBehaviour
 	{
 		objectManager = ObjectManager.GetInstance ();
 		objectManager.AddEntity (this);
-		FillNodesInRange();
 	}
 	
 	public void Deselect()
@@ -204,8 +171,6 @@ public class Turret : MonoBehaviour
 	void Fire (EnemyBase myTarget)
 	{
         var targetPosition = myTarget.transform.position;
-		var aimError = Random.Range (-accuracyError, accuracyError);
-		var aimPoint = new Vector3 (targetPosition.x + aimError, targetPosition.y, targetPosition.z + aimError);
 		nextDamageEvent = Time.time + AttackDelay;
         ////GameObject projectileObject = Instantiate (projectileType, transform.position, Quaternion.LookRotation (targetPosition)) as GameObject;
         ////Projectile projectile = projectileObject.GetComponent<Projectile> ();
@@ -214,18 +179,18 @@ public class Turret : MonoBehaviour
             transform.position,
             Quaternion.LookRotation(targetPosition));
 		projectile.gameObject.name = projectileType.name;
-		projectile.Damage = damage;
-        projectile.DamageOverTime = damageOverTime;
-        projectile.Slow = Slow;
-        projectile.SlowDuration = SlowDuration;
+		projectile.Damage = turretModel.damage;
+        projectile.DamageOverTime = turretModel.damageOverTime;
+        projectile.Slow = turretModel.Slow;
+        projectile.SlowDuration = turretModel.SlowDuration;
 		projectile.target = myTarget;
-		projectile.targetPosition = aimPoint;
+		projectile.targetPosition = targetPosition;
         projectile.Owner = this;
 
         // Turret is AoE enabled. Do stuff.
-        if (aoeDamage > 0 && aoeRange > 0)
+        if (turretModel.aoeDamage > 0 && turretModel.aoeRange > 0)
         {
-            projectile.AoeDamage = aoeDamage;
+            projectile.AoeDamage = turretModel.aoeDamage;
             projectile.AoeRange = AoeRange;
         }
 	}
@@ -295,15 +260,15 @@ public class Turret : MonoBehaviour
 	{
 		string str = "";
 
-		str += StatInfo.statInfo[Attribute.Damage].Acronym + "=" + damage + "\t" ;
-		str += StatInfo.statInfo[Attribute.Range].Acronym + "=" + range + "\t" ;
-		str += StatInfo.statInfo[Attribute.RateOfFire].Acronym + "=" + rateOfFire + "\t" ;
-		str += aoeDamage > 0?StatInfo.statInfo[Attribute.AoeDamage].Acronym + "=" + aoeDamage + "\t":"";
-		str += aoeRange > 0?StatInfo.statInfo[Attribute.AoeRange].Acronym + "=" + aoeRange + "\t":"";
-		str += damageOverTime > 0?StatInfo.statInfo[Attribute.DamageOverTime].Acronym + "=" + damageOverTime + "\t":"";
-		str += Slow > 0?StatInfo.statInfo[Attribute.Slow].Acronym + "=" + Slow + "\t":"";
-		str += SlowDuration > 0?StatInfo.statInfo[Attribute.SlowDuration].Acronym + "=" + SlowDuration + "\t":"";
-		str += MindControlDuration > 0?StatInfo.statInfo[Attribute.MindControlDuration].Acronym + "=" + MindControlDuration + "\t":"";
+		str += StatInfo.statInfo[Attribute.Damage].Acronym + "=" + turretModel.damage + "\t" ;
+		str += StatInfo.statInfo[Attribute.Range].Acronym + "=" + turretModel.range + "\t" ;
+		str += StatInfo.statInfo[Attribute.RateOfFire].Acronym + "=" + turretModel.rateOfFire + "\t" ;
+		str += turretModel.aoeDamage > 0?StatInfo.statInfo[Attribute.AoeDamage].Acronym + "=" + turretModel.aoeDamage + "\t":"";
+		str += turretModel.aoeRange > 0?StatInfo.statInfo[Attribute.AoeRange].Acronym + "=" + turretModel.aoeRange + "\t":"";
+		str += turretModel.damageOverTime > 0?StatInfo.statInfo[Attribute.DamageOverTime].Acronym + "=" + turretModel.damageOverTime + "\t":"";
+		str += turretModel.Slow > 0?StatInfo.statInfo[Attribute.Slow].Acronym + "=" + turretModel.Slow + "\t":"";
+		str += turretModel.SlowDuration > 0?StatInfo.statInfo[Attribute.SlowDuration].Acronym + "=" + turretModel.SlowDuration + "\t":"";
+		str += turretModel.MindControlDuration > 0?StatInfo.statInfo[Attribute.MindControlDuration].Acronym + "=" + turretModel.MindControlDuration + "\t":"";
 
 		return str;
 	}
@@ -314,17 +279,17 @@ public class Turret : MonoBehaviour
 
 		Node onNode = objectManager.NodeManager.GetNodeFromLocation(transform.position);
 
-		Vector3 start = new Vector3 (onNode.UnityPosition.x + ((objectManager.MapData.NodeSize.x / 2) * (range - 1)),
+		Vector3 start = new Vector3 (onNode.UnityPosition.x + ((objectManager.MapData.NodeSize.x / 2) * (turretModel.range - 1)),
 		                             0,
-		                             onNode.UnityPosition.z - ((objectManager.MapData.NodeSize.y / 2) * (range - 1) + objectManager.MapData.NodeSize.y));
+		                             onNode.UnityPosition.z - ((objectManager.MapData.NodeSize.y / 2) * (turretModel.range - 1) + objectManager.MapData.NodeSize.y));
 
 		Vector3 currentLoc = start;
 
 		//GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-		for(int i = 0; i < range * 2 + 1; i++)
+		for(int i = 0; i < turretModel.range * 2 + 1; i++)
 		{
-			if(i < range - 1 )
+			if(i < turretModel.range - 1 )
 			{
 
 				for(int l = 0; l < 3 + i * 2; l++)
@@ -343,9 +308,9 @@ public class Turret : MonoBehaviour
 				currentLoc.z = start.z;
 				start = currentLoc;
 			}
-			else if(i < range + 1)
+			else if(i < turretModel.range + 1)
 			{
-				for(int l = 0; l < range * 2 + 1; l++)
+				for(int l = 0; l < turretModel.range * 2 + 1; l++)
 				{
 					//Instantiate(cube, currentLoc, Quaternion.Euler(Vector3.zero));
 
@@ -363,7 +328,7 @@ public class Turret : MonoBehaviour
 			}
 			else
 			{
-				for(int l = 0; l < 3 + ((range * 2 ) - i) * 2; l++)
+				for(int l = 0; l < 3 + ((turretModel.range * 2 ) - i) * 2; l++)
 				{
 					//Instantiate(cube, currentLoc, Quaternion.Euler(Vector3.zero));
 
