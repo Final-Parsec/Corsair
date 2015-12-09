@@ -5,7 +5,7 @@
 
 	public static class TurretUpgrades
 	{
-		public static Dictionary<string, Upgrade[]> upgrades = new Dictionary<string, Upgrade[]>();
+		private static Dictionary<string, Upgrade[]> upgrades;
 
 		public static int infernoCost = 40;
         public static int armageddonCost = 20;
@@ -20,6 +20,16 @@
         public static int hexCost = 20;
 
         public static float costScaling = .5f; // costs of upgrades increase by 50% with each upgrade
+
+        public static Upgrade GetUpgrade(string name, int rank)
+        {
+            Upgrade[] upgradeList;
+            if (upgrades.TryGetValue(name, out upgradeList) && rank < upgradeList.Length && rank >= 0)
+            {
+                return upgradeList[rank];
+            }
+            return null;
+        }
 
 		public static void MakeUpgrades()
 		{

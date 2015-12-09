@@ -3,6 +3,7 @@ namespace Assets.Scripts.Turrets
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class TurretModel : ICloneable
     {
@@ -18,8 +19,8 @@ namespace Assets.Scripts.Turrets
         public float Slow { get; set; }
         public float SlowDuration { get; set; }
         public int MindControlDuration { get; set; }
-        public List<string> UpgradeNames { get; set; }
-        public Dictionary<string, int> UpgradePaths { get; set; }
+        public IList<string> UpgradeNames { get; set; }
+        public IDictionary<string, int> UpgradePaths { get; set; }
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -29,22 +30,22 @@ namespace Assets.Scripts.Turrets
         /// </returns>
         public object Clone()
         {
-            //return new TurretModel
-            //{
-            //    aoeDamage = this.aoeDamage,
-            //    aoeRange = this.aoeRange,
-            //    damage = this.damage,
-            //    damageOverTime = this.damageOverTime,
-            //    range = this.range,
-            //    rateOfFire = this.rateOfFire,
-            //    attackOptions = this.attackOptions,
-            //    Slow = Slow,
-            //    SlowDuration = SlowDuration,
-            //    MindControlDuration = this.MindControlDuration,
-            //    turretType = this.turretType
-            //};
-
-            return this.MemberwiseClone();
+            return new TurretModel
+            {
+                aoeDamage = this.aoeDamage,
+                aoeRange = this.aoeRange,
+                damage = this.damage,
+                damageOverTime = this.damageOverTime,
+                range = this.range,
+                rateOfFire = this.rateOfFire,
+                attackOptions = this.attackOptions,
+                Slow = Slow,
+                SlowDuration = SlowDuration,
+                MindControlDuration = this.MindControlDuration,
+                turretType = this.turretType,
+                UpgradeNames = this.UpgradeNames.Clone(),
+                UpgradePaths = this.UpgradePaths.ToDictionary(entry => entry.Key, entry => entry.Value)
+            };
         }
     }
 }

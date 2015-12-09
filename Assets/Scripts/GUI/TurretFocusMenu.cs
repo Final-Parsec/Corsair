@@ -102,7 +102,7 @@ public class TurretFocusMenu : MonoBehaviour
 		SelectedTurret = null;
 	}
 	
-	public void Upgrade(int upgradeType)
+	public void UpgradeSelectedTurret(int upgradeType)
 	{
         if (this.SelectedTurret == null)
         {
@@ -112,20 +112,16 @@ public class TurretFocusMenu : MonoBehaviour
 		objectManager.GuiButtonMethods.PlayDefaultSound();
 
         Debug.Log(upgradeType + "   " + SelectedTurret.turretModel.UpgradeNames[upgradeType]);
-        switch (upgradeType) 
-		{
-		    case 0:
-			    // SelectedTurret.UpgradeTurret();
-			    break;
-			
-		    case 1:
-                // SelectedTurret.UpgradeTurret();
-                break;
-			
-		    case 2:
-                // SelectedTurret.UpgradeTurret();
-                break;
-		}
+
+        var upgradeName = selectedTurret.turretModel.UpgradeNames[upgradeType];
+        var upgradePathRank = selectedTurret.turretModel.UpgradePaths[upgradeName];
+
+        if (SelectedTurret.Upgrade(TurretUpgrades.GetUpgrade(upgradeName, upgradePathRank)))
+        {
+            // increment the upgrade rank
+            selectedTurret.turretModel.UpgradePaths[upgradeName] = upgradePathRank + 1;
+        }
+        
 		AttachToTurret();
 		
 	}
@@ -151,16 +147,28 @@ public class TurretFocusMenu : MonoBehaviour
 	    UpdateUpgradeButton(selectedTurret.turretModel.UpgradeNames);
 	}
 
-	private void UpdateUpgradeButton(List<string> upgradeNames)
+	private void UpdateUpgradeButton(IList<string> upgradeNames)
 	{
 	    for (var x = 0; x < upgradeNames.Count; x++)
 	    {
-            upgradeButtons[x].upgradeName.text = TurretUpgrades.upgrades[upgradeNames[x]]
-                [selectedTurret.turretModel.UpgradePaths[upgradeNames[x]]].Cost + " ";
-            upgradeButtons[x].upgradeName.text += upgradeNames[x];
-            //upgradeButtons[x].description.text = TurretUpgrades.upgrades[upgradeNames[x]].Description;
-            //upgradeButtons[0].stats.text = TurretUpgrades.upgrades[upgradeNames[x]].GetPrettyStats();
-            upgradeButtons[x].image.texture = IconLookup[upgradeNames[x]];
+            var upgrade = TurretUpgrades.GetUpgrade(upgradeNames[x], selectedTurret.turretModel.UpgradePaths[upgradeNames[x]]);
+            if (upgrade == null)
+            {
+                // turret is fully upgraded on this path
+                upgradeButtons[x].upgradeName.text = "MAX ";
+                upgradeButtons[x].upgradeName.text += upgradeNames[x];
+                //upgradeButtons[x].description.text = TurretUpgrades.upgrades[upgradeNames[x]].Description;
+                //upgradeButtons[0].stats.text = TurretUpgrades.upgrades[upgradeNames[x]].GetPrettyStats();
+                upgradeButtons[x].image.texture = IconLookup[upgradeNames[x]];
+            }
+            else
+            {
+                upgradeButtons[x].upgradeName.text = upgrade.Cost + " ";
+                upgradeButtons[x].upgradeName.text += upgradeNames[x];
+                //upgradeButtons[x].description.text = TurretUpgrades.upgrades[upgradeNames[x]].Description;
+                //upgradeButtons[0].stats.text = TurretUpgrades.upgrades[upgradeNames[x]].GetPrettyStats();
+                upgradeButtons[x].image.texture = IconLookup[upgradeNames[x]];
+            }            
         }
 	}
 	
@@ -193,7 +201,7 @@ public class TurretFocusMenu : MonoBehaviour
 
 			upgradeButtons.Add(upgradeButton);
 		    var button = obj.GetComponent<Button>();
-            UnityEngine.Events.UnityAction action1 = () => { Upgrade(upTypeReal); };
+            UnityEngine.Events.UnityAction action1 = () => { UpgradeSelectedTurret(upTypeReal); };
             button.onClick.AddListener(action1);
 			upgradeType++;
 		}

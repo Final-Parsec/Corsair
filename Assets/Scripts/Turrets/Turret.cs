@@ -105,10 +105,14 @@ public class Turret : MonoBehaviour
     // Based on upgrades, bling, and current market conditions.
     public int Msrp { get; set; }
 
-	public void UpgradeTurret(Upgrade upgrade, int upgradePath)
+	public bool Upgrade(Upgrade upgrade)
 	{
-		if (upgrade.Cost > objectManager.gameState.playerMoney)
-			return;
+        if (upgrade == null || 
+            upgrade.Cost > objectManager.gameState.playerMoney)
+        {
+            return false;
+        }
+
 		objectManager.gameState.playerMoney -= (int)upgrade.Cost;
 		Msrp += (int)upgrade.Cost / 2;
 
@@ -152,6 +156,8 @@ public class Turret : MonoBehaviour
 				break;
 			}
 		}
+
+        return true;
 	}
 
 
