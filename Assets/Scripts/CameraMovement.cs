@@ -73,13 +73,14 @@ public class CameraMovement : MonoBehaviour{
 			}
 		}
 
+        // 1 Touch drag
 		if(Input.touchCount == 1){
 
 			Touch touch = Input.touches[0];
 			if(dragTouchId !=  NO_DRAG|| Math.Abs(touch.deltaPosition.x) > dragZone || Math.Abs(touch.deltaPosition.y) > dragZone){
 
-				deltaX = -touch.deltaPosition.x/2f;
-				deltaY = -touch.deltaPosition.y/2f;
+				deltaX = -touch.deltaPosition.x/2f * (Camera.main.orthographicSize / 60f);
+				deltaY = -touch.deltaPosition.y/2f * (Camera.main.orthographicSize / 60f);
 
 				dragTouchId = Input.touchCount == 1?touch.fingerId:-1;
 			}

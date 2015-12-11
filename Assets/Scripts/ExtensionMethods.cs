@@ -28,9 +28,21 @@ public static class ExtensionMethods
     {
         trans.localScale = new Vector3(1, 1, 1);
     }
+    public static void SetAnchorTopLeft(this RectTransform trans)
+    {
+        Vector2 vec = new Vector2(0, 1);
+        trans.anchorMin = vec;
+        trans.anchorMax = vec;
+    }
     public static void SetAnchorBotLeft(this RectTransform trans)
     {
         Vector2 vec = new Vector2(0, 0);
+        trans.anchorMin = vec;
+        trans.anchorMax = vec;
+    }
+    public static void SetAnchorMidTop(this RectTransform trans)
+    {
+        Vector2 vec = new Vector2(.5f, 1);
         trans.anchorMin = vec;
         trans.anchorMax = vec;
     }

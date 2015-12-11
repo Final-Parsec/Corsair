@@ -3,14 +3,17 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Canvas))]
 public class WaveDisplay : MonoBehaviour {
-    
+    public static float screenHeightPercent = .2f;
 
     private readonly List<WaveSprite> sprites = new List<WaveSprite>();
     private readonly IDictionary<WaveId, Texture> waveTextures = new Dictionary<WaveId, Texture>();
     public WaveSprite waveSprite;
 
+    [HideInInspector]
+    public float topYcordinate;
+
     private ObjectManager objectManager;
-    private Vector2 size = new Vector2(150, 75);
+    private Vector2 size;
     private float speed;
     private float turboSpeed = 350;
     private int turboCount = 0;
@@ -18,9 +21,11 @@ public class WaveDisplay : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         objectManager = ObjectManager.GetInstance();
+        size.y = Screen.height * screenHeightPercent;
+        size.x = size.y * 2f;
 
         Texture def = Resources.Load("GUI/Wave Images/Default") as Texture;
         // Load textures
@@ -52,6 +57,7 @@ public class WaveDisplay : MonoBehaviour {
                 sprites[x].rectTransform.SetSize(size);
                 sprites[x].rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
                 xScreenEdge = sprites[x].rectTransform.position.x;
+                topYcordinate = sprites[x].rectTransform.anchoredPosition.y;
             }
             else
             {
