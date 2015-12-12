@@ -57,7 +57,6 @@ public class WaveDisplay : MonoBehaviour {
                 sprites[x].rectTransform.SetSize(size);
                 sprites[x].rectTransform.SetLeftBottomPosition(new Vector2(0, 0));
                 xScreenEdge = sprites[x].rectTransform.position.x;
-                topYcordinate = sprites[x].rectTransform.anchoredPosition.y;
             }
             else
             {
@@ -76,6 +75,7 @@ public class WaveDisplay : MonoBehaviour {
                 node = node.Next;
             }
         }
+        topYcordinate = sprites[0].rectTransform.anchoredPosition.y / sprites[0].rectTransform.pivot.y;
         speed = Mathf.Abs(sprites[0].rectTransform.position.x - sprites[1].rectTransform.position.x) / objectManager.WaveManager.waveSpawnDelay;
 
         objectManager.WaveManager.SendWave += UpdateWaveSprites;
