@@ -256,24 +256,20 @@ public class NodeManager{
 
 	public Node GetDestinationNode()
 	{
-		Vector2 destIndex = objectManager.MapData.DestinationNode;
-		return nodes[(int)destIndex.x - xIndexOffset, (int)destIndex.y - yIndexOffset];
+		var destIndex = objectManager.MapData.DestinationNode;
+		return nodes[(int)destIndex.x, (int)destIndex.y];
 	}
 
 	public Node[] GetSpawnNodes()
 	{
-		Vector2[] spawnInecies = objectManager.MapData.EnemySpawnTileIndicies;
-		Node[] spawnNodes = new Node[spawnInecies.Length];
+		var enemySpawnTileIndicies = objectManager.MapData.EnemySpawnTileIndicies;
+		var spawnNodes = new Node[enemySpawnTileIndicies.Length];
 
-		for(int x = 0; x< spawnInecies.Length; x++){
-			spawnNodes[x] = nodes[(int)spawnInecies[x].x - xIndexOffset, (int)spawnInecies[x].y - yIndexOffset];
-		}
+		for (var x = 0; x < enemySpawnTileIndicies.Length; x++)
+        {
+            spawnNodes[x] = nodes[(int)enemySpawnTileIndicies[x].x, (int)enemySpawnTileIndicies[x].y];
+        }
 
 		return spawnNodes;
-	}
-
-	public Node GetNodeFromTileIndex(int x, int y)
-	{
-		return nodes[x + xIndexOffset, y + yIndexOffset];
 	}
 }

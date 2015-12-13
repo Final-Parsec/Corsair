@@ -6,6 +6,33 @@ using UnityEngine;
 
 public static class ExtensionMethods
 {
+    /// <summary>
+    ///     Gets the X component of a <see cref="Vector2" /> cast to an int.
+    /// </summary>
+    /// <param name="vector2">
+    ///     The 2D vector.
+    /// </param>
+    /// <returns>
+    ///     The X component of a <see cref="Vector2" /> cast to an int.
+    /// </returns>
+    public static int XInt(this Vector2 vector2)
+    {
+        return (int) vector2.x;
+    }
+
+    /// <summary>
+    ///     Gets the Y component of a <see cref="Vector2" /> cast to an int.
+    /// </summary>
+    /// <param name="vector2">
+    ///     The 2D vector.
+    /// </param>
+    /// <returns>
+    ///     The Y component of a <see cref="Vector2" /> cast to an int.
+    /// </returns>
+    public static int YInt(this Vector2 vector2)
+    {
+        return (int)vector2.y;
+    }
 
     public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
     {

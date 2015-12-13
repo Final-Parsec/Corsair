@@ -96,25 +96,27 @@ public class Map : MonoBehaviour
 
 	public void PlaceDoodads()
 	{
-		for(int x = 0; x< this.objectManager.MapData.Tiles.GetLength(0); x++)
+		for(var x = 0; x < this.objectManager.MapData.Tiles.GetLength(0); x++)
 		{
-			for(int y = 0; y< this.objectManager.MapData.Tiles.GetLength(1); y++)
+			for(var y = 0; y < this.objectManager.MapData.Tiles.GetLength(1); y++)
 			{
-				Tile tile = this.objectManager.MapData.Tiles[x, y];
+				var tile = this.objectManager.MapData.Tiles[x, y];
+			    if (tile.doodads.Count <= 0)
+			    {
+			        continue;
+			    }
 
-				if(tile.doodads.Count > 0)
-				{
-					foreach(GameObject doodad in tile.doodads)
-					{
-						Instantiate(doodad, this.objectManager.NodeManager.GetNodeFromTileIndex(x, y).UnityPosition,
-						            Quaternion.Euler(Vector3.zero));
-					}
-				}
+			    foreach(var doodad in tile.doodads)
+			    {
+			        var doodadPosition = this.objectManager.NodeManager.nodes[x, y].UnityPosition;
+                    doodadPosition.y = -(y / this.objectManager.NodeManager.size_y + x / this.objectManager.NodeManager.size_x) - .001f;
+                    Instantiate(doodad, doodadPosition, doodad.transform.rotation);
+			    }
 			}
 		}
 	}
 
-	public void LoadMapTexture()
+    public void LoadMapTexture()
 	{
 		Texture2D[] textures = Resources.LoadAll<Texture2D>(this.objectManager.MapData.MapName+"/mapTextures");
 	    this.StartCoroutine (this.Animate(textures));

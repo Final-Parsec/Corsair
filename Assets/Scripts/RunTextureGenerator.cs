@@ -10,7 +10,7 @@
 
         public void GetTexture()
         {
-            IMapData mapData = new HardcodedMapData(grid);
+            IMapData mapData = new WashingtonDCMapData(grid);
 
             var textureGenerator = new TextureGenerator();
             var gridTextures = textureGenerator.Generate(mapData);

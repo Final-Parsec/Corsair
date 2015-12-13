@@ -109,7 +109,7 @@ public class ObjectManager
 	{
         get
         {
-            return this.mapData ?? (this.mapData = new HardcodedMapData(null));
+            return this.mapData ?? (this.mapData = new WashingtonDCMapData());
         }
 	}
 
