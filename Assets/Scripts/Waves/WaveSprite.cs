@@ -2,23 +2,23 @@
 using System.Collections;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(RawImage))]
+[RequireComponent(typeof(Image))]
 [RequireComponent(typeof(RectTransform))]
 public class WaveSprite : MonoBehaviour
 {
 
-    private RawImage rawImage;
+    private Image image;
     public RectTransform rectTransform;
 
     // Use this for initialization
     void Awake()
     {
-        rawImage = this.GetComponent<RawImage>();
+        image = this.GetComponent<Image>();
         rectTransform = this.GetComponent<RectTransform>();
     }
 
-    public void SetTexture(Texture tex)
+    public void SetSprite(Sprite sprite)
     {
-        this.rawImage.texture = tex;
+        this.image.sprite = sprite;
     }
 }

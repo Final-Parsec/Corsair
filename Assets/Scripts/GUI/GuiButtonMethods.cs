@@ -52,11 +52,6 @@ public class GuiButtonMethods : MonoBehaviour
 		// Turret Selection Buttons
 		GameObject turretButtonPanel = GameObject.Find ("TurretSelectPanel");
 
-		//GameObject.Find ("EarthPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.EarthTurret] + ")";
-		//GameObject.Find ("FirePrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.FireTurret] + ")";
-		//GameObject.Find ("StormPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.StormTurret] + ")";
-		//GameObject.Find ("VoodooPrice").GetComponent<Text>().text = "(" + objectManager.TurretFactory.turretCosts[(int)TurretType.VoodooTurret] + ")";
-    
 		// Send Wave Button
 		sendWaveName = GameObject.Find ("SendWaveName").GetComponent<Text>();
 		sendWaveTime = GameObject.Find ("SendWaveTime").GetComponent<Text>();
@@ -101,7 +96,11 @@ public class GuiButtonMethods : MonoBehaviour
 	
 	void Update()
 	{
-		sendWaveTime.text = objectManager.gameState.nextWaveCountDown.ToString();
+        if(objectManager.gameState.waveCount >= objectManager.gameState.numberOfWaves)
+        {
+            sendWaveTime.gameObject.SetActive(false);
+        }
+		sendWaveTime.text = "+" + objectManager.gameState.nextWaveCountDown.ToString();
 		moneyValue.text = objectManager.gameState.playerMoney.ToString();
 		healthValue.text = objectManager.gameState.PlayerHealth.ToString();
 

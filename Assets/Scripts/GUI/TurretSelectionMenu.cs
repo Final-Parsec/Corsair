@@ -81,36 +81,36 @@ public class TurretSelectionMenu : MonoBehaviour
 
         ObjectManager objectManager = ObjectManager.GetInstance();
 
-        UnityAction action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Pistolman); };
-        buttons[1].onClick.AddListener(action1);
+        UnityAction action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Pistolman); };
+        buttons[1].onClick.AddListener(action);
         buttons[1].GetComponent<Image>().sprite = turretSprites[TurretType.Pistolman.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Rifleman); };
-        buttons[0].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Rifleman); };
+        buttons[0].onClick.AddListener(action);
         buttons[0].GetComponent<Image>().sprite = turretSprites[TurretType.Rifleman.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Cannon); };
-        buttons[2].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Cannon); };
+        buttons[2].onClick.AddListener(action);
         buttons[2].GetComponent<Image>().sprite = turretSprites[TurretType.Cannon.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Netter); };
-        buttons[3].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Netter); };
+        buttons[3].onClick.AddListener(action);
         buttons[3].GetComponent<Image>().sprite = turretSprites[TurretType.Netter.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Buckshot); };
-        buttons[4].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Buckshot); };
+        buttons[4].onClick.AddListener(action);
         buttons[4].GetComponent<Image>().sprite = turretSprites[TurretType.Buckshot.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Molotov); };
-        buttons[5].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Molotov); };
+        buttons[5].onClick.AddListener(action);
         buttons[5].GetComponent<Image>().sprite = turretSprites[TurretType.Molotov.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Sirens); };
-        buttons[6].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Sirens); };
+        buttons[6].onClick.AddListener(action);
         buttons[6].GetComponent<Image>().sprite = turretSprites[TurretType.Sirens.ToString()];
 
-        action1 = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.PiroThePirateHero); };
-        buttons[7].onClick.AddListener(action1);
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.PiroThePirateHero); };
+        buttons[7].onClick.AddListener(action);
         buttons[7].GetComponent<Image>().sprite = turretSprites[TurretType.PiroThePirateHero.ToString()];
     }
 }
