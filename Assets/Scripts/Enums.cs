@@ -16,7 +16,6 @@ public enum Border
 
 public enum WaveId
 {
-    Start = -1,
     Zombie,
     Horde,
     PregerWench,
@@ -25,8 +24,7 @@ public enum WaveId
     Seagull,
     Boss1,
     Boss2,
-    Boss3,
-    Max
+    Boss3
 }
 
 public enum TurretType

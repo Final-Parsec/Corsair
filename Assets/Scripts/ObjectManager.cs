@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using FinalParsec.Corsair.Maps;
 using FinalParsec.Corsair;
 using JetBrains.Annotations;
+using System.Collections;
+using System.IO;
 
 public class ObjectManager
 {
@@ -179,4 +181,35 @@ public class ObjectManager
 	    WaveDisplay.DeReference();
 		ObjectManager.instance = null;
 	}
+
+    /// <summary>
+    /// Loads resources with the given names.
+    /// </summary>
+    /// <typeparam name="T">The type of the resource to load.</typeparam>
+    /// <param name="path">The path into Resources</param>
+    /// <param name="textureNames">Names of the resources to load</param>
+    /// <returns>A <see cref="Dictionary{TKey, TValue}"/> of resource names to resources.</returns>
+    public static IDictionary<string, T> LoadResources<T>(string path, IEnumerable<string> textureNames)
+        where T : Object
+    {
+        var dictionary = new Dictionary<string, T>();
+        T def = Resources.Load<T>(path + "Default");
+
+        foreach (var name in textureNames)
+        {
+            T tex = Resources.Load<T>(path + name);
+            if (tex != null)
+            {
+                dictionary.Add(name, tex);
+                Debug.Log("Loaded Asset " + name);
+            }
+            else if (def != null)
+            {
+                dictionary.Add(name, def);
+                Debug.Log("Loaded Default Asset " + name);
+            }
+        }
+
+        return dictionary;
+    }
 }

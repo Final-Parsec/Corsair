@@ -22,6 +22,6 @@ public class RandomWaveGenerator : IWaveGenerator
     /// <returns>The generated <see cref="Wave"/></returns>
     public override Wave GetWave()
     {
-        return this.MakeWave((WaveId) this.rng.Next((int)WaveId.Start + 1, (int)WaveId.Max));
+        return this.MakeWave((WaveId) this.rng.Next(0, Enum.GetNames(typeof(WaveId)).Length));
     }
 }

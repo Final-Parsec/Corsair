@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(Canvas))]
 public class WaveDisplay : MonoBehaviour {
     public static float screenHeightPercent = .2f;
 
     private readonly List<WaveSprite> sprites = new List<WaveSprite>();
-    private readonly IDictionary<WaveId, Texture> waveTextures = new Dictionary<WaveId, Texture>();
+    private IDictionary<string, Texture> waveTextures = new Dictionary<string, Texture>();
     public WaveSprite waveSprite;
 
     [HideInInspector]
@@ -27,23 +28,7 @@ public class WaveDisplay : MonoBehaviour {
         size.y = Screen.height * screenHeightPercent;
         size.x = size.y * 2f;
 
-        Texture def = Resources.Load("GUI/Wave Images/Default") as Texture;
-        // Load textures
-        for (int x = 0; x < (int)WaveId.Max; x++)
-        {
-            WaveId wave = ((WaveId)x);
-            Texture tex = Resources.Load("GUI/Wave Images/" + wave.ToString()) as Texture;
-            if (tex != null)
-            {
-                waveTextures.Add(wave, tex);
-                Debug.Log("Loaded Wave Image " + wave.ToString());
-            }
-            else if (def != null)
-            {
-                waveTextures.Add(wave, def);
-                Debug.Log("Loaded Default Wave Image.");
-            }
-        }
+        waveTextures = ObjectManager.LoadResources<Texture>("GUI/Wave Images/", Enum.GetNames(typeof(WaveId)));
         
         LinkedListNode<Wave> node = objectManager.WaveManager.upcomingWaves.First;
         for (int x = 0; x < objectManager.WaveManager.upcomingWaves.Count; x++)
@@ -65,7 +50,7 @@ public class WaveDisplay : MonoBehaviour {
                 sprites[x].rectTransform.SetLeftBottomPosition(position);
             }
 
-            sprites[x].SetTexture(waveTextures[node.Value.waveId]);
+            sprites[x].SetTexture(waveTextures[node.Value.waveId.ToString()]);
             sprites[x].rectTransform.pivot = new Vector2(0.5f, 0.5f);
             sprites[x].rectTransform.SetAnchorBotLeft();
             sprites[x].rectTransform.SetParent(this.transform);
@@ -145,7 +130,7 @@ public class WaveDisplay : MonoBehaviour {
         }
 
         sprites.RemoveAt(0);
-        sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId]);
+        sprite.SetTexture(waveTextures[objectManager.WaveManager.upcomingWaves.Last.Value.waveId.ToString()]);
         sprite.rectTransform.position = new Vector3(sprite.rectTransform.position.x + size.x * (sprites.Count + 1),
                                                     sprite.rectTransform.position.y,
                                                     sprite.rectTransform.position.z);
