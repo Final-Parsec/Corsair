@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Canvas))]
 public class WaveDisplay : MonoBehaviour {
-    public static float screenHeightPercent = .2f;
+    public static float screenHeightPercent = .1f;
 
     private readonly List<WaveSprite> sprites = new List<WaveSprite>();
     private IDictionary<string, Sprite> waveImages = new Dictionary<string, Sprite>();

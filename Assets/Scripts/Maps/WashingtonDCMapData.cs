@@ -110,7 +110,7 @@
                 }
 
                 var lengthX = (int)this.NodeSize.x * 2;
-                var lengthY = (int)this.NodeSize.y * 2;
+                var lengthY = (int)this.NodeSize.y * 2 + 10;
 
                 this.tiles = new Tile[lengthX, lengthY];
 

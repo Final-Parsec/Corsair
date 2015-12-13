@@ -46,7 +46,7 @@ public class GameState
 
 	public int waveCount = 0;
 	public int nextWaveCountDown;
-    public int numberOfWaves = 10;
+    public int numberOfWaves = 15;
 	public float dificultyFactor = .20f;
     public string friendlyDifficulty = "DEV";
 	public float enemyValueFactor = .20f;
