@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+    public static int numberOfWavesInMemory = 6;
+
     /// <summary>
     /// Manages and maps class instances.
     /// </summary>
@@ -72,7 +74,7 @@ public class WaveManager : MonoBehaviour
     /// </summary>
     private void PopulateUpcomingWaves()
     {
-        for (int x = 0; x < 15; x++)
+        for (int x = 0; x < numberOfWavesInMemory; x++)
         {
             this.upcomingWaves.AddLast(this.waveGene.GetWave());
         }

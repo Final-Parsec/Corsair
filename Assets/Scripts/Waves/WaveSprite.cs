@@ -9,6 +9,7 @@ public class WaveSprite : MonoBehaviour
 
     private Image image;
     public RectTransform rectTransform;
+    public int waveNumber;
 
     // Use this for initialization
     void Awake()
