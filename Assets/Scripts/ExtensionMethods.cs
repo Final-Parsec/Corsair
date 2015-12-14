@@ -67,6 +67,12 @@ public static class ExtensionMethods
         trans.anchorMin = vec;
         trans.anchorMax = vec;
     }
+    public static void SetAnchorTopRight(this RectTransform trans)
+    {
+        Vector2 vec = new Vector2(1, 1);
+        trans.anchorMin = vec;
+        trans.anchorMax = vec;
+    }
     public static void SetAnchorMidTop(this RectTransform trans)
     {
         Vector2 vec = new Vector2(.5f, 1);
