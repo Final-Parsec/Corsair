@@ -12,7 +12,9 @@ public class GuiButtonMethods : MonoBehaviour
     private ObjectManager objectManager;
 
 	private Text sendWaveTime;
-	private Text sendWaveName;
+    private Text sendWaveName;
+
+
 	private Text healthValue;
 	private Text moneyValue;
 
@@ -52,11 +54,10 @@ public class GuiButtonMethods : MonoBehaviour
 		// Turret Selection Buttons
 		GameObject turretButtonPanel = GameObject.Find ("TurretSelectPanel");
 
-		// Send Wave Button
-		sendWaveName = GameObject.Find ("SendWaveName").GetComponent<Text>();
-		sendWaveTime = GameObject.Find ("SendWaveTime").GetComponent<Text>();
+        // Send Wave Button
+        sendWaveTime = GameObject.Find("SendWaveTime").GetComponent<Text>();
+        sendWaveName = GameObject.Find ("SendWaveName").GetComponent<Text>();
 		sendWaveName.text = "Start Game";
-		sendWaveTime.text = objectManager.gameState.nextWaveCountDown.ToString();
 
 		//Money And Health
 		healthValue = GameObject.Find ("HealthValue").GetComponent<Text>();
@@ -96,11 +97,12 @@ public class GuiButtonMethods : MonoBehaviour
 	
 	void Update()
 	{
-        if(objectManager.gameState.waveCount >= objectManager.gameState.numberOfWaves)
+        if (objectManager.gameState.waveCount >= objectManager.gameState.numberOfWaves)
         {
             sendWaveTime.gameObject.SetActive(false);
         }
-		sendWaveTime.text = "+" + objectManager.gameState.nextWaveCountDown.ToString();
+        sendWaveTime.text = "+" + objectManager.gameState.nextWaveCountDown.ToString();
+
 		moneyValue.text = objectManager.gameState.playerMoney.ToString();
 		healthValue.text = objectManager.gameState.PlayerHealth.ToString();
 
@@ -290,15 +292,15 @@ public class GuiButtonMethods : MonoBehaviour
     public void TurretMenuToggelPressed()
     {
 
-        if (!selectionAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeLeftIn"))
+        if (!selectionAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeRightIn"))
         {
             PlayDefaultSound();
-            selectionAnimator.SetTrigger("Swipe Left In");
+            selectionAnimator.SetTrigger("Swipe Right In");
         }
         else
         {
             PlayDefaultSound();
-            selectionAnimator.SetTrigger("Swipe Left Out");
+            selectionAnimator.SetTrigger("Swipe Right Out");
         }
 
         objectManager.TurretRange.gameObject.SetActive(false);

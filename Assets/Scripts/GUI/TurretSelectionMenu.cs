@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
+using System.Collections;
 
 [RequireComponent(typeof(RectTransform))]
 public class TurretSelectionMenu : MonoBehaviour
@@ -46,10 +47,13 @@ public class TurretSelectionMenu : MonoBehaviour
 
         Vector2 spacer = new Vector2((rectTransform.GetWidth() - buttonSize * layoutdimensions.x) / (layoutdimensions.x + 1),
                                      (rectTransform.GetHeight() - buttonSize * layoutdimensions.y) / (layoutdimensions.y + 1));
-        
-        // Move up so the menu is just above the WaveDisplay
-        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
-            rectTransform.anchoredPosition.y + ObjectManager.GetInstance().WaveDisplay.topYcordinate);
+
+        //StartCoroutine(EventualSetup());
+
+
+        //var sendWaveRt = GameObject.Find("SendWave").GetComponent<RectTransform>();
+        //rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
+        //    rectTransform.anchoredPosition.y - sendWaveRt.GetHeight());
 
         int turretCount = Enum.GetNames(typeof(TurretType)).Length;
         var buttons = new List<Button>();
@@ -69,7 +73,7 @@ public class TurretSelectionMenu : MonoBehaviour
                 buttonRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, buttonSize);
                 buttonRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, buttonSize);
                 buttonRT.pivot = new Vector2(0.5f, 0.5f);
-                buttonRT.SetParent(this.transform);
+                buttonRT.SetParent(this.transform, false);
                 buttonRT.SetAnchorTopLeft();
 
                 float xpos = spacer.x * x + buttonRT.GetWidth() * (x - 1) + buttonRT.GetWidth() / 2f;
@@ -113,4 +117,18 @@ public class TurretSelectionMenu : MonoBehaviour
         buttons[7].onClick.AddListener(action);
         buttons[7].GetComponent<Image>().sprite = turretSprites[TurretType.PiroThePirateHero.ToString()];
     }
+
+    //private IEnumerator EventualSetup()
+    //{
+    //    var objectManager = ObjectManager.GetInstance();
+    //    RectTransform rectTransform = this.GetComponent<RectTransform>();
+
+    //    while (objectManager.WaveDisplay.bottomYcordinate == 0)
+    //    {
+    //        yield return new WaitForSeconds(.01f);
+    //    }
+    //    // Move up so the menu is just above the WaveDisplay
+    //    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
+    //        rectTransform.anchoredPosition.y + ObjectManager.GetInstance().WaveDisplay.bottomYcordinate);
+    //}
 }

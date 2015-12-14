@@ -82,7 +82,7 @@ public class ObjectManager
 	{ 
 		get{
 			if(waveDisplay == null)
-				waveDisplay = GameObject.Find("Canvas").GetComponent<WaveDisplay>();
+				waveDisplay = GameObject.Find("WaveDisplay").GetComponent<WaveDisplay>();
 			return waveDisplay;
 		} 
 	}
