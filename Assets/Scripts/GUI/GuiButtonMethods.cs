@@ -61,7 +61,6 @@ public class GuiButtonMethods : MonoBehaviour
         // Send Wave Button
         sendWaveTime = GameObject.Find("SendWaveTime").GetComponent<Text>();
         sendWaveName = GameObject.Find ("SendWaveName").GetComponent<Text>();
-		sendWaveName.text = "Start Game";
 
 		//Money And Health
 		healthValue = GameObject.Find ("HealthValue").GetComponent<Text>();
@@ -112,7 +111,7 @@ public class GuiButtonMethods : MonoBehaviour
         {
             sendWaveTime.gameObject.SetActive(false);
         }
-        sendWaveTime.text = "+" + objectManager.gameState.nextWaveCountDown.ToString();
+        sendWaveTime.text = objectManager.gameState.nextWaveCountDown.ToString();
 
 		moneyValue.text = objectManager.gameState.playerMoney.ToString();
 		healthValue.text = objectManager.gameState.PlayerHealth.ToString();
@@ -152,17 +151,16 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void SendWavePressed()
 	{
-		PlayDefaultSound();
+        PlayDefaultSound();
 		if (!objectManager.gameState.gameStarted)
 		{
-			
-			Animator anim = GameObject.Find ("SendWave").GetComponent<Animator>();
+			var anim = GameObject.Find("SendWave").GetComponent<Animator>();
 			anim.SetBool("StartGame", true);
 			anim.speed = 20;
 
-			sendWaveName.text = "Send Wave";
-			objectManager.gameState.gameStarted = true;
-
+			sendWaveName.text = string.Empty;
+            sendWaveTime.color = new Color(.2f, .2f, .2f, 1);
+            objectManager.gameState.gameStarted = true;
 		}
         
 		objectManager.WaveManager.playerTriggeredWave = true;
