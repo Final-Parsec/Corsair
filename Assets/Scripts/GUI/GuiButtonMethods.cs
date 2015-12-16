@@ -36,12 +36,19 @@ public class GuiButtonMethods : MonoBehaviour
 	private Animator upgradeAnimator;
 
 	private GameObject selectionMenu;
-	private Animator selectionAnimator;
+    private TurretSelectionMenu TurretScript;
+    private Animator selectionAnimator;
 
 	private AudioSource audioSource;
 	private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
 
-	private bool gridToggle = true;
+    private Animator PauseButtonAnimator;
+
+    private Image SelectedTurretIcon;
+
+    private bool gridToggle = true;
+
+    private GameSpeed prePauseSpeed;
     
     void Start()
     {
@@ -50,9 +57,6 @@ public class GuiButtonMethods : MonoBehaviour
 		// Load Audio Clips
 		audioClips.Add("defaultPress" , Resources.Load("GUI/Sounds/ButtonPress") as AudioClip);
 		audioClips.Add("sellPress", Resources.Load("GUI/Sounds/SellPress") as AudioClip);
-		
-		// Turret Selection Buttons
-		GameObject turretButtonPanel = GameObject.Find ("TurretSelectPanel");
 
         // Send Wave Button
         sendWaveTime = GameObject.Find("SendWaveTime").GetComponent<Text>();
@@ -91,7 +95,14 @@ public class GuiButtonMethods : MonoBehaviour
 
         // Turret Upgrade Menu
         selectionMenu = GameObject.Find("TurretSelectPanel");
+        TurretScript = selectionMenu.GetComponent<TurretSelectionMenu>();
         selectionAnimator = selectionMenu.GetComponent<Animator>();
+
+        // Pause Resume Button
+        PauseButtonAnimator = GameObject.Find("PauseResume").GetComponent<Animator>();
+
+        // Selected Turret Icon
+        SelectedTurretIcon = GameObject.Find("SelectedTurretIcon").GetComponent<Image>();
 
     }
 	
@@ -136,6 +147,7 @@ public class GuiButtonMethods : MonoBehaviour
 	{
 		PlayDefaultSound();
         objectManager.TurretFactory.TurretType = (TurretType)turretType;
+        SelectedTurretIcon.sprite = TurretScript.turretSprites[((TurretType)turretType).ToString()];
     }
 
 	public void SendWavePressed()
@@ -344,7 +356,41 @@ public class GuiButtonMethods : MonoBehaviour
 		}
 	}
 
-	public void PlaySellSound()
+    public void CycleSpeed()
+    {
+        PlayDefaultSound();
+        switch (objectManager.gameState.GameSpeed)
+        {
+            case GameSpeed.X1:
+                objectManager.gameState.GameSpeed = GameSpeed.X2;
+                break;
+
+            case GameSpeed.X2:
+                objectManager.gameState.GameSpeed = GameSpeed.X3;
+                break;
+
+            case GameSpeed.X3:
+                objectManager.gameState.GameSpeed = GameSpeed.X1;
+                break;
+        }
+    }
+
+    public void PauseResume()
+    {
+        PlayDefaultSound();
+        if (objectManager.gameState.GameSpeed == GameSpeed.Paused)
+        {
+            objectManager.gameState.GameSpeed = prePauseSpeed;
+        }
+        else
+        {
+            prePauseSpeed = objectManager.gameState.GameSpeed;
+            objectManager.gameState.GameSpeed = GameSpeed.Paused;
+        }
+        PauseButtonAnimator.SetTrigger("toggle");
+    }
+
+    public void PlaySellSound()
 	{
 		upgradeAnimator.SetTrigger("Swipe Out");
 		

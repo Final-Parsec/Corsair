@@ -25,10 +25,6 @@ public class GameState
 
 			switch(gameSpeed)
 			{
-			case GameSpeed.Paused:
-				speedDisplay.text = "II";
-				break;
-
 			case GameSpeed.X1:
 				speedDisplay.text = "x1";
 				break;

@@ -29,7 +29,7 @@ public class TurretSelectionMenu : MonoBehaviour
     /// </remarks>
     public Vector2 buttonPadding = new Vector2(10, 0);
     
-    private IDictionary<string, Sprite> turretSprites = new Dictionary<string, Sprite>();
+    public IDictionary<string, Sprite> turretSprites = new Dictionary<string, Sprite>();
 
 
     /// <summary>
@@ -47,13 +47,6 @@ public class TurretSelectionMenu : MonoBehaviour
 
         Vector2 spacer = new Vector2((rectTransform.GetWidth() - buttonSize * layoutdimensions.x) / (layoutdimensions.x + 1),
                                      (rectTransform.GetHeight() - buttonSize * layoutdimensions.y) / (layoutdimensions.y + 1));
-
-        //StartCoroutine(EventualSetup());
-
-
-        //var sendWaveRt = GameObject.Find("SendWave").GetComponent<RectTransform>();
-        //rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
-        //    rectTransform.anchoredPosition.y - sendWaveRt.GetHeight());
 
         int turretCount = Enum.GetNames(typeof(TurretType)).Length;
         var buttons = new List<Button>();
@@ -117,18 +110,4 @@ public class TurretSelectionMenu : MonoBehaviour
         buttons[7].onClick.AddListener(action);
         buttons[7].GetComponent<Image>().sprite = turretSprites[TurretType.PiroThePirateHero.ToString()];
     }
-
-    //private IEnumerator EventualSetup()
-    //{
-    //    var objectManager = ObjectManager.GetInstance();
-    //    RectTransform rectTransform = this.GetComponent<RectTransform>();
-
-    //    while (objectManager.WaveDisplay.bottomYcordinate == 0)
-    //    {
-    //        yield return new WaitForSeconds(.01f);
-    //    }
-    //    // Move up so the menu is just above the WaveDisplay
-    //    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x,
-    //        rectTransform.anchoredPosition.y + ObjectManager.GetInstance().WaveDisplay.bottomYcordinate);
-    //}
 }
