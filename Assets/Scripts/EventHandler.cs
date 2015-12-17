@@ -51,17 +51,13 @@ public class EventHandler : MonoBehaviour
 		if (!CameraMovement.IsCameraMoving() && Input.GetMouseButtonUp(0)) {
 
             // Swipe away Turret Upgrade Menu if active
-			if(objectManager.TurretFocusMenu.isActive)
+            if (objectManager.TurretFocusMenu.isActive)
             {
-				objectManager.GuiButtonMethods.UpgradeMenuBackPressed();
-				return;
-			}
-			
+                objectManager.TurretFocusMenu.SelectedTurret = null;
+                return;
+            }
 
-			if (objectManager.TurretFocusMenu.SelectedTurret == null)
-            {
-				StartCoroutine(objectManager.TurretFactory.PlaceOrSelectTurret());
-			}
+            StartCoroutine(objectManager.TurretFactory.PlaceOrSelectTurret());
 		}
 	}
 

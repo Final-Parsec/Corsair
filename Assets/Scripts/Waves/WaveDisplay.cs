@@ -8,7 +8,7 @@ using System.Collections;
 [RequireComponent(typeof(Mask))]
 [RequireComponent(typeof(RectTransform))]
 public class WaveDisplay : MonoBehaviour {
-    public static float screenHeightPercent = .15f;
+    public static float screenWidthPercent = .5f;
 
     private readonly List<WaveSprite> sprites = new List<WaveSprite>();
     private IDictionary<string, Sprite> waveImages = new Dictionary<string, Sprite>();
@@ -31,8 +31,8 @@ public class WaveDisplay : MonoBehaviour {
         var rectTransform = GetComponent<RectTransform>();
         
         numberOfDisplayWaves = WaveManager.numberOfWavesInMemory;
-        size.y = Screen.height * screenHeightPercent;
-        size.x = size.y;
+        size.x = (Screen.width* screenWidthPercent) / numberOfDisplayWaves;
+        size.y = size.x;
 
         rectTransform.pivot = new Vector2(1f, 1f);
         rectTransform.SetSize(new Vector2(size.x * (numberOfDisplayWaves - 1), size.y));

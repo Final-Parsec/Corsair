@@ -50,7 +50,15 @@ public class TurretFactory : MonoBehaviour
 		
 		if (!canBuild)
 		{
-			objectManager.TurretFocusMenu.SelectedTurret = cursorOnNode.turret;
+            if(objectManager.TurretFocusMenu.SelectedTurret == cursorOnNode.turret)
+            {
+                objectManager.TurretFocusMenu.SelectedTurret = null;
+            }
+            else
+            {
+                objectManager.TurretFocusMenu.SelectedTurret = cursorOnNode.turret;
+                objectManager.GuiButtonMethods.CloseTurretMenu();
+            }
 			yield break;
 		}
 		

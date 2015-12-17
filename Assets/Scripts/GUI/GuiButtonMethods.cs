@@ -13,8 +13,7 @@ public class GuiButtonMethods : MonoBehaviour
 
 	private Text sendWaveTime;
     private Text sendWaveName;
-
-
+    
 	private Text healthValue;
 	private Text moneyValue;
 
@@ -39,7 +38,7 @@ public class GuiButtonMethods : MonoBehaviour
     private TurretSelectionMenu TurretScript;
     private Animator selectionAnimator;
 
-	private AudioSource audioSource;
+    private AudioSource audioSource;
 	private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
 
     private Animator PauseButtonAnimator;
@@ -89,7 +88,7 @@ public class GuiButtonMethods : MonoBehaviour
 		highScoreScreen.SetActive (false);
 
 		// Turret Upgrade Menu
-		upgradeMenu = GameObject.Find ("UpgradeMenu");
+		upgradeMenu = GameObject.Find ("TurretUpgradePanel");
 		upgradeAnimator = upgradeMenu.GetComponent<Animator>();
 
         // Turret Upgrade Menu
@@ -288,17 +287,7 @@ public class GuiButtonMethods : MonoBehaviour
 			position++;
 		}
 	}
-
-	public void UpgradeMenuBackPressed()
-	{
-		
-		if (!upgradeAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeOut")){
-			PlayDefaultSound();
-			upgradeAnimator.SetTrigger("Swipe Out");
-		}
-		objectManager.TurretRange.gameObject.SetActive(false);
-	}
-
+    
     public void TurretMenuToggelPressed()
     {
 
@@ -306,53 +295,49 @@ public class GuiButtonMethods : MonoBehaviour
         {
             PlayDefaultSound();
             selectionAnimator.SetTrigger("Swipe Right In");
+
+            if(objectManager.TurretFocusMenu.SelectedTurret != null)
+            {
+                objectManager.TurretFocusMenu.SelectedTurret = null;
+            }
         }
         else
         {
             PlayDefaultSound();
             selectionAnimator.SetTrigger("Swipe Right Out");
         }
-
-        objectManager.TurretRange.gameObject.SetActive(false);
     }
 
-    public void SpeedUp()
-	{
-		PlayDefaultSound();
-		switch(objectManager.gameState.GameSpeed)
-		{
-		case GameSpeed.Paused:
-			objectManager.gameState.GameSpeed = GameSpeed.X1;
-			break;
+    public void CloseTurretMenu()
+    {
+        if (selectionAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeRightIn"))
+        {
+            selectionAnimator.SetTrigger("Swipe Right Out");
+        }
+    }
 
-		case GameSpeed.X1:
-			objectManager.gameState.GameSpeed = GameSpeed.X2;
-			break;
+    public void RemoveTurretUpgradeMenu()
+    {
+        objectManager.TurretFocusMenu.isActive = false;
+        upgradeAnimator.SetTrigger("Swipe Out");
+    }
 
-		case GameSpeed.X2:
-			objectManager.gameState.GameSpeed = GameSpeed.X3;
-			break;
-		}
-	}
+    public void TurretUpgradeToggelPressed()
+    {
 
-	public void SlowDown()
-	{
-		PlayDefaultSound();
-		switch(objectManager.gameState.GameSpeed)
-		{
-		case GameSpeed.X1:
-			objectManager.gameState.GameSpeed = GameSpeed.Paused;
-			break;
-			
-		case GameSpeed.X2:
-			objectManager.gameState.GameSpeed = GameSpeed.X1;
-			break;
-
-		case GameSpeed.X3:
-			objectManager.gameState.GameSpeed = GameSpeed.X2;
-			break;
-		}
-	}
+        if (!upgradeAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeRightIn"))
+        {
+            objectManager.TurretFocusMenu.isActive = true;
+            PlayDefaultSound();
+            upgradeAnimator.SetTrigger("Swipe Right In");
+        }
+        else
+        {
+            objectManager.TurretFocusMenu.isActive = false;
+            PlayDefaultSound();
+            upgradeAnimator.SetTrigger("Swipe Right Out");
+        }
+    }
 
     public void CycleSpeed()
     {
@@ -386,6 +371,20 @@ public class GuiButtonMethods : MonoBehaviour
             objectManager.gameState.GameSpeed = GameSpeed.Paused;
         }
         PauseButtonAnimator.SetTrigger("toggle");
+    }
+
+    // Called when the sell button is pressed.
+    public void Sell()
+    {
+        if (objectManager.TurretFocusMenu.SelectedTurret == null)
+            return;
+
+        objectManager.GuiButtonMethods.PlaySellSound();
+
+        objectManager.gameState.playerMoney += objectManager.TurretFocusMenu.SelectedTurret.Msrp;
+        objectManager.NodeManager.UnBlockNode(objectManager.TurretFocusMenu.SelectedTurret.transform.position);
+        Destroy(objectManager.TurretFocusMenu.SelectedTurret.gameObject);
+        objectManager.TurretFocusMenu.SelectedTurret = null;
     }
 
     public void PlaySellSound()

@@ -1,8 +1,7 @@
 ﻿namespace FinalParsec.Corsair.Turrets
 {
-	using UnityEngine;
 	using System.Collections.Generic;
-
+    using System.Linq;
 	public static class TurretUpgrades
 	{
 		private static Dictionary<string, Upgrade[]> upgrades;
@@ -23,6 +22,11 @@
 
         public static Upgrade GetUpgrade(string name, int rank)
         {
+            if(upgrades == null)
+            {
+                MakeUpgrades();
+            }
+
             Upgrade[] upgradeList;
             if (upgrades.TryGetValue(name, out upgradeList) && rank < upgradeList.Length && rank >= 0)
             {
@@ -31,7 +35,17 @@
             return null;
         }
 
-		public static void MakeUpgrades()
+        public static IEnumerable<string> GetUpgradeNames()
+        {
+            if (upgrades == null)
+            {
+                MakeUpgrades();
+            }
+
+            return upgrades.Keys;
+        }
+
+        private static void MakeUpgrades()
 		{
             upgrades = new Dictionary<string, Upgrade[]>();
 
