@@ -50,5 +50,10 @@
         ///     Gets the size, in pixels, of an individual tile.
         /// </summary>
         Vector2 TileSize { get; }
+
+        /// <summary>
+        ///     Gets the texture used to make the map grid.
+        /// </summary>
+        Texture2D Grid{ get; }
     }
 }

@@ -123,7 +123,18 @@ public class ObjectManager
 		} 
 	}
 
-	private RangeVisual turretRange;
+    private TextureGenerator textureGenerator;
+    public TextureGenerator TextureGenerator
+    {
+        get
+        {
+            if (textureGenerator == null)
+                textureGenerator = new TextureGenerator(this.MapData);
+            return textureGenerator;
+        }
+    }
+
+    private RangeVisual turretRange;
 	public RangeVisual TurretRange 
 	{ 
 		get{
@@ -146,7 +157,7 @@ public class ObjectManager
 	[NotNull]
     public static ObjectManager GetInstance ()
 	{
-	    return ObjectManager.instance ?? new ObjectManager();
+        return ObjectManager.instance ?? new ObjectManager();
 	}
 
     /// <summary>

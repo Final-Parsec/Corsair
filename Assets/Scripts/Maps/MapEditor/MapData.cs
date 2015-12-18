@@ -102,6 +102,14 @@
             }
         }
 
+        public Texture2D Grid
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         ///     Gets a value indicating whether the map uses an isometric grid.
         /// </summary>

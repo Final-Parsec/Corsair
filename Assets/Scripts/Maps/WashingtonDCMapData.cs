@@ -6,7 +6,7 @@
 
     public class WashingtonDCMapData : IMapData
     {
-        private readonly Texture2D[] grid;
+        private readonly Texture2D[] tileTextures;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="WashingtonDCMapData" /> class.
@@ -18,8 +18,17 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="WashingtonDCMapData" /> class.
         /// </summary>
-        public WashingtonDCMapData(Texture2D[] grid)
+        public WashingtonDCMapData(Texture2D grid)
         {
+            this.grid = grid;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="WashingtonDCMapData" /> class.
+        /// </summary>
+        public WashingtonDCMapData(Texture2D[] tileTextures, Texture2D grid)
+        {
+            this.tileTextures = tileTextures;
             this.grid = grid;
         }
 
@@ -109,8 +118,8 @@
                     return this.tiles;
                 }
 
-                var lengthX = (int)this.NodeSize.x * 2;
-                var lengthY = (int)this.NodeSize.y * 2 + 10;
+                var lengthX = (int)this.NodeSize.x * 2 + 1;
+                var lengthY = (int)this.NodeSize.y * 2 + 11;
 
                 this.tiles = new Tile[lengthX, lengthY];
 
@@ -118,15 +127,15 @@
                 {
                     for (var y = 0; y < lengthY; y++)
                     {
-                        var textures = this.grid;
+                        var textures = this.tileTextures;
                         var tile = new Tile(textures, false, false, false);
 
                         this.tiles[x, y] = tile;
 
-                        if (x >= 15 &&
-                            x < 48 &&
-                            y >= 7 &&
-                            y < 26)
+                        if (x >= lengthX/4 &&
+                            x < lengthX / 4 * 3 &&
+                            y >= lengthY / 4 &&
+                            y < lengthY / 4 * 3)
                         {
                             tile.isBuildable = true;
                             tile.isWalkable = true;
@@ -153,6 +162,15 @@
             get
             {
                 return new Vector2(128, 64);
+            }
+        }
+
+        private Texture2D grid;
+        public Texture2D Grid
+        {
+            get
+            {
+                return grid;
             }
         }
     }

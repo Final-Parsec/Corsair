@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System;
 
 public class Map : MonoBehaviour
 {
@@ -9,8 +7,8 @@ public class Map : MonoBehaviour
     
 	public Texture healthTexture;
 
-	// Grid/Node
-	private ObjectManager objectManager;
+    // Grid/Node
+    private ObjectManager objectManager;
     
 	[HideInInspector]
 	public GoogleMobileAdsScript ad;
@@ -26,17 +24,10 @@ public class Map : MonoBehaviour
 	    this.ad = GameObject.FindGameObjectWithTag("Ad").GetComponent<GoogleMobileAdsScript>();
 	    this.ad.RequestInterstitial ();
 
-//		foreach (Node node in objectManager.NodeManager.nodes){
-//			Instantiate(GameObject.CreatePrimitive(PrimitiveType.Cube), node.UnityPosition, Quaternion.Euler(Vector3.zero));
-//		}
-
 	    this.LoadMapTexture ();
 	    this.PlaceDoodads ();
 	}
-
-	/// <summary>
-	/// Displays the grid.
-	/// </summary>
+    
 	void OnGUI ()
 	{
 		foreach (EnemyBase Gob in this.objectManager.ThingsWithHealthBars()) {
@@ -55,10 +46,10 @@ public class Map : MonoBehaviour
 			}
 		}
 	}
-    
 
 	public void ScaleAndPlaceMap()
 	{
+
 		Node firstNode = this.objectManager.NodeManager.nodes [0, 0];
 		Node lastNode = this.objectManager.NodeManager.nodes [this.objectManager.NodeManager.size_x - 1, this.objectManager.NodeManager.size_y - 1];
 		
@@ -68,29 +59,29 @@ public class Map : MonoBehaviour
 
 		int xIndex = -1;
 		int yIndex = -1;
-		for(int x = 0; x< this.objectManager.MapData.Tiles.GetLength(0); x++)
+        float textureSizeX = this.objectManager.MapData.Tiles.GetLength(0);
+        float textureSizeY = this.objectManager.MapData.Tiles.GetLength(1);
+        for (int x = 0; x< textureSizeX; x++)
 		{
-			for(int y = 0; y< this.objectManager.MapData.Tiles.GetLength(1); y++)
+			for(int y = 0; y< textureSizeY; y++)
 			{
 				if(xIndex == -1 && this.objectManager.MapData.Tiles[x,y].isNode){
 					xIndex = x;
 					yIndex = y;
 					
-					x = this.objectManager.MapData.Tiles.GetLength(0);
-					y = this.objectManager.MapData.Tiles.GetLength(1);
+					x = (int)textureSizeX;
+					y = (int)textureSizeY;
 				}
 			}
 		}
 
-		float textureSizeX = this.objectManager.MapData.Tiles.GetLength (0);
-		float textureSizeY = this.objectManager.MapData.Tiles.GetLength (1);
 
-		center.z = center.z + (((textureSizeX - this.objectManager.NodeManager.size_x) / 2f) - xIndex) * this.objectManager.MapData.NodeSize.y;
-		center.x = center.x + (((textureSizeY - this.objectManager.NodeManager.size_y) / 2f) - yIndex) * (this.objectManager.MapData.NodeSize.x / (this.objectManager.MapData.IsIsoGrid?2:1));
+		center.z = center.z + (((textureSizeY - this.objectManager.NodeManager.size_y) / 2f) - yIndex ) * this.objectManager.MapData.NodeSize.y;
+		center.x = center.x + (((textureSizeX - this.objectManager.NodeManager.size_x) / 2f) - xIndex) * (this.objectManager.MapData.NodeSize.x / (this.objectManager.MapData.IsIsoGrid?2:1));
 
 	    this.transform.position = center;
-	    this.transform.localScale = new Vector3 (((this.objectManager.MapData.Tiles.GetLength(0) + 1) * this.objectManager.MapData.NodeSize.x) / (this.objectManager.MapData.IsIsoGrid?2:1),
-		                                    (this.objectManager.MapData.Tiles.GetLength(1)+.5f) * this.objectManager.MapData.NodeSize.y,
+	    this.transform.localScale = new Vector3 (((textureSizeX + 1) * this.objectManager.MapData.NodeSize.x) / (this.objectManager.MapData.IsIsoGrid?2:1),
+		                                    (textureSizeY + .5f) * this.objectManager.MapData.NodeSize.y,
 		                                    1);
 	}
 
@@ -117,10 +108,10 @@ public class Map : MonoBehaviour
 	}
 
     public void LoadMapTexture()
-	{
-		Texture2D[] textures = Resources.LoadAll<Texture2D>(this.objectManager.MapData.MapName+"/mapTextures");
+    {
+        Texture2D[] textures = Resources.LoadAll<Texture2D>(this.objectManager.MapData.MapName+"/mapTextures");
 	    this.StartCoroutine (this.Animate(textures));
-	}
+    }
 
 	IEnumerator Animate(Texture2D[] gridTextures) {
 		int itr = 0;

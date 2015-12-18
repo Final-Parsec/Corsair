@@ -1,5 +1,6 @@
 ﻿namespace FinalParsec.Corsair
 {
+    using System;
     using Maps;
     using UnityEngine;
 
@@ -8,15 +9,16 @@
     /// </summary>
     public class HardcodedMapData : IMapData
     {
-        private readonly Texture2D[] grid;
+        private readonly Texture2D[] tileTextures;
 
         /// <summary>
         ///     Backing field for <see cref="Tiles" />.
         /// </summary>
         private Tile[,] tiles;
 
-        public HardcodedMapData(Texture2D[] grid)
+        public HardcodedMapData(Texture2D[] tileTextures, Texture2D grid)
         {
+            this.tileTextures = tileTextures;
             this.grid = grid;
         }
 
@@ -94,7 +96,7 @@
                 {
                     for (var y = 0; y < lengthY; y++)
                     {
-                        var textures = this.grid;
+                        var textures = this.tileTextures;
                         var tile = new Tile(textures, false, false, false);
                         this.tiles[x, y] = tile;
 
@@ -117,6 +119,15 @@
         public Vector2 TileSize
         {
             get { return new Vector2(64, 32); }
+        }
+
+        private Texture2D grid;
+        public Texture2D Grid
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

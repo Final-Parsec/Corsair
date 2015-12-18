@@ -14,7 +14,7 @@ namespace FinalParsec.Corsair
         private int maxTextures;
         private IMapData mapData;
 
-        public Texture2D[] Generate(IMapData mapData)
+        public TextureGenerator(IMapData mapData)
         {
             this.mapData = mapData;
 
@@ -23,7 +23,10 @@ namespace FinalParsec.Corsair
 
             tileSizeX = (int)mapData.TileSize.x;
             tileSizeY = (int)mapData.TileSize.y;
+        }
 
+        public Texture2D[] Generate()
+        {
             CalculateTilePositions();
 
             return MakeTextures();
@@ -68,13 +71,33 @@ namespace FinalParsec.Corsair
                     for (var x = 1; x < sizeX; x += 2)
                     {
                         var tile = mapData.Tiles[x, y];
-                        WriteTileTexture(tile, tile.tileTextures[(textureNumber >= tile.tileTextures.Length) ? tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
+                        WriteTileTexture(tile.texturePositionX, tile.texturePositionY, tile.tileTextures[(textureNumber >= tile.tileTextures.Length) ? tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
                     }
 
                     for (var x = 0; x < sizeX; x += 2)
                     {
                         var tile = mapData.Tiles[x, y];
-                        WriteTileTexture(tile, tile.tileTextures[(textureNumber >= tile.tileTextures.Length) ? tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
+                        WriteTileTexture(tile.texturePositionX, tile.texturePositionY, tile.tileTextures[(textureNumber >= tile.tileTextures.Length) ? tile.tileTextures.Length - 1 : textureNumber], textureArray[textureNumber]);
+                    }
+                }
+
+                for (var y = sizeY - 1; y > -1; y--)
+                {
+                    for (var x = 1; x < sizeX; x += 2)
+                    {
+                        var tile = mapData.Tiles[x, y];
+                        if (tile.isNode)
+                        {
+                            WriteTileTexture(tile.texturePositionX, tile.texturePositionY, this.mapData.Grid, textureArray[textureNumber]);
+                        }
+                    }
+
+                    for (var x = 0; x < sizeX; x += 2)
+                    {
+                        var tile = mapData.Tiles[x, y];if (tile.isNode)
+                        {
+                            WriteTileTexture(tile.texturePositionX, tile.texturePositionY, this.mapData.Grid, textureArray[textureNumber]);
+                        }
                     }
                 }
                 textureArray[textureNumber].Apply();
@@ -84,19 +107,19 @@ namespace FinalParsec.Corsair
             return textureArray;
         }
 
-        public void WriteTileTexture(Tile tile, Texture2D tex, Texture2D masterTexture)
+        public void WriteTileTexture(int xPos, int yPos, Texture2D tex, Texture2D masterTexture)
         {
             Color[] colors = tex.GetPixels();
 
-            int xOffset = tile.texturePositionX - tileSizeX / 2;
-            int yOffset = tile.texturePositionY - tileSizeY / 2;
+            int xOffset = xPos - tileSizeX / 2;
+            int yOffset = yPos - tileSizeY / 2;
 
             for (int x = 0; x < tileSizeX; x++)
             {
                 for (int y = 0; y < tileSizeY; y++)
                 {
                     int index = y * tileSizeX + x;
-                    if (colors[index].a == 0)
+                    if (index >= colors.Length || colors[index].a == 0)
                     {
                         continue;
                     }
