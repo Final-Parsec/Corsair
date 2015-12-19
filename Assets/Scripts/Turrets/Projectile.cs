@@ -50,6 +50,11 @@ public class Projectile : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+        if (target != null)
+        {
+            targetPosition = target.transform.position;
+        }
+
 		Vector3 moveVector = new Vector3 (transform.position.x - targetPosition.x,
 		                                 transform.position.y - targetPosition.y,
 		                                 transform.position.z - targetPosition.z).normalized;
@@ -68,7 +73,6 @@ public class Projectile : MonoBehaviour
             transform.gameObject.ReturnToPool(this.gameObject.name);
 			if (target != null) 
             {
-                targetPosition = target.transform.position;
 
                 if (Damage > 0)
                 {
