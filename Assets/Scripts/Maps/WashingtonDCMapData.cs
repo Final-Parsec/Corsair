@@ -52,7 +52,7 @@
         {
             get
             {
-                return new Vector2(15, 15);
+                return new Vector2(15, 19);
             }
         }
 
@@ -67,7 +67,7 @@
                 {
                     new Vector2(0, 5),
                     new Vector2(31, 5),
-                    new Vector2(15, 2)
+                    new Vector2(15, 0)
                 };
             }
         }
@@ -106,6 +106,21 @@
             }
         }
 
+        private Vector2 tileGap;
+        /// <summary>
+        ///     Gets the left and bottom spacing between the tile map and the node map
+        /// </summary>
+        public Vector2 TileGap {
+            get
+            {
+                return tileGap;
+            }
+            set
+            {
+                tileGap = value;
+            }
+        }
+
         /// <summary>
         ///     Gets the 2D tile set.
         /// </summary>
@@ -120,6 +135,8 @@
 
                 var lengthX = (int)this.NodeSize.x * 2 + 1;
                 var lengthY = (int)this.NodeSize.y * 2 + 11;
+                
+                this.TileGap = new Vector2(lengthX/4, lengthY/4);
 
                 this.tiles = new Tile[lengthX, lengthY];
 
@@ -141,14 +158,16 @@
                             tile.isWalkable = true;
                             tile.isNode = true;
                         }
-
-                        if (x == this.DestinationNode.XInt() &&
-                            y == this.DestinationNode.YInt())
-                        {
-                            tile.doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House/White House 45"));
-                        }
                     }
                 }
+
+                foreach (var spawn in this.EnemySpawnTileIndicies)
+                {
+                    this.tiles[spawn.XInt() + lengthX / 4, spawn.YInt() + lengthY / 4].isBuildable = false;
+                }
+
+                this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House With Donald/White House With Donald"));
+                this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].isBuildable = false;
 
                 return this.tiles;
             }

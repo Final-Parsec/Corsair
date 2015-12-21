@@ -20,12 +20,14 @@ public class TurretFactory : MonoBehaviour
         Vector3 mousePosition = Input.mousePosition;
 
         Node cursorOnNode = objectManager.NodeManager.GetNodeFromLocation (Camera.main.ScreenToWorldPoint (mousePosition));
+
         if (cursorOnNode == null || objectManager.gameState.optionsOn)
         {
             yield break;
         }
+        Debug.Log(cursorOnNode.listIndexX + ", " + cursorOnNode.listIndexY);
 
-		bool canBuild = objectManager.NodeManager.BlockNode (cursorOnNode.UnityPosition);
+        bool canBuild = objectManager.NodeManager.BlockNode (cursorOnNode.UnityPosition);
 
         if (canBuild &&
             turretCosts[(int)TurretType] <= objectManager.gameState.playerMoney)

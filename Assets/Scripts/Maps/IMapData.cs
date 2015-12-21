@@ -55,5 +55,10 @@
         ///     Gets the texture used to make the map grid.
         /// </summary>
         Texture2D Grid{ get; }
+
+        /// <summary>
+        ///     Gets the left and bottom spacing between the tile map and the node map
+        /// </summary>
+        Vector2 TileGap{ get; }
     }
 }

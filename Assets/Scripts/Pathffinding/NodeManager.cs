@@ -169,7 +169,7 @@ public class NodeManager{
 			for(int y = 0; y<objectManager.MapData.Tiles.GetLength(1); y++)
 			{
 				if(objectManager.MapData.Tiles[x,y].isNode){
-					nodes [x - xIndexOffset, y - yIndexOffset] = new Node (objectManager.MapData.Tiles[x,y].isBuildable, objectManager.MapData.Tiles[x,y].isWalkable);
+					nodes [x - xIndexOffset, y - yIndexOffset] = new Node (objectManager.MapData.Tiles[x,y].isWalkable, objectManager.MapData.Tiles[x, y].isBuildable);
 				}
 			}
 		}
