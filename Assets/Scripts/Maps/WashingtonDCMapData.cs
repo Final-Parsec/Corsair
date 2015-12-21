@@ -145,7 +145,7 @@
                         if (x == this.DestinationNode.XInt() &&
                             y == this.DestinationNode.YInt())
                         {
-                            tile.doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House/White House 45"));
+                            tile.doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House with Trump/White House with Trump"));
                         }
                     }
                 }
