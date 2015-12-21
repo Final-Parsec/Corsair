@@ -166,7 +166,7 @@
                     this.tiles[spawn.XInt() + lengthX / 4, spawn.YInt() + lengthY / 4].isBuildable = false;
                 }
 
-                this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House With Donald/White House With Donald"));
+                this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House with Trump/White House with Trump"));
                 this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].isBuildable = false;
 
                 return this.tiles;
