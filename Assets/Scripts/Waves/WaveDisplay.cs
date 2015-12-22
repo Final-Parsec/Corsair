@@ -31,8 +31,8 @@ public class WaveDisplay : MonoBehaviour {
         var rectTransform = GetComponent<RectTransform>();
         
         numberOfDisplayWaves = WaveManager.numberOfWavesInMemory;
-        size.x = (Screen.width* screenWidthPercent) / numberOfDisplayWaves;
-        size.y = size.x;
+        size.x = 75;
+        size.y = 75;
 
         rectTransform.pivot = new Vector2(1f, 1f);
         rectTransform.SetSize(new Vector2(size.x * (numberOfDisplayWaves - 1), size.y));

@@ -86,7 +86,7 @@ namespace FinalParsec.Corsair
                     for (var x = 1; x < sizeX; x += 2)
                     {
                         var tile = mapData.Tiles[x, y];
-                        if (tile.isNode)
+                        if (tile.isNode && tile.isBuildable)
                         {
                             WriteTileTexture(tile.texturePositionX, tile.texturePositionY, this.mapData.Grid, textureArray[textureNumber]);
                         }
@@ -94,7 +94,8 @@ namespace FinalParsec.Corsair
 
                     for (var x = 0; x < sizeX; x += 2)
                     {
-                        var tile = mapData.Tiles[x, y];if (tile.isNode)
+                        var tile = mapData.Tiles[x, y];
+                        if (tile.isNode && tile.isBuildable)
                         {
                             WriteTileTexture(tile.texturePositionX, tile.texturePositionY, this.mapData.Grid, textureArray[textureNumber]);
                         }

@@ -52,7 +52,7 @@
         {
             get
             {
-                return new Vector2(15, 19);
+                return new Vector2(15, 15);
             }
         }
 
@@ -157,6 +157,12 @@
                             tile.isBuildable = true;
                             tile.isWalkable = true;
                             tile.isNode = true;
+                        }
+
+                        if(y - lengthY / 4 >= 16 && y - lengthY / 4 <= 19)
+                        {
+                            tile.isBuildable = false;
+                            tile.isWalkable = false;
                         }
                     }
                 }
