@@ -14,12 +14,12 @@ public class TurretFactory : MonoBehaviour
     private TurretModel[] turretModels;
 	
 	private ObjectManager objectManager;
-	
-	public IEnumerator PlaceOrSelectTurret ()
-	{
+
+    public IEnumerator PlaceOrSelectTurret()
+    {
         Vector3 mousePosition = Input.mousePosition;
 
-        Node cursorOnNode = objectManager.NodeManager.GetNodeFromLocation (Camera.main.ScreenToWorldPoint (mousePosition));
+        Node cursorOnNode = objectManager.NodeManager.GetNodeFromLocation(Camera.main.ScreenToWorldPoint(mousePosition));
 
         if (cursorOnNode == null || objectManager.gameState.optionsOn)
         {
@@ -27,27 +27,36 @@ public class TurretFactory : MonoBehaviour
         }
         Debug.Log(cursorOnNode.listIndexX + ", " + cursorOnNode.listIndexY);
 
-        bool canBuild = objectManager.NodeManager.BlockNode (cursorOnNode.UnityPosition);
+        bool canBuild = objectManager.NodeManager.BlockNode(cursorOnNode.UnityPosition);
 
-        if (canBuild &&
-            turretCosts[(int)TurretType] <= objectManager.gameState.playerMoney)
+        if (turretCosts[(int)TurretType] <= objectManager.gameState.playerMoney)
         {
-            
-            yield return StartCoroutine(objectManager.Pathfinding.CheckAndUpdatePaths());
-
-            if(objectManager.Pathfinding.pathsExist)
+            if (canBuild)
             {
-                Vector3 correctedPosition = cursorOnNode.UnityPosition;
-                correctedPosition.y = -((cursorOnNode.listIndexY / objectManager.NodeManager.size_y) + (cursorOnNode.listIndexX / objectManager.NodeManager.size_x));
-                Turret turret = ((GameObject)Instantiate(turretPrefabs[(int)TurretType], correctedPosition, Quaternion.Euler(new Vector3(90, 0, 0)))).GetComponent<Turret>();
-                turret.Msrp = turretCosts[(int)TurretType];
-                turret.turretModel = (TurretModel)turretModels[(int)TurretType].Clone();
-                turret.FillNodesInRange();
-                cursorOnNode.turret = turret;
-                objectManager.gameState.playerMoney -= turretCosts[(int)TurretType];
-                yield break;
-            }
 
+                yield return StartCoroutine(objectManager.Pathfinding.CheckAndUpdatePaths());
+
+                if (objectManager.Pathfinding.pathsExist)
+                {
+                    Vector3 correctedPosition = cursorOnNode.UnityPosition;
+                    correctedPosition.y = -((cursorOnNode.listIndexY / objectManager.NodeManager.size_y) + (cursorOnNode.listIndexX / objectManager.NodeManager.size_x));
+                    Turret turret = ((GameObject)Instantiate(turretPrefabs[(int)TurretType], correctedPosition, Quaternion.Euler(new Vector3(90, 0, 0)))).GetComponent<Turret>();
+                    turret.Msrp = turretCosts[(int)TurretType];
+                    turret.turretModel = (TurretModel)turretModels[(int)TurretType].Clone();
+                    turret.FillNodesInRange();
+                    cursorOnNode.turret = turret;
+                    objectManager.gameState.playerMoney -= turretCosts[(int)TurretType];
+                    yield break;
+                }
+                else
+                {
+                    AlertText.Alert("Can't Block The Path!");
+                }
+            }
+        }
+        else
+        {
+            AlertText.Alert("You Need More $$$");
         }
 		
 		if (!canBuild)

@@ -4,7 +4,7 @@ using System.Collections;
 public class ScreenAnimationEvents : MonoBehaviour {
 	
 	
-	public void FadeOutFinished()
+	public void DisableGameObject()
 	{
 		gameObject.SetActive (false);
 	}
