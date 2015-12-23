@@ -144,7 +144,18 @@ public class ObjectManager
 		} 
 	}
 
-	public ObjectManager ()
+    private AudioManager audioManager;
+    public AudioManager AudioManager
+    {
+        get
+        {
+            if (audioManager == null)
+                audioManager = GameObject.Find("Main Camera").GetComponent<AudioManager>();
+            return audioManager;
+        }
+    }
+
+    public ObjectManager ()
 	{
 		ObjectManager.instance = this;
 		gameState = new GameState(1, 999, MapType.Open);

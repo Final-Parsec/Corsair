@@ -51,12 +51,14 @@ public class TurretFactory : MonoBehaviour
                 else
                 {
                     AlertText.Alert("Can't Block The Path!");
+                    objectManager.AudioManager.PlayBlock();
                 }
             }
         }
         else
         {
             AlertText.Alert("You Need More $$$");
+            objectManager.AudioManager.PlayMoney();
         }
 		
 		if (!canBuild)

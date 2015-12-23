@@ -66,7 +66,7 @@ public class TurretFocusMenu : MonoBehaviour
             return;
         }
 
-		objectManager.GuiButtonMethods.PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 
         Debug.Log(upgradeType + "   " + SelectedTurret.turretModel.UpgradeNames[upgradeType]);
 

@@ -38,9 +38,6 @@ public class GuiButtonMethods : MonoBehaviour
     private TurretSelectionMenu TurretScript;
     private Animator selectionAnimator;
 
-    private AudioSource audioSource;
-	private Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
-
     private Animator PauseButtonAnimator;
 
     private Image SelectedTurretIcon;
@@ -52,10 +49,6 @@ public class GuiButtonMethods : MonoBehaviour
     void Start()
     {
 		objectManager = ObjectManager.GetInstance();
-		audioSource = GetComponent<AudioSource>();
-		// Load Audio Clips
-		audioClips.Add("defaultPress" , Resources.Load("GUI/Sounds/ButtonPress") as AudioClip);
-		audioClips.Add("sellPress", Resources.Load("GUI/Sounds/SellPress") as AudioClip);
 
         // Send Wave Button
         sendWaveTime = GameObject.Find("SendWaveTime").GetComponent<Text>();
@@ -122,11 +115,13 @@ public class GuiButtonMethods : MonoBehaviour
 		{
 			
 			EndGame("Victory!");
+            objectManager.AudioManager.PlayEndGame(true);
 		}
 		else if(objectManager.gameState.PlayerHealth <= 0 && !objectManager.gameState.gameOver)
 		{
 			EndGame("Defeat!");
-		}
+            objectManager.AudioManager.PlayEndGame(false);
+        }
 	}
 
 	private void EndGame(string conditionText)
@@ -143,15 +138,15 @@ public class GuiButtonMethods : MonoBehaviour
 
     public void TurretButtonPressed(int turretType)
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
         objectManager.TurretFactory.TurretType = (TurretType)turretType;
         SelectedTurretIcon.sprite = TurretScript.turretSprites[((TurretType)turretType).ToString()];
     }
 
 	public void SendWavePressed()
 	{
-        PlayDefaultSound();
-		if (!objectManager.gameState.gameStarted)
+        objectManager.AudioManager.PlayButtonSound();
+        if (!objectManager.gameState.gameStarted)
 		{
 			var anim = GameObject.Find("SendWave").GetComponent<Animator>();
 			anim.SetBool("StartGame", true);
@@ -174,7 +169,7 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void OptionPressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 
 		if (objectManager.gameState.gameOver)
 		{
@@ -192,14 +187,13 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void MutePressed()
 	{
-		PlayDefaultSound();
-		var objectManager = ObjectManager.GetInstance();
-		objectManager.gameState.isMuted = !objectManager.gameState.isMuted;
+        objectManager.AudioManager.PlayButtonSound();
+        objectManager.gameState.isMuted = !objectManager.gameState.isMuted;
 	}
 
 	public void DisplayGridPressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 		gridToggle = !gridToggle;
 		//objectManager.Map.SetGrid(gridToggle);
 		// TODO: make work
@@ -207,20 +201,20 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void QuitPressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 		Application.Quit ();
 	}
 
 	public void MainMenuPressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 		objectManager.DestroySinglton();
 		Application.LoadLevel("Main Menu");
 	}
 
 	public void HighScorePressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 		gameOverScreen.SetActive (false);
 
 		submitScoreScreen.SetActive (true);
@@ -229,7 +223,7 @@ public class GuiButtonMethods : MonoBehaviour
 
 	public void SubmitScorePressed()
 	{
-		PlayDefaultSound();
+		objectManager.AudioManager.PlayButtonSound();
 
 		if (string.IsNullOrEmpty(GameObject.Find("PlayerNameTextField").GetComponent<Text>().text))
 		{
@@ -293,7 +287,7 @@ public class GuiButtonMethods : MonoBehaviour
 
         if (!selectionAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeRightIn"))
         {
-            PlayDefaultSound();
+            objectManager.AudioManager.PlayButtonSound();
             selectionAnimator.SetTrigger("Swipe Right In");
 
             if(objectManager.TurretFocusMenu.SelectedTurret != null)
@@ -303,7 +297,7 @@ public class GuiButtonMethods : MonoBehaviour
         }
         else
         {
-            PlayDefaultSound();
+            objectManager.AudioManager.PlayButtonSound();
             selectionAnimator.SetTrigger("Swipe Right Out");
         }
     }
@@ -328,20 +322,20 @@ public class GuiButtonMethods : MonoBehaviour
         if (!upgradeAnimator.GetCurrentAnimatorStateInfo(0).IsName("ScreenSwipeRightIn"))
         {
             objectManager.TurretFocusMenu.isActive = true;
-            PlayDefaultSound();
+            objectManager.AudioManager.PlayButtonSound();
             upgradeAnimator.SetTrigger("Swipe Right In");
         }
         else
         {
             objectManager.TurretFocusMenu.isActive = false;
-            PlayDefaultSound();
+            objectManager.AudioManager.PlayButtonSound();
             upgradeAnimator.SetTrigger("Swipe Right Out");
         }
     }
 
     public void CycleSpeed()
     {
-        PlayDefaultSound();
+        objectManager.AudioManager.PlayButtonSound();
         switch (objectManager.gameState.GameSpeed)
         {
             case GameSpeed.X1:
@@ -360,7 +354,7 @@ public class GuiButtonMethods : MonoBehaviour
 
     public void PauseResume()
     {
-        PlayDefaultSound();
+        objectManager.AudioManager.PlayButtonSound();
         if (objectManager.gameState.GameSpeed == GameSpeed.Paused)
         {
             objectManager.gameState.GameSpeed = prePauseSpeed;
@@ -379,28 +373,11 @@ public class GuiButtonMethods : MonoBehaviour
         if (objectManager.TurretFocusMenu.SelectedTurret == null)
             return;
 
-        objectManager.GuiButtonMethods.PlaySellSound();
+        objectManager.AudioManager.PlaySellSound();
 
         objectManager.gameState.playerMoney += objectManager.TurretFocusMenu.SelectedTurret.Msrp;
         objectManager.NodeManager.UnBlockNode(objectManager.TurretFocusMenu.SelectedTurret.transform.position);
         Destroy(objectManager.TurretFocusMenu.SelectedTurret.gameObject);
         objectManager.TurretFocusMenu.SelectedTurret = null;
     }
-
-    public void PlaySellSound()
-	{
-		upgradeAnimator.SetTrigger("Swipe Out");
-		
-		objectManager.TurretRange.gameObject.SetActive(false);
-
-		if(!objectManager.gameState.isMuted)
-			audioSource.PlayOneShot(audioClips["sellPress"]);
-	}
-
-	public void PlayDefaultSound()
-	{
-		if (!objectManager.gameState.isMuted) {
-			audioSource.PlayOneShot (audioClips ["defaultPress"]);
-		}
-	}
 }

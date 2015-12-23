@@ -89,6 +89,7 @@ public class WaveManager : MonoBehaviour
         Wave wave = this.DequeueWave();
         if (wave != null)
         {
+            objectManager.AudioManager.PlayWaveSound(wave.waveId);
             this.objectManager.gameState.waveCount++;
             this.StartCoroutine(this.CreateEnemies(wave, this.enemySpawnNodes));
 
