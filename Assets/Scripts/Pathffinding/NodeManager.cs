@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class NodeManager{
 	
@@ -272,4 +273,45 @@ public class NodeManager{
 
 		return spawnNodes;
 	}
+
+    /// <summary>
+    /// Corrects the Y position of the Vector3 to layer correctly with the rest of the map.
+    /// Uses the original Y value of the vector.
+    /// </summary>
+    /// <param name="vector">The original position of the object</param>
+    /// <returns>The corrected Vector3</returns>
+    public Vector3 CorrectInitialPosition(Vector3 vector)
+    {
+        Node node = GetNodeFromLocation(vector);
+        if (node == null)
+        {
+            throw new Exception("could node find node for position "+vector.x+", "+vector.y);
+        }
+
+        // perfect for non mind control
+        float yVariance = (float)node.listIndexY / (float)size_y;
+        float correctedY = vector.y - (yVariance + ((float)node.listIndexX % 2 == 1 ? ((((float)node.listIndexY + 1f) / (float)size_y) - yVariance) / 2f : 0f));
+        return new Vector3(vector.x, correctedY, vector.z);
+
+    }
+
+    /// <summary>
+    /// Corrects the Y position of the Vector3 to layer correctly with the rest of the map.
+    /// Does not use the original Y value of the vecotor.
+    /// </summary>
+    /// <param name="vector">The original position of the object</param>
+    /// <returns>The corrected Vector3</returns>
+    public Vector3 CorrectPosition(Vector3 vector)
+    {
+        Node node = GetNodeFromLocation(vector);
+        if (node == null)
+        {
+            throw new Exception("could node find node for position " + vector.x + ", " + vector.y);
+        }
+
+        // perfect for non mind control
+        float yVariance = (float)node.listIndexY / (float)size_y;
+        float correctedY = - (yVariance + ((float)node.listIndexX % 2 == 1 ? ((((float)node.listIndexY + 1f) / (float)size_y) - yVariance) / 2f : 0f));
+        return new Vector3(vector.x, correctedY, vector.z);
+    }
 }

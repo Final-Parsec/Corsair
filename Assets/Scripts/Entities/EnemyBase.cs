@@ -134,28 +134,17 @@ public class EnemyBase : Agent
 	    this.onNode = this.objectManager.NodeManager.GetClosestNode (this.transform.position);
 	    this.SpawnNode = this.onNode;
 	    this.InitAttributes();
-	}	
+        this.transform.position = this.objectManager.NodeManager.CorrectPosition(this.transform.position);
+    }	
 
 	/// <summary>
     /// Called once per frame.
     /// </summary>
 	void Update ()
 	{
-	    this.CorrectPosition();
 	    this.Move();
 	    this.ApplyDebuffs();
         this.UpdateAnimator();
-    }
-
-    /// <summary>
-    /// Corrects the Y position of the <see cref="EnemyBase"/>.
-    /// Makes the enemy appear behind obsticles and turrets.
-    /// </summary>
-    private void CorrectPosition()
-    {
-        // perfect for non mind control
-		float correctedY = -((this.onNode.listIndexY / this.objectManager.NodeManager.size_y) + (this.onNode.listIndexX / this.objectManager.NodeManager.size_x));
-        this.transform.position = new Vector3(this.transform.position.x, correctedY, this.transform.position.z);
     }
 
     /// <summary>

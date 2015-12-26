@@ -121,6 +121,13 @@
             }
         }
 
+        private Vector2[] leftDownFenceLocations = new Vector2[] { new Vector2(5, 15), new Vector2(5, 14) , new Vector2(5, 13) ,  new Vector2(5, 12) , new Vector2(5, 11) , new Vector2(5, 10), new Vector2(5,9), new Vector2(5, 8) ,
+            new Vector2(5, 7), new Vector2(5, 3) ,  new Vector2(5, 2), new Vector2(25, 15) , new Vector2(25, 14) , new Vector2(25, 13), new Vector2(25,12), new Vector2(25, 11) , new Vector2(25, 10) , new Vector2(25, 9), new Vector2(25,8), new Vector2(25, 7) ,
+            new Vector2(25, 3), new Vector2(25,2)};
+
+        private Vector2[] frontFenceLocations = new Vector2[] { new Vector2(6, 16), new Vector2(8, 16) , new Vector2(10, 16) ,  new Vector2(12, 16) , new Vector2(12, 16) , new Vector2(18, 16), new Vector2(20,16), new Vector2(22, 16) ,
+            new Vector2(24, 16), new Vector2(24, 2) , new Vector2(22, 2) ,  new Vector2(20, 2), new Vector2(18, 2) , new Vector2(12, 2) , new Vector2(10, 2), new Vector2(8,2), new Vector2(6, 2)};
+
         /// <summary>
         ///     Gets the 2D tile set.
         /// </summary>
@@ -159,11 +166,27 @@
                             tile.isNode = true;
                         }
 
-                        if(y - lengthY / 4 >= 16 && y - lengthY / 4 <= 19)
+                        // Top section where white house is
+                        if((y - lengthY / 4 >= 16 && y - lengthY / 4 <= 19))
                         {
                             tile.isBuildable = false;
                             tile.isWalkable = false;
                         }
+
+                        // Sides of fence
+                        if (x - lengthX / 4 >= 26 || x - lengthX / 4 <= 4 || y - lengthY / 4 <= 1)
+                        {
+                            tile.isBuildable = false;
+                        }
+
+                        // Stop walking through fence
+                        if ((x - lengthX / 4 == 4 && (y - lengthY / 4 != 6 && y - lengthY / 4 != 5)) ||
+                            (x - lengthX / 4 == 26 && (y - lengthY / 4 != 6 && y - lengthY / 4 != 5)) ||
+                            (y - lengthY / 4 == 1 && (x - lengthX / 4 != 13 && x - lengthX / 4 != 17 && x - lengthX / 4 != 15)))
+                        {
+                            tile.isWalkable = false;
+                        }
+
                     }
                 }
 
@@ -174,6 +197,20 @@
 
                 this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/White House with Trump/White House with Trump"));
                 this.tiles[DestinationNode.XInt() + lengthX / 4, DestinationNode.YInt() + lengthY / 4].isBuildable = false;
+
+                // Fences
+                foreach (var location in leftDownFenceLocations)
+                {
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/Fence/FenceDown"));
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].isBuildable = false;
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].isWalkable = false;
+                }
+                foreach (var location in frontFenceLocations)
+                {
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].doodads.AddFirst(Resources.Load<GameObject>("Doodads/Fence/FenceFront"));
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].isBuildable = false;
+                    this.tiles[location.XInt() + lengthX / 4, location.YInt() + lengthY / 4].isWalkable = false;
+                }
 
                 return this.tiles;
             }

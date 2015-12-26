@@ -116,6 +116,7 @@ public abstract class Agent : MonoBehaviour
         position.y = pathNode.UnityPosition.y;
         if (Vector3.Distance(position, pathNode.UnityPosition) <= this.minWaypointDisplacement)
         {
+            this.transform.position = this.objectManager.NodeManager.CorrectPosition(this.transform.position);
             AgentChangedNodes();
 
             if (this.NodeExit != null)

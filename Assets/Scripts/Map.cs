@@ -100,7 +100,8 @@ public class Map : MonoBehaviour
 			    foreach(var doodad in tile.doodads)
 			    {
 			        var doodadPosition = this.objectManager.NodeManager.nodes[x - this.objectManager.MapData.TileGap.XInt(), y - this.objectManager.MapData.TileGap.YInt()].UnityPosition;
-                    doodadPosition.y = -(y / this.objectManager.NodeManager.size_y + x / this.objectManager.NodeManager.size_x) - .001f;
+                    doodadPosition.y = doodadPosition.y + doodad.transform.position.y; 
+                    doodadPosition = this.objectManager.NodeManager.CorrectInitialPosition(doodadPosition);
                     Instantiate(doodad, doodadPosition, doodad.transform.rotation);
 			    }
 			}

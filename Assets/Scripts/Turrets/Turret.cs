@@ -166,7 +166,9 @@ public class Turret : MonoBehaviour
 	{
 		objectManager = ObjectManager.GetInstance ();
 		objectManager.AddEntity (this);
-	}
+
+        this.transform.position = this.objectManager.NodeManager.CorrectInitialPosition(this.transform.position);
+    }
 	
 	public void Deselect()
 	{
