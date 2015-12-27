@@ -1,35 +1,36 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System;
-using UnityEngine.Events;
-using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Mask))]
 [RequireComponent(typeof(RectTransform))]
-public class WaveDisplay : MonoBehaviour {
+public class WaveDisplay : MonoBehaviour
+{
+    private const float TurboSpeed = 350;
     public static float screenWidthPercent = .5f;
 
     private readonly List<WaveSprite> sprites = new List<WaveSprite>();
-    private IDictionary<string, Sprite> waveImages = new Dictionary<string, Sprite>();
-    public WaveSprite waveSprite;
+    private int numberOfDisplayWaves;
 
     private ObjectManager objectManager;
     private Vector2 size;
     private float speed;
-    private float turboSpeed = 350;
-    private int turboCount = 0;
+    private int turboCount;
+    private IDictionary<string, Sprite> waveImages = new Dictionary<string, Sprite>();
+    public WaveSprite waveSprite;
     private float xRemoveLimit;
     private float xSpawnLimit;
-    private int numberOfDisplayWaves;
 
-
-    // Use this for initialization
-    void Awake()
+    /// <summary>
+    ///     Use this for initialization.
+    /// </summary>
+    private void Awake()
     {
         objectManager = ObjectManager.GetInstance();
         var rectTransform = GetComponent<RectTransform>();
-        
+
         numberOfDisplayWaves = WaveManager.numberOfWavesInMemory;
         size.x = 75;
         size.y = 75;
@@ -42,20 +43,20 @@ public class WaveDisplay : MonoBehaviour {
         waveImages = ObjectManager.LoadResources<Sprite>("GUI/Wave Images/", Enum.GetNames(typeof(WaveId)));
 
         StartCoroutine(EventualSetup());
-        
+
         objectManager.WaveManager.SendWave += UpdateWaveSprites;
     }
 
     private IEnumerator EventualSetup()
     {
-        LinkedListNode<Wave> node = objectManager.WaveManager.upcomingWaves.First;
-        while(node == null)
+        var node = objectManager.WaveManager.upcomingWaves.First;
+        while (node == null)
         {
             yield return new WaitForSeconds(.01f);
             node = objectManager.WaveManager.upcomingWaves.First;
         }
 
-        for (int x = 0; x < numberOfDisplayWaves; x++)
+        for (var x = 0; x < numberOfDisplayWaves; x++)
         {
             sprites.Add(Instantiate(waveSprite, new Vector3(0, 0, 0), Quaternion.Euler(Vector3.zero)) as WaveSprite);
 
@@ -90,14 +91,8 @@ public class WaveDisplay : MonoBehaviour {
             }
         }
 
-        speed = Mathf.Abs(sprites[0].rectTransform.anchoredPosition.x - sprites[1].rectTransform.anchoredPosition.x) / objectManager.WaveManager.waveSpawnDelay;
-
-
-        var sendWaveRt = GameObject.Find("SendWave").GetComponent<RectTransform>();
-        sendWaveRt.SetSize(new Vector2(size.x, size.y + 5)); // add a bit of padding to wave button
-        sendWaveRt.pivot = new Vector2(1f, 1f);
-        sendWaveRt.SetAnchorTopRight();
-        sendWaveRt.anchoredPosition = new Vector2(0, 0);
+        speed = Mathf.Abs(sprites[0].rectTransform.anchoredPosition.x - sprites[1].rectTransform.anchoredPosition.x) /
+                objectManager.WaveManager.waveSpawnDelay;
     }
 
     // Update is called once per frame
@@ -107,12 +102,13 @@ public class WaveDisplay : MonoBehaviour {
         {
             return;
         }
-        
+
         foreach (var sprite in sprites)
         {
-            float adjustedSpeed = -(speed + (turboCount != 0 ? turboSpeed : 0)) * (float)this.objectManager.gameState.GameSpeed * Time.deltaTime;
+            var adjustedSpeed = -(speed + (turboCount != 0 ? WaveDisplay.TurboSpeed : 0)) *
+                                (float)this.objectManager.gameState.GameSpeed * Time.deltaTime;
             sprite.rectTransform.anchoredPosition = new Vector2(sprite.rectTransform.anchoredPosition.x - adjustedSpeed,
-                                                                sprite.rectTransform.anchoredPosition.y);
+                sprite.rectTransform.anchoredPosition.y);
         }
 
         if (sprites[1].rectTransform.anchoredPosition.x > xSpawnLimit + size.x)
@@ -157,8 +153,9 @@ public class WaveDisplay : MonoBehaviour {
 
         sprites.RemoveAt(0);
         sprite.SetSprite(waveImages[objectManager.WaveManager.upcomingWaves.Last.Value.waveId.ToString()]);
-        sprite.rectTransform.anchoredPosition = new Vector2(sprite.rectTransform.anchoredPosition.x - size.x * (sprites.Count + 1),
-                                                            sprite.rectTransform.anchoredPosition.y);
+        sprite.rectTransform.anchoredPosition =
+            new Vector2(sprite.rectTransform.anchoredPosition.x - size.x * (sprites.Count + 1),
+                sprite.rectTransform.anchoredPosition.y);
         sprite.waveNumber = objectManager.WaveManager.upcomingWaves.Last.Value.waveNumber;
         sprites.Add(sprite);
     }
