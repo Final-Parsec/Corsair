@@ -21,7 +21,6 @@ public class WaveDisplay : MonoBehaviour
     private IDictionary<string, Sprite> waveImages = new Dictionary<string, Sprite>();
     public WaveSprite waveSprite;
     private float xRemoveLimit;
-    private float xSpawnLimit;
 
     /// <summary>
     ///     Use this for initialization.
@@ -37,8 +36,8 @@ public class WaveDisplay : MonoBehaviour
 
         rectTransform.pivot = new Vector2(1f, 1f);
         rectTransform.SetSize(new Vector2(size.x * (numberOfDisplayWaves - 1), size.y));
-        rectTransform.SetAnchorTopRight();
-        rectTransform.anchoredPosition = new Vector2(0, 0);
+        //rectTransform.SetAnchorTopRight();
+        //rectTransform.anchoredPosition = new Vector2(0, 0);
 
         waveImages = ObjectManager.LoadResources<Sprite>("GUI/Wave Images/", Enum.GetNames(typeof(WaveId)));
 
@@ -67,15 +66,8 @@ public class WaveDisplay : MonoBehaviour
             {
                 sprites[x].rectTransform.SetSize(size);
                 sprites[x].rectTransform.anchoredPosition = new Vector2(0, 0);
-                xRemoveLimit = sprites[x].rectTransform.anchoredPosition.x;
-                sprites[x].gameObject.SetActive(false);
-            }
-            else if (x == 1)
-            {
-                sprites[x].rectTransform.SetSize(size);
-                sprites[x].rectTransform.anchoredPosition = new Vector2(size.x * -x, 0);
                 sprites[x].SetSprite(waveImages[node.Value.waveId.ToString()]);
-                xSpawnLimit = sprites[x].rectTransform.anchoredPosition.x;
+                xRemoveLimit = sprites[x].rectTransform.anchoredPosition.x;
             }
             else
             {
@@ -111,17 +103,14 @@ public class WaveDisplay : MonoBehaviour
                 sprite.rectTransform.anchoredPosition.y);
         }
 
-        if (sprites[1].rectTransform.anchoredPosition.x > xSpawnLimit + size.x)
+        if (sprites[0].rectTransform.anchoredPosition.x > xRemoveLimit + size.x)
         {
+            this.BackOfTheLine(sprites[0]);
+
             if (turboCount > 0)
             {
                 turboCount--;
             }
-        }
-
-        if (sprites[0].rectTransform.anchoredPosition.x > xRemoveLimit + size.x)
-        {
-            this.BackOfTheLine(sprites[0]);
         }
     }
 
@@ -145,7 +134,6 @@ public class WaveDisplay : MonoBehaviour
 
     private void BackOfTheLine(WaveSprite sprite)
     {
-        sprite.gameObject.SetActive(true); // to enable the first sprite
         if (objectManager.WaveManager.upcomingWaves.Count < WaveManager.numberOfWavesInMemory)
         {
             sprite.gameObject.SetActive(false);

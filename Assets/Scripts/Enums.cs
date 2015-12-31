@@ -32,11 +32,7 @@ public enum TurretType
     Pistolman = 0,
     Rifleman,
     Cannon,
-    Netter,
-    Buckshot,
-    Molotov,
-    Sirens,
-    PiroThePirateHero
+    Netter
 }
 
 public enum StatusEffects
