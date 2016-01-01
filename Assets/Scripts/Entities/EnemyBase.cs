@@ -5,12 +5,6 @@ using System;
 
 public class EnemyBase : Agent
 {
-
-    /// <summary>
-    /// The Last sorting layer used.
-    /// </summary>
-    private static int sortingOrder = 0;
-
     /// <summary>
     /// A <see cref="Dictionary{StatusEffects, float}"/> of effects to floats.
     /// Used to track active Coroutines flashing colors on the <see cref="EnemyBase"/>.
@@ -104,14 +98,6 @@ public class EnemyBase : Agent
 			}
 		}
 	}
-
-    void Start()
-    {
-        foreach (var spriteRenderer in this.GetComponentsInChildren<SpriteRenderer>())
-        {
-            spriteRenderer.sortingOrder = EnemyBase.sortingOrder++;
-        }
-    }
 
 	/// <summary>
     /// Called when object is enabled.

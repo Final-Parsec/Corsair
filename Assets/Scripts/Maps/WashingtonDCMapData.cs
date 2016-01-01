@@ -66,16 +66,19 @@
                 return new[]
                 {
                     new Vector2(0, 6),
-                    new Vector2(0, 4),
-                    new Vector2(0, 2),
-                    new Vector2(1, 4),
                     new Vector2(31, 5),
-                    new Vector2(31, 7),
-                    new Vector2(31, 3),
-                    new Vector2(30, 5),
                     new Vector2(15, 0),
+
+                    new Vector2(0, 4),
+                    new Vector2(31, 7),
                     new Vector2(13, 0),
+
+                    new Vector2(0, 2),
+                    new Vector2(31, 3),
                     new Vector2(17, 0),
+
+                    new Vector2(1, 4),
+                    new Vector2(30, 5),
                     new Vector2(15, 1)
                 };
             }
