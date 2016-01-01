@@ -16,15 +16,10 @@ public enum Border
 
 public enum WaveId
 {
-    Zombie,
-    Horde,
-    PregerWench,
-    SeaDog,
-    Dog,
-    Seagull,
-    Boss1,
-    Boss2,
-    Boss3
+    Mexican,
+    Chinaman,
+    Muslim,
+    Hillary
 }
 
 public enum TurretType

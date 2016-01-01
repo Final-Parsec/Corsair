@@ -27,25 +27,6 @@ public class Map : MonoBehaviour
 	    this.LoadMapTexture ();
 	    this.PlaceDoodads ();
 	}
-    
-	void OnGUI ()
-	{
-		foreach (EnemyBase Gob in this.objectManager.ThingsWithHealthBars()) {
-			//Health Bar
-			float healthRatio = (((float)Gob.Health) / ((float)Gob.maxHealth));
-			if (healthRatio != 1) {
-				Vector2 objSize = Gob.GetPixelSize ();
-				float width = Gob.healthBarSize.x;
-				float height = Gob.healthBarSize.y;
-	
-				width = width * healthRatio;
-				Vector3 wantedPos = Camera.main.WorldToScreenPoint (Gob.transform.position);
-	
-				GUI.color = new Color (2 * (1 - healthRatio), 2 * healthRatio, 0);
-				GUI.DrawTexture (new Rect (wantedPos.x - width / 2, Screen.height - wantedPos.y - objSize.y / 2, width, height), this.healthTexture);
-			}
-		}
-	}
 
 	public void ScaleAndPlaceMap()
 	{

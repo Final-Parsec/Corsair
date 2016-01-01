@@ -10,7 +10,8 @@ public class DeathIntAction : MonoBehaviour {
 
 	// Use this for initialization
 	void OnEnable () {
-		objectManager = ObjectManager.GetInstance();
+        gameObject.GetComponent<MeshRenderer>().sortingOrder = 32767;
+        objectManager = ObjectManager.GetInstance();
 		madeAt = Time.time;
 	}
 	

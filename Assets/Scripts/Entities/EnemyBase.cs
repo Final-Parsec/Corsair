@@ -5,25 +5,11 @@ using System;
 
 public class EnemyBase : Agent
 {
-    /// <summary>
-    /// White
-    /// </summary>
-	public static Color normal = new Color (1,1,1,1);
 
     /// <summary>
-    /// Red
+    /// The Last sorting layer used.
     /// </summary>
-    public static Color burn = new Color (1,0,0,1);
-
-    /// <summary>
-    /// Purple
-    /// </summary>
-    public static Color poison = new Color (.5f,0,.5f,1); 
-
-    /// <summary>
-    /// The time between color flashes when an enemy is Poisoned or Burned.
-    /// </summary>
-    private static float statusFlashInterval = .5f;
+    private static int sortingOrder = 0;
 
     /// <summary>
     /// A <see cref="Dictionary{StatusEffects, float}"/> of effects to floats.
@@ -51,11 +37,6 @@ public class EnemyBase : Agent
     /// The size of the healthbar.
     /// </summary>
 	public Vector2 healthBarSize;
-
-    /// <summary>
-    /// A reference to the <see cref="spriteRenderer"/> component.
-    /// </summary>
-	protected SpriteRenderer spriteRenderer;
 
     /// <summary>
     /// A reference to the <see cref="Animator"/> component.
@@ -124,6 +105,14 @@ public class EnemyBase : Agent
 		}
 	}
 
+    void Start()
+    {
+        foreach (var spriteRenderer in this.GetComponentsInChildren<SpriteRenderer>())
+        {
+            spriteRenderer.sortingOrder = EnemyBase.sortingOrder++;
+        }
+    }
+
 	/// <summary>
     /// Called when object is enabled.
     /// </summary>
@@ -144,7 +133,6 @@ public class EnemyBase : Agent
 	{
 	    this.Move();
 	    this.ApplyDebuffs();
-        this.UpdateAnimator();
     }
 
     /// <summary>
@@ -153,7 +141,6 @@ public class EnemyBase : Agent
 	protected void InitAttributes()
     {
 	    this.minWaypointDisplacement = this.objectManager.MapData.NodeSize.x / 10;
-	    this.spriteRenderer = this.GetComponent<SpriteRenderer> ();
 	    this.animator = this.GetComponent<Animator>();
 	    this.SetPath (this.objectManager.Pathfinding.Astar (this.onNode, this.objectManager.WaveManager.destinationNode));
 	    this.animator.speed = this.speed;
@@ -179,7 +166,6 @@ public class EnemyBase : Agent
 
 		foreach (IBuff debuff in removeList) {
 		    this.debuffs.Remove (debuff);
-		    this.spriteRenderer.color = normal;
 		}
 	}
 
@@ -285,92 +271,9 @@ public class EnemyBase : Agent
             this.activeStatusFlashCoroutineEndTimes[enemyState] < Time.time)
         {
             this.activeStatusFlashCoroutineEndTimes[enemyState] = Time.time + duration;
-            this.StartCoroutine(this.FlashColor(EnemyBase.burn, enemyState));
             return;
         }
         this.activeStatusFlashCoroutineEndTimes[enemyState] = Time.time + duration;
-    }
-
-    /// <summary>
-    /// Flashes the debuff color on the agent.
-    /// </summary>
-    /// <param name="color">The color to flash.</param>
-    /// <param name="state">The state of the flash. 
-    /// Used as the key into activeStatusFlashCoroutineEndTimes. </param>
-    IEnumerator FlashColor(Color color, StatusEffects state)
-    {
-        while (true)
-        {
-            this.spriteRenderer.color = color;
-            this.Invoke("SetDefaultColor", .15f);
-
-            float endTime;
-            if (this.activeStatusFlashCoroutineEndTimes.TryGetValue(state, out endTime))
-            {
-                if (this.objectManager.gameState.GameSpeed == GameSpeed.Paused)
-                {
-                    this.activeStatusFlashCoroutineEndTimes[state] = endTime + EnemyBase.statusFlashInterval;
-                }
-                else if (this.objectManager.gameState.GameSpeed != GameSpeed.X1)
-                {
-                    float adjustedInterval = EnemyBase.statusFlashInterval /
-                                             (float)this.objectManager.gameState.GameSpeed;
-                    this.activeStatusFlashCoroutineEndTimes[state] = endTime - adjustedInterval;
-                    yield return new WaitForSeconds(adjustedInterval);
-                    continue;
-                }
-
-                if (Time.time > endTime)
-                {
-                    break;
-                }
-                yield return new WaitForSeconds(EnemyBase.statusFlashInterval);
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Called by the Invoke method.
-    /// Sets the color of the agent back to normal.
-    /// </summary>
-    private void SetDefaultColor()
-    {
-        if (this.spriteRenderer.color != EnemyBase.normal)
-        {
-            this.spriteRenderer.color = EnemyBase.normal;
-        }
-    }
-
-    /// <summary>
-    /// Updates the animator state machine.
-    /// </summary>
-    private void UpdateAnimator()
-    {
-        if (this.path != null && this.currentPathIndex < this.path.Count && this.currentPathIndex >= 0)
-        {
-            this.animator.speed = 5 * (this.speed / 20 + 1) * (float)this.objectManager.gameState.GameSpeed;
-            this.animator.SetInteger("walking", this.onNode.GetDirection(this.path[this.currentPathIndex]));
-            this.SetState((int)State.Walking);
-        }
-        else
-        {
-            this.animator.speed = 0;
-        }
-    }
-
-    /// <summary>
-    /// Sets the state of the animator.
-    /// </summary>
-    /// <param name="stateId">The current state of the <see cref="EnemyBase"/></param>
-	public void SetState(int stateId){
-		if(this.animator.GetInteger("currentState") != stateId){
-		    this.animator.SetTrigger("resetState");
-		    this.animator.SetInteger("currentState",stateId);
-		}
     }
 
     /// <summary>
@@ -396,21 +299,6 @@ public class EnemyBase : Agent
             return;
         }
         this.DestroyThis();
-    }
-
-    /// <summary>
-    /// Gets the pixel size of the sprite.
-    /// </summary>
-    /// <returns>A vector2 of the sprite size.</returns>
-    public virtual Vector2 GetPixelSize()
-    {
-        Vector3 start = Camera.main.WorldToScreenPoint(new Vector3(this.spriteRenderer.bounds.min.x, this.spriteRenderer.bounds.min.y, this.spriteRenderer.bounds.min.z));
-        Vector3 end = Camera.main.WorldToScreenPoint(new Vector3(this.spriteRenderer.bounds.max.x, this.spriteRenderer.bounds.max.y, this.spriteRenderer.bounds.max.z));
-
-        int widthX = (int)(end.z - start.z);
-        int widthY = (int)(end.y - start.y);
-
-        return new Vector2(widthX, widthY);
     }
 
     /// <summary>
@@ -446,6 +334,9 @@ public class EnemyBase : Agent
         }
 
         this.objectManager.DeReference(this);
+
+        // TODO: play death animation
+
         this.gameObject.ReturnToPool(this.gameObject.name);
     }
 }

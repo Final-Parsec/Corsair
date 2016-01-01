@@ -21,27 +21,16 @@ public abstract class IWaveGenerator
 
         switch (waveId)
         {
-            case WaveId.Zombie:
-                return new Wave(waveId, .25f, 21, this.nextWaveNumber);
-
-            case WaveId.Horde:
+            case WaveId.Muslim:
                 return new Wave(waveId, .1f, 21, this.nextWaveNumber);
 
-            case WaveId.PregerWench:
+            case WaveId.Mexican:
                 return new Wave(waveId, .35f, 13, this.nextWaveNumber);
 
-            case WaveId.SeaDog:
-                return new Wave(waveId, .3f, 18, this.nextWaveNumber);
-
-            case WaveId.Dog:
+            case WaveId.Chinaman:
                 return new Wave(waveId, .3f, 21, this.nextWaveNumber);
-
-            case WaveId.Seagull:
-                return new Wave(waveId, .35f, 21, this.nextWaveNumber);
                 
-            case WaveId.Boss3:
-            case WaveId.Boss2:
-            case WaveId.Boss1:
+            case WaveId.Hillary:
                 return new Wave(waveId, .0f, 1, this.nextWaveNumber);
 
             default:

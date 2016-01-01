@@ -41,34 +41,20 @@ public class AudioManager : MonoBehaviour
     {
         switch (waveId)
         {
-            case WaveId.Zombie:
+            case WaveId.Mexican:
                 PlayTrump(waveMexican[mexicanIndex++ % waveMexican.Length], false);
                 break;
 
-            case WaveId.Horde:
+            case WaveId.Chinaman:
                 PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
                 break;
 
-            case WaveId.PregerWench:
+            case WaveId.Muslim:
                 PlayTrump(waveMuslim[muslimIndex++ % waveMuslim.Length], false);
                 break;
 
-            case WaveId.SeaDog:
-                PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
-                break;
-
-            case WaveId.Dog:
-                PlayTrump(waveMuslim[muslimIndex++ % waveMuslim.Length], false);
-                break;
-
-            case WaveId.Seagull:
-                PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
-                break;
-
-            case WaveId.Boss3:
-            case WaveId.Boss2:
-            case WaveId.Boss1:
-                PlayTrump(waveMexican[mexicanIndex++ % waveMexican.Length], false);
+            case WaveId.Hillary:
+                //PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
                 break;
         }
     }
