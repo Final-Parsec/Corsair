@@ -327,9 +327,9 @@ public class EnemyBase : Agent
             this.objectManager.gameState.playerMoney += this.moneyValue;
             this.objectManager.gameState.score += this.moneyValue;
             deathInt.text = "+" + this.moneyValue;
-            animator.SetTrigger("Dead");
         }
 
+        animator.SetTrigger("Dead");
         yield return new WaitForSeconds(1.5f);
 
         this.gameObject.ReturnToPool(this.gameObject.name);

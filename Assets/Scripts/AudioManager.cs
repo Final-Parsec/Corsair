@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour
 {
-    private AudioSource trumpAudio;
+    public AudioSource trumpAudio;
     private AudioSource guiAudio;
 
     // For GUI
@@ -24,6 +24,9 @@ public class AudioManager : MonoBehaviour
     private int chineseIndex;
     private int muslimIndex;
     private ObjectManager objectManager;
+    
+    public delegate void TalkingAction();
+    public event TalkingAction Talking;
 
     // Use this for initialization
     void Start()
@@ -100,6 +103,12 @@ public class AudioManager : MonoBehaviour
     {
         if ((!trumpAudio.isPlaying || isPrimeAudio) && !objectManager.gameState.isMuted)
         {
+            // Call callback
+            if (this.Talking != null)
+            {
+                this.Talking();
+            }
+
             trumpAudio.Stop();
             trumpAudio.clip = newClip;
             trumpAudio.Play();

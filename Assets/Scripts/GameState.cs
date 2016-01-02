@@ -67,14 +67,25 @@ public class GameState
                 value = 0;
             }
 
+            if (value < playerHealth)
+            {
+                // Call callback
+                if (this.Damaged != null)
+                {
+                    this.Damaged();
+                }
+            }
+
             playerHealth = value;
         }
     }
 	public int playerMoney;
 	public MapType MapType = MapType.Obstacles;
 
+    public delegate void DamagedAction();
+    public event DamagedAction Damaged;
 
-	public GameState (int playerHealth, int playerMoney, MapType MapType)
+    public GameState (int playerHealth, int playerMoney, MapType MapType)
 	{
 		PlayerHealth = playerHealth;
 		this.playerMoney = playerMoney;

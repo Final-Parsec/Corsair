@@ -158,7 +158,7 @@ public class ObjectManager
     public ObjectManager ()
 	{
 		ObjectManager.instance = this;
-		gameState = new GameState(1, 999, MapType.Open);
+		gameState = new GameState(900, 999, MapType.Open);
 	}
 	
 	/// <summary>
