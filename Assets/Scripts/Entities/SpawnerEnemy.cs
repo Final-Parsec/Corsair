@@ -1,18 +1,21 @@
+using System.Collections;
 using UnityEngine;
 
 public class SpawnerEnemy : EnemyBase {
 	public GameObject babies;
 	public int numBabies;
 	
-	public override void DestroyThis ()
+	public override IEnumerator DestroyThis ()
 	{
 		if(!(onNode == this.objectManager.WaveManager.destinationNode)){
 			for(int x=0; x<numBabies; x++)
 			{
-				babies.GetObjectFromPool(babies.gameObject.name , GetClosePosition(), Quaternion.Euler (new Vector3 (90, 0, 0)));
-			}
+				var go = babies.GetObjectFromPool(babies.gameObject.name , GetClosePosition(), Quaternion.Euler (new Vector3 (90, 0, 0)));
+                go.name = babies.name;
+            }
 		}
-		base.DestroyThis();
+
+		yield return StartCoroutine(base.DestroyThis());
 	}
 	
 	private Vector3 GetClosePosition(){

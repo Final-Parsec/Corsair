@@ -21,15 +21,20 @@ public abstract class IWaveGenerator
 
         switch (waveId)
         {
-            case WaveId.Muslim:
-                return new Wave(waveId, .1f, 21, this.nextWaveNumber);
+            case WaveId.StrongMuslimMen:
+                return new Wave(waveId, .55f, 16, this.nextWaveNumber);
 
-            case WaveId.Mexican:
-                return new Wave(waveId, .35f, 13, this.nextWaveNumber);
+            case WaveId.FastMexicanMen:
+                return new Wave(waveId, .45f, 12, this.nextWaveNumber);
 
-            case WaveId.Chinaman:
-                return new Wave(waveId, .3f, 21, this.nextWaveNumber);
-                
+            case WaveId.GroupChineseMen:
+                return new Wave(waveId, .15f, 20, this.nextWaveNumber);
+
+            case WaveId.AnchorMuslimWomen:
+            case WaveId.AnchorMexicanWomen:
+            case WaveId.AnchorChineseWomen:
+                return new Wave(waveId, .55f, 12, this.nextWaveNumber);
+
             case WaveId.Hillary:
                 return new Wave(waveId, .0f, 1, this.nextWaveNumber);
 

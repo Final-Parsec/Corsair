@@ -16,9 +16,12 @@ public enum Border
 
 public enum WaveId
 {
-    Mexican,
-    Chinaman,
-    Muslim,
+    FastMexicanMen,
+    AnchorMexicanWomen,
+    GroupChineseMen,
+    AnchorChineseWomen,
+    StrongMuslimMen,
+    AnchorMuslimWomen,
     Hillary
 }
 

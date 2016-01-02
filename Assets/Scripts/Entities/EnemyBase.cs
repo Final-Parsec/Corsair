@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
+[RequireComponent(typeof(Animator))]
 public class EnemyBase : Agent
 {
     /// <summary>
@@ -90,7 +91,7 @@ public class EnemyBase : Agent
 		
 			if (value < 1) {
 			    this.health = 0;
-			    this.DestroyThis ();
+                StartCoroutine(this.DestroyThis ());
 			} else if (value > this.maxHealth) {
 			    this.health = this.maxHealth;
 			} else {
@@ -110,6 +111,8 @@ public class EnemyBase : Agent
 	    this.SpawnNode = this.onNode;
 	    this.InitAttributes();
         this.transform.position = this.objectManager.NodeManager.CorrectPosition(this.transform.position);
+
+        //animator.SetTrigger("Alive");
     }	
 
 	/// <summary>
@@ -117,7 +120,12 @@ public class EnemyBase : Agent
     /// </summary>
 	void Update ()
 	{
-	    this.Move();
+        if (Health == 0)
+        {
+            return;
+        }
+
+        this.Move();
 	    this.ApplyDebuffs();
     }
 
@@ -284,14 +292,14 @@ public class EnemyBase : Agent
         {
             return;
         }
-        this.DestroyThis();
+        StartCoroutine(this.DestroyThis());
     }
 
     /// <summary>
     /// Called when this objects time has come to an end.
     /// Spawns a death int with the money the user get, returns enemy to pool, and cleans up references.
     /// </summary>
-    public virtual void DestroyThis()
+    public virtual IEnumerator DestroyThis()
     {
         // Call callback
         if (this.Killed != null)
@@ -301,6 +309,13 @@ public class EnemyBase : Agent
 
         TextMesh deathInt = this.objectManager.Map.enemyDeathInt.GetObjectFromPool<TextMesh>(this.objectManager.Map.enemyDeathInt.name, new Vector3(this.transform.position.x, 40, this.transform.position.z), Quaternion.Euler(new Vector3(90, 0, 0)));
         deathInt.gameObject.name = this.objectManager.Map.enemyDeathInt.name;
+
+        if (this.onNode.enemie == this)
+        {
+            this.onNode.enemie = null;
+        }
+
+        this.objectManager.DeReference(this);
 
         if (this.onNode == this.objectManager.WaveManager.destinationNode)
         {
@@ -312,16 +327,10 @@ public class EnemyBase : Agent
             this.objectManager.gameState.playerMoney += this.moneyValue;
             this.objectManager.gameState.score += this.moneyValue;
             deathInt.text = "+" + this.moneyValue;
+            animator.SetTrigger("Dead");
         }
 
-        if (this.onNode.enemie == this)
-        {
-            this.onNode.enemie = null;
-        }
-
-        this.objectManager.DeReference(this);
-
-        // TODO: play death animation
+        yield return new WaitForSeconds(1.5f);
 
         this.gameObject.ReturnToPool(this.gameObject.name);
     }

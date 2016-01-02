@@ -97,8 +97,6 @@ public static class ObjectPooling
             var newPool = new LinkedList<GameObject>();
             ObjectPooling.PooledObjects.Add(objectPoolName, newPool);
             objectPool = newPool;
-
-			Debug.Log(objectPoolName);
         }
 
         return objectPool;

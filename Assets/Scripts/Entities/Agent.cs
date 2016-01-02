@@ -44,12 +44,13 @@ public abstract class Agent : MonoBehaviour
     /// <summary>
     /// The speed that the <see cref="Agent"/> is traveling.
     /// </summary>
-    protected float speed = 10;
+    public float speed;
 
     /// <summary>
     /// 0 is walking forward, >0 are stacked back commands.
     /// Makes <see cref="Agent"/> more back to the spawn Node.
     /// </summary>
+    [HideInInspector]
     public int movingBackwards = 0;
 
     /// <summary>

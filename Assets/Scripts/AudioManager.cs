@@ -41,15 +41,18 @@ public class AudioManager : MonoBehaviour
     {
         switch (waveId)
         {
-            case WaveId.Mexican:
+            case WaveId.FastMexicanMen:
+            case WaveId.AnchorMexicanWomen:
                 PlayTrump(waveMexican[mexicanIndex++ % waveMexican.Length], false);
                 break;
 
-            case WaveId.Chinaman:
+            case WaveId.GroupChineseMen:
+            case WaveId.AnchorChineseWomen:
                 PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
                 break;
 
-            case WaveId.Muslim:
+            case WaveId.StrongMuslimMen:
+            case WaveId.AnchorMuslimWomen:
                 PlayTrump(waveMuslim[muslimIndex++ % waveMuslim.Length], false);
                 break;
 

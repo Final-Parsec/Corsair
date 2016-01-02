@@ -11,7 +11,7 @@ public class WaveManager : MonoBehaviour
     /// </summary>
     private ObjectManager objectManager;
 
-    private readonly IWaveGenerator waveGene = new RandomWaveGenerator(8008);
+    private readonly IWaveGenerator waveGene = new HardCodedWaveGenerator();
 
     /// <summary>
     /// Executes event when the <see cref="Wave"/> is sent.
