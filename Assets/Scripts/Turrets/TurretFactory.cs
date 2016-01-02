@@ -78,8 +78,33 @@ public class TurretFactory : MonoBehaviour
 		Debug.Log ("Unable to place turret at this location.");
 		objectManager.NodeManager.UnBlockNode (cursorOnNode.UnityPosition);
 	}
-    
-	void Start ()
+
+    public IEnumerator SelectTurret()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+
+        Node cursorOnNode = objectManager.NodeManager.GetNodeFromLocation(Camera.main.ScreenToWorldPoint(mousePosition));
+
+        if (cursorOnNode == null || objectManager.gameState.optionsOn)
+        {
+            yield break;
+        }
+        Debug.Log(cursorOnNode.listIndexX + ", " + cursorOnNode.listIndexY);
+        
+        if (objectManager.TurretFocusMenu.SelectedTurret == cursorOnNode.turret)
+        {
+            objectManager.TurretFocusMenu.SelectedTurret = null;
+        }
+        else
+        {
+            objectManager.TurretFocusMenu.SelectedTurret = cursorOnNode.turret;
+            objectManager.GuiButtonMethods.CloseTurretMenu();
+        }
+        yield break;
+        
+    }
+
+    void Start ()
 	{
 		objectManager = ObjectManager.GetInstance ();
 	    PopulateTurretModels();
