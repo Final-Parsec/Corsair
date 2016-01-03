@@ -36,6 +36,8 @@ public abstract class IWaveGenerator
                 return new Wave(waveId, .55f, 12, this.nextWaveNumber);
 
             case WaveId.Hillary:
+            case WaveId.Bernie:
+            case WaveId.Obama:
                 return new Wave(waveId, .0f, 1, this.nextWaveNumber);
 
             default:

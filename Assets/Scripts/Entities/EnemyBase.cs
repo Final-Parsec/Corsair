@@ -112,7 +112,7 @@ public class EnemyBase : Agent
 	    this.InitAttributes();
         this.transform.position = this.objectManager.NodeManager.CorrectPosition(this.transform.position);
 
-        //animator.SetTrigger("Alive");
+        animator.SetTrigger("Alive");
     }	
 
 	/// <summary>
@@ -142,7 +142,6 @@ public class EnemyBase : Agent
 	    this.maxHealth += (int)(this.maxHealth * ((float)this.objectManager.gameState.dificultyFactor * (float)(this.objectManager.gameState.waveCount)));
 	    this.moneyValue += (int)(this.moneyValue * this.objectManager.gameState.enemyValueFactor * (this.objectManager.gameState.waveCount));
 	    this.health = this.maxHealth;
-	    this.speed = this.speed + UnityEngine.Random.Range(-1f,1f);
 	}
 
 	
@@ -328,6 +327,13 @@ public class EnemyBase : Agent
             this.objectManager.gameState.score += this.moneyValue;
             deathInt.text = "+" + this.moneyValue;
         }
+
+        // remove debuffs
+        foreach (var debuff in debuffs)
+        {
+            debuff.EndEffect();
+        }
+        debuffs.Clear();
 
         animator.SetTrigger("Dead");
         yield return new WaitForSeconds(1.5f);

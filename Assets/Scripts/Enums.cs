@@ -22,7 +22,9 @@ public enum WaveId
     AnchorChineseWomen,
     StrongMuslimMen,
     AnchorMuslimWomen,
-    Hillary
+    Hillary,
+    Bernie,
+    Obama
 }
 
 public enum TurretType

@@ -6,6 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource trumpAudio;
     private AudioSource guiAudio;
+    private AudioSource otherAudio;
 
     // For GUI
     public AudioClip button;
@@ -16,6 +17,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip loss;
     public AudioClip noMoney;
     public AudioClip cantBuildThere;
+    public AudioClip hillary;
+    public AudioClip bernie;
+    public AudioClip obama;
     public AudioClip[] waveMexican;
     public AudioClip[] waveChinese;
     public AudioClip[] waveMuslim;
@@ -35,6 +39,7 @@ public class AudioManager : MonoBehaviour
         var audios = GetComponents<AudioSource>();
         trumpAudio = audios[0];
         guiAudio = audios[1];
+        otherAudio = audios[2];
         mexicanIndex = Random.Range(0, waveMexican.Length);
         chineseIndex = Random.Range(0, waveChinese.Length);
         muslimIndex = Random.Range(0, waveMuslim.Length);
@@ -60,7 +65,15 @@ public class AudioManager : MonoBehaviour
                 break;
 
             case WaveId.Hillary:
-                //PlayTrump(waveChinese[chineseIndex++ % waveChinese.Length], false);
+                PlayOther(hillary, false);
+                break;
+
+            case WaveId.Bernie:
+                PlayOther(bernie, false);
+                break;
+
+            case WaveId.Obama:
+                PlayOther(obama, false);
                 break;
         }
     }
@@ -122,6 +135,16 @@ public class AudioManager : MonoBehaviour
             guiAudio.Stop();
             guiAudio.clip = newClip;
             guiAudio.Play();
+        }
+    }
+
+    private void PlayOther(AudioClip newClip, bool isPrimeAudio)
+    {
+        if ((!otherAudio.isPlaying || isPrimeAudio) && !objectManager.gameState.isMuted)
+        {
+            otherAudio.Stop();
+            otherAudio.clip = newClip;
+            otherAudio.Play();
         }
     }
 }
