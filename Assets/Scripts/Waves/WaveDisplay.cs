@@ -76,7 +76,7 @@ public class WaveDisplay : MonoBehaviour
                 sprites[x].SetSprite(waveImages[node.Value.waveId.ToString()]);
             }
 
-            if (x != 0 && node.Next != null)
+            if (node.Next != null)
             {
                 sprites[x].waveNumber = node.Value.waveNumber;
                 node = node.Next;

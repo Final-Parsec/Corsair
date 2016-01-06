@@ -24,9 +24,14 @@ public class EnemyBase : Agent
 	public int damageValue;
 
     /// <summary>
+    /// The money gained by the player before adjusting for wave count and difficulty.
+    /// </summary>
+	public int baseMoneyValue;
+
+    /// <summary>
     /// The money gained by the player when they kill it.
     /// </summary>
-	public int moneyValue;
+	private int moneyValue;
 
     /// <summary>
     /// The size of the healthbar.
@@ -46,7 +51,12 @@ public class EnemyBase : Agent
     /// <summary>
     /// The max posible health of the <see cref="EnemyBase"/>.
     /// </summary>
-	public int maxHealth = 100;
+	private int maxHealth;
+
+    /// <summary>
+    /// The max posible health of the <see cref="EnemyBase"/>.
+    /// </summary>
+	public int baseHealth = 100;
 
     /// <summary>
     /// The armor.
@@ -139,8 +149,8 @@ public class EnemyBase : Agent
 	    this.SetPath (this.objectManager.Pathfinding.Astar (this.onNode, this.objectManager.WaveManager.destinationNode));
 	    this.animator.speed = this.speed;
 
-	    this.maxHealth += (int)(this.maxHealth * ((float)this.objectManager.gameState.dificultyFactor * (float)(this.objectManager.gameState.waveCount)));
-	    this.moneyValue += (int)(this.moneyValue * this.objectManager.gameState.enemyValueFactor * (this.objectManager.gameState.waveCount));
+	    this.maxHealth = this.baseHealth + (int)(this.baseHealth * ((float)this.objectManager.gameState.dificultyFactor * (float)(this.objectManager.gameState.waveCount)));
+	    this.moneyValue = this.baseMoneyValue + (int)(this.baseMoneyValue * this.objectManager.gameState.enemyValueFactor * (this.objectManager.gameState.waveCount));
 	    this.health = this.maxHealth;
 	}
 
@@ -327,6 +337,9 @@ public class EnemyBase : Agent
             this.objectManager.gameState.score += this.moneyValue;
             deathInt.text = "+" + this.moneyValue;
         }
+        
+        animator.SetTrigger("Dead");
+        yield return new WaitForSeconds(1.5f);
 
         // remove debuffs
         foreach (var debuff in debuffs)
@@ -334,9 +347,6 @@ public class EnemyBase : Agent
             debuff.EndEffect();
         }
         debuffs.Clear();
-
-        animator.SetTrigger("Dead");
-        yield return new WaitForSeconds(1.5f);
 
         this.gameObject.ReturnToPool(this.gameObject.name);
     }

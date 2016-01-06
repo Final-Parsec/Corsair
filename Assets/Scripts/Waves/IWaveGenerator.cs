@@ -28,7 +28,7 @@ public abstract class IWaveGenerator
                 return new Wave(waveId, .45f, 12, this.nextWaveNumber);
 
             case WaveId.GroupChineseMen:
-                return new Wave(waveId, .15f, 20, this.nextWaveNumber);
+                return new Wave(waveId, .15f, 24, this.nextWaveNumber);
 
             case WaveId.AnchorMuslimWomen:
             case WaveId.AnchorMexicanWomen:
