@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,6 +63,7 @@ public class WaveDisplay : MonoBehaviour
             sprites[x].rectTransform.pivot = new Vector2(1f, 1f);
             sprites[x].rectTransform.SetParent(this.transform, false);
             sprites[x].rectTransform.SetAnchorTopRight();
+            sprites[x].waveNumber = node.Value.waveNumber;
             if (x == 0)
             {
                 sprites[x].rectTransform.SetSize(size);
@@ -78,7 +80,6 @@ public class WaveDisplay : MonoBehaviour
 
             if (node.Next != null)
             {
-                sprites[x].waveNumber = node.Value.waveNumber;
                 node = node.Next;
             }
         }
@@ -105,7 +106,7 @@ public class WaveDisplay : MonoBehaviour
 
         if (sprites[0].rectTransform.anchoredPosition.x > xRemoveLimit + size.x)
         {
-            this.BackOfTheLine(sprites[0]);
+            this.BackOfTheLine();
 
             if (turboCount > 0)
             {
@@ -132,19 +133,29 @@ public class WaveDisplay : MonoBehaviour
         }
     }
 
-    private void BackOfTheLine(WaveSprite sprite)
+    private void BackOfTheLine()
     {
+        WaveSprite sprite = sprites[0];
+        sprites.RemoveAt(0);
         if (objectManager.WaveManager.upcomingWaves.Count < WaveManager.numberOfWavesInMemory)
         {
             sprite.gameObject.SetActive(false);
+            sprites.Add(sprite);
+            return;
         }
 
-        sprites.RemoveAt(0);
-        sprite.SetSprite(waveImages[objectManager.WaveManager.upcomingWaves.Last.Value.waveId.ToString()]);
+        Wave nextWave = objectManager.WaveManager.upcomingWaves.Where(w => w.waveNumber == sprites[sprites.Count - 1].waveNumber + 1).FirstOrDefault();
+
+        if (nextWave == null)
+        {
+            throw new InvalidOperationException("Next wave does not exist.");
+        }
+
+        sprite.SetSprite(waveImages[nextWave.waveId.ToString()]);
         sprite.rectTransform.anchoredPosition =
             new Vector2(sprite.rectTransform.anchoredPosition.x - size.x * (sprites.Count + 1),
                 sprite.rectTransform.anchoredPosition.y);
-        sprite.waveNumber = objectManager.WaveManager.upcomingWaves.Last.Value.waveNumber;
+        sprite.waveNumber = nextWave.waveNumber;
         sprites.Add(sprite);
     }
 }
