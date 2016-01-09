@@ -9,7 +9,7 @@ public class CameraMovement : MonoBehaviour{
 	int scrollSensitivity = 75;
 	Vector2 cameraMinDistance;
 	Vector2 cameraMaxDistance;
-	int scrollMaxDistance = 150;
+	int scrollMaxDistance = 250;
 	int scrollMinDistance = 50;
 
 	private static bool isZooming;
