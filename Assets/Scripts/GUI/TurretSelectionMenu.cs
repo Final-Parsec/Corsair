@@ -69,7 +69,7 @@ public class TurretSelectionMenu : MonoBehaviour
                 buttonRT.SetParent(this.transform, false);
                 buttonRT.SetAnchorTopLeft();
 
-                float xpos = spacer.x * x + buttonRT.GetWidth() * (x - 1) + buttonRT.GetWidth() / 2f;
+                float xpos = spacer.x * x + buttonRT.GetWidth() * (x - 1) + buttonRT.GetWidth();
                 float ypos = spacer.y * y + buttonRT.GetHeight() * (y - 1) + buttonRT.GetHeight() / 2f;
 
                 buttonRT.anchoredPosition = new Vector2(xpos, -ypos);
@@ -78,20 +78,22 @@ public class TurretSelectionMenu : MonoBehaviour
 
         ObjectManager objectManager = ObjectManager.GetInstance();
 
-        UnityAction action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Pistolman); };
-        buttons[1].onClick.AddListener(action);
-        buttons[1].GetComponent<Image>().sprite = turretSprites[TurretType.Pistolman.ToString()];
-
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Rifleman); };
+        UnityAction action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Basic); };
         buttons[0].onClick.AddListener(action);
-        buttons[0].GetComponent<Image>().sprite = turretSprites[TurretType.Rifleman.ToString()];
+        buttons[0].GetComponent<Image>().sprite = turretSprites[TurretType.Basic.ToString()];
 
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Cannon); };
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Strong); };
+        buttons[1].onClick.AddListener(action);
+        buttons[1].GetComponent<Image>().sprite = turretSprites[TurretType.Strong.ToString()];
+
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.RedTape); };
         buttons[2].onClick.AddListener(action);
-        buttons[2].GetComponent<Image>().sprite = turretSprites[TurretType.Cannon.ToString()];
+        buttons[2].GetComponent<Image>().sprite = turretSprites[TurretType.RedTape.ToString()];
 
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Netter); };
+        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Deportation); };
         buttons[3].onClick.AddListener(action);
-        buttons[3].GetComponent<Image>().sprite = turretSprites[TurretType.Netter.ToString()];
+        buttons[3].GetComponent<Image>().sprite = turretSprites[TurretType.Deportation.ToString()];
+
+        objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Basic);
     }
 }

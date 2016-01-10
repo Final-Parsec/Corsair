@@ -114,7 +114,7 @@ public class TurretFactory : MonoBehaviour
     {
         turretModels = new TurretModel[Enum.GetNames(typeof(TurretType)).Length];
 
-        turretModels[(int)TurretType.Pistolman] = new TurretModel
+        turretModels[(int)TurretType.Basic] = new TurretModel
         {
             damage = 1,
             range = 2,
@@ -126,47 +126,47 @@ public class TurretFactory : MonoBehaviour
             SlowDuration = 0,
             MindControlDuration = 0,
             attackOptions = AttackOptionsFlags.Ground | AttackOptionsFlags.Air,
-            turretType = TurretType.Pistolman,
+            turretType = TurretType.Basic,
             UpgradeNames = new List<string> {"Range","Damage","Speed"},
             UpgradePaths = new Dictionary<string, int> { { "Range", 0} , { "Damage", 0 }, { "Speed", 0 } }
         };
 
-        turretModels[(int)TurretType.Rifleman] = new TurretModel
+        turretModels[(int)TurretType.Strong] = new TurretModel
         {
             damage = 3,
             range = 3,
             rateOfFire = 5,
-            aoeDamage = 0,
-            aoeRange = 0,
+            aoeDamage = 3,
+            aoeRange = 1,
             damageOverTime = 0,
             Slow = 0,
             SlowDuration = 0,
             MindControlDuration = 0,
             attackOptions = AttackOptionsFlags.Ground | AttackOptionsFlags.Air,
-            turretType = TurretType.Rifleman,
+            turretType = TurretType.Strong,
             UpgradeNames = new List<string> { "Range", "Damage", "Speed" },
             UpgradePaths = new Dictionary<string, int> { { "Range", 0 }, { "Damage", 0 }, { "Speed", 0 } }
         };
 
-        turretModels[(int)TurretType.Cannon] = new TurretModel
+        turretModels[(int)TurretType.Deportation] = new TurretModel
         {
             damage = 0,
             range = 3,
             rateOfFire = 3,
-            aoeDamage = 3,
-            aoeRange = 1,
+            aoeDamage = 0,
+            aoeRange = 0,
             // TODO: calculate aoeRange the same way as turret range.
             damageOverTime = 0,
             Slow = 0,
             SlowDuration = 0,
-            MindControlDuration = 0,
+            MindControlDuration = 2,
             attackOptions = AttackOptionsFlags.Ground,
-            turretType = TurretType.Cannon,
+            turretType = TurretType.Deportation,
             UpgradeNames = new List<string> { "Range", "Damage", "Speed" },
             UpgradePaths = new Dictionary<string, int> { { "Range", 0 }, { "Damage", 0 }, { "Speed", 0 } }
         };
 
-        turretModels[(int)TurretType.Netter] = new TurretModel
+        turretModels[(int)TurretType.RedTape] = new TurretModel
         {
             damage = 2,
             range = 1,
@@ -178,7 +178,7 @@ public class TurretFactory : MonoBehaviour
             SlowDuration = 7.2f,
             MindControlDuration = 0,
             attackOptions = AttackOptionsFlags.Ground | AttackOptionsFlags.Air,
-            turretType = TurretType.Netter,
+            turretType = TurretType.RedTape,
             UpgradeNames = new List<string> { "Range", "Damage", "Speed" },
             UpgradePaths = new Dictionary<string, int> { { "Range", 0 }, { "Damage", 0 }, { "Speed", 0 } }
         };

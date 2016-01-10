@@ -29,10 +29,10 @@ public enum WaveId
 
 public enum TurretType
 {
-    Pistolman = 0,
-    Rifleman,
-    Cannon,
-    Netter
+    Basic = 0,
+    Strong,
+    Deportation,
+    RedTape
 }
 
 public enum StatusEffects
