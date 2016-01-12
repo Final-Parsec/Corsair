@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
+using System;
 
 [RequireComponent(typeof(AudioSource))]
 public class GuiButtonMethods : MonoBehaviour
@@ -105,7 +106,7 @@ public class GuiButtonMethods : MonoBehaviour
         }
         sendWaveTime.text = objectManager.gameState.nextWaveCountDown.ToString();
 
-		moneyValue.text = objectManager.gameState.playerMoney.ToString();
+		moneyValue.text = String.Format("{0:n}", objectManager.gameState.playerMoney * 1000000);
 		healthValue.text = objectManager.gameState.PlayerHealth.ToString();
 
 		if(objectManager.gameState.waveCount >= objectManager.gameState.numberOfWaves &&

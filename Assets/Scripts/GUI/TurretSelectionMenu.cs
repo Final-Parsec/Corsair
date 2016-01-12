@@ -31,6 +31,7 @@ public class TurretSelectionMenu : MonoBehaviour
     
     public IDictionary<string, Sprite> turretSprites = new Dictionary<string, Sprite>();
 
+    private ObjectManager objectManager = ObjectManager.GetInstance();
 
     /// <summary>
     /// Runs when the TurretSelectionMenu is created.
@@ -76,23 +77,18 @@ public class TurretSelectionMenu : MonoBehaviour
             }
         }
 
-        ObjectManager objectManager = ObjectManager.GetInstance();
+        for(int x = 0; x < Enum.GetNames(typeof(TurretType)).Length; x++)
+        {
+            int struggle = x;
+            UnityAction action = () => { objectManager.GuiButtonMethods.TurretButtonPressed(struggle); };
+            buttons[x].onClick.AddListener(action);
+            buttons[x].GetComponent<Image>().sprite = turretSprites[((TurretType) x).ToString()];
 
-        UnityAction action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Basic); };
-        buttons[0].onClick.AddListener(action);
-        buttons[0].GetComponent<Image>().sprite = turretSprites[TurretType.Basic.ToString()];
-
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Strong); };
-        buttons[1].onClick.AddListener(action);
-        buttons[1].GetComponent<Image>().sprite = turretSprites[TurretType.Strong.ToString()];
-
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.RedTape); };
-        buttons[2].onClick.AddListener(action);
-        buttons[2].GetComponent<Image>().sprite = turretSprites[TurretType.RedTape.ToString()];
-
-        action = () => { objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Deportation); };
-        buttons[3].onClick.AddListener(action);
-        buttons[3].GetComponent<Image>().sprite = turretSprites[TurretType.Deportation.ToString()];
+            var buttonRT = buttons[x].GetComponent<RectTransform>();
+            var priceObject = buttonRT.Find("Price");
+            priceObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-buttonRT.GetWidth(), 0);
+            priceObject.GetComponent<Text>().text = "$" + objectManager.TurretFactory.turretCosts[x] + "M";
+        }
 
         objectManager.GuiButtonMethods.TurretButtonPressed((int)TurretType.Basic);
     }

@@ -31,8 +31,8 @@ public enum TurretType
 {
     Basic = 0,
     Strong,
-    Deportation,
-    RedTape
+    RedTape,
+    Deportation
 }
 
 public enum StatusEffects
